@@ -86,6 +86,13 @@ DefaultContentLanguage = "en"                   # Theme i18n support
         weight = -60
         pre = "search"
 
+    [[menu.main]]
+        identifier = "dotfiles"
+        name = "Dotfiles"
+        url = "https://github.com/mnabila/dotfiles"
+        weight = -50
+        pre = "user"
+
 [related]
     includeNewer = true
     threshold = 60

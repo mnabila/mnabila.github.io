@@ -1,8 +1,9 @@
 ---
-title: "Configurasi Nextdns Client Di Archlinux"
+title: "Konfigurasi Nextdns Client Di Archlinux"
 date: 2020-11-08T11:26:13+07:00
 categories: ["network", "application"]
 tags: ["nextdns", "dns", "blockads"]
+lastmod : "2020-11-13"
 ---
 
 # Intro
@@ -44,12 +45,12 @@ Belum selesai sampai sini jadi perlu lanjut lagi ketahap berikutnya yakni memasu
   alternative lainnya kalian bisa langsung mengubah file yang ada di `/etc/resolv.conf` dan ubah alamat ip dnsnya menjadi `127.0.0.1`
 
 - langkah terakhir test ping ke salah satu domain
-  ![test configurasi](./test.png)
+  ![test konfigurasi](./test.png)
 
 # Kesimpulan
 
 - kelebihan
-  - kesimpulannya yakni instalasinya cukup mudah tidak perlu susah payah ubah file configurasinya secara manual
+  - kesimpulannya yakni instalasinya cukup mudah tidak perlu susah payah ubah file konfigurasinya secara manual
   - nextdns client ini tidak memerlukan resouce yang banyak
 - kekurangan
   - ada limitasi query perbulannya yakni 300k query jadi klok lebih dari itu perlu upgrade sayan

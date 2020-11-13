@@ -1,8 +1,9 @@
 ---
-title: "Configurasi Nextdns Menggunakan Dnscrypt-Proxy Di Archlinux"
+title: "Konfigurasi Nextdns Menggunakan Dnscrypt-Proxy Di Archlinux"
 date: 2020-11-08T11:29:06+07:00
 categories: ["network", "application"]
 tags: ["nextdns", "dns", "blockads", "dnscrypt"]
+lastmod : "2020-11-13"
 ---
 
 # Intro
@@ -21,7 +22,7 @@ Ketika `dns client` mengirimkan request ke `dns resolver`, dnscrypt ini mengenkr
 
 nah begitulan sedikit penjelasan mengenai protocol dnscrypt ini, selanjutnya adalah pembahasan mengenai aplikasi dnscrypt-proxy
 
-## implementasi nextdns kedalam configurasi dnscrypt-proxy
+## implementasi nextdns kedalam konfigurasi dnscrypt-proxy
 
 langkah pertama yang jelas adalah kita harus punya akun nextdns.io terbelih dahulu, baru dilanjut melakukan instalasi dnscrypt-proxy, instalasi dnscrypt-proxy ini cukup mudah yakni dengan perintah seperti dibawah ini
 
@@ -29,7 +30,7 @@ langkah pertama yang jelas adalah kita harus punya akun nextdns.io terbelih dahu
 $ yay -S dnscrypt-proxy
 ```
 
-setelah instalasi selesai maka ubah configurasi dnscrypt-proxy yang ada di `/etc/dnscrypt-proxy/dnscrypt-proxy.toml` menggunakan teks editor kesayangan kalian. disini saya menggunakan teks editor `neovim` yang dipanggil melalui perintah `sudoedit`. sampai sini kita akan menambahkan private dns resolver yang kita dapatkan dari nextdns,
+setelah instalasi selesai maka ubah konfigurasi dnscrypt-proxy yang ada di `/etc/dnscrypt-proxy/dnscrypt-proxy.toml` menggunakan teks editor kesayangan kalian. disini saya menggunakan teks editor `neovim` yang dipanggil melalui perintah `sudoedit`. sampai sini kita akan menambahkan private dns resolver yang kita dapatkan dari nextdns,
 
 untuk mendapatkan private dns resolvernya temen temen bisa muka [https://my.nextdns.io/](https://my.nextdns.io/) kemudian masuk bagian setup dan scroll kebawah sampai ketemu bagian ini.
 ![my nextdns setup dnscrypt](./mynextdns-setup-dnscrypt.png)
@@ -58,7 +59,7 @@ Selanjutnya bukanetwork manager yang kalian gunakan sebagai contoh saya disini m
 alternative lainnya kalian bisa langsung mengubah file yang ada di `/etc/resolv.conf` dan ubah alamat ip dnsnya menjadi `127.0.0.1`
 
 langkah terakhir test ping ke salah satu domain
-![test configurasi](./test.png)
+![test konfigurasi](./test.png)
 
 # Kesimpulan
 ternyata si nextdns ini juga menyedian sebuah dns resolver  yang menggunakan protocol dnscript untuk berkomunikasi dengan dns client, sehingga user mendapatkan pelayanan yang lebih baik lagi.
