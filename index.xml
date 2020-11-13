@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>mnabila</title><link>https://mnabila.github.io/</link><description>Recent content on mnabila</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Sun, 08 Nov 2020 11:29:06 +0700</lastBuildDate><atom:link href="https://mnabila.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>Configurasi Nextdns Menggunakan Dnscrypt-Proxy Di Archlinux</title><link>https://mnabila.github.io/p/configurasi-nextdns-menggunakan-dnscrypt-proxy-di-archlinux/</link><pubDate>Sun, 08 Nov 2020 11:29:06 +0700</pubDate><guid>https://mnabila.github.io/p/configurasi-nextdns-menggunakan-dnscrypt-proxy-di-archlinux/</guid><description>&lt;h1 id="intro">Intro&lt;/h1>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>mnabila</title><link>https://mnabila.github.io/</link><description>Recent content on mnabila</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Sun, 08 Nov 2020 11:29:06 +0700</lastBuildDate><atom:link href="https://mnabila.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>Konfigurasi Nextdns Menggunakan Dnscrypt-Proxy Di Archlinux</title><link>https://mnabila.github.io/p/konfigurasi-nextdns-menggunakan-dnscrypt-proxy-di-archlinux/</link><pubDate>Sun, 08 Nov 2020 11:29:06 +0700</pubDate><guid>https://mnabila.github.io/p/konfigurasi-nextdns-menggunakan-dnscrypt-proxy-di-archlinux/</guid><description>&lt;h1 id="intro">Intro&lt;/h1>
 &lt;p>Sebelum berpindah ke nextdns, saya sebenernya pengguna dnscrypt-proxy akan tetapi karna di nextdns ada fitur yang menurut saya menarik alhasil saya bermigrasi ke nextdns client.&lt;/p>
 &lt;p>Nah disisilain saya memiliki 2 aplikasi yang memiliki fungsi sama tapi mau uninstall dnscrypt-proxy kok masih sayang, mengingat protocol dnscrypt lebih aman dibandingkan protocol yang digunakan di nextdns-client yang mana di nextdns-client ini mengggunakan protocol DOT(Dns Over TLS). Karna hal itu saya jadi kepikiran bagaimana cara mengimplementasikan si nextdns ini kedalam dnscrypt-proxy.&lt;/p>
 &lt;blockquote>
@@ -9,10 +9,10 @@
 &lt;p>Sebelum ke pembahasan utama, sepertinya saya perlu mengulas sedikit mengenai dnscrypt yang akan saya gunakan. Dnscrypt merupakan sebuah protocol yang digunakan untuk mengautentikasi komunikasi antara &lt;code>dns client&lt;/code> menuju &lt;code>dns resolver&lt;/code> yang bertujuan untuk menghindari terjadinya &lt;code>dns spoofing&lt;/code>.&lt;/p>
 &lt;p>Ketika &lt;code>dns client&lt;/code> mengirimkan request ke &lt;code>dns resolver&lt;/code>, dnscrypt ini mengenkripsi data yang dikirimkan baik dari &lt;code>dns client&lt;/code> maupun dari &lt;code>dns resolver&lt;/code> sehingga data yang diterima oleh &lt;code>dns client&lt;/code> tidak dapat dirubah oleh pihak pihak yang tidak bertanggung jawab.&lt;/p>
 &lt;p>nah begitulan sedikit penjelasan mengenai protocol dnscrypt ini, selanjutnya adalah pembahasan mengenai aplikasi dnscrypt-proxy&lt;/p>
-&lt;h2 id="implementasi-nextdns-kedalam-configurasi-dnscrypt-proxy">implementasi nextdns kedalam configurasi dnscrypt-proxy&lt;/h2>
+&lt;h2 id="implementasi-nextdns-kedalam-konfigurasi-dnscrypt-proxy">implementasi nextdns kedalam konfigurasi dnscrypt-proxy&lt;/h2>
 &lt;p>langkah pertama yang jelas adalah kita harus punya akun nextdns.io terbelih dahulu, baru dilanjut melakukan instalasi dnscrypt-proxy, instalasi dnscrypt-proxy ini cukup mudah yakni dengan perintah seperti dibawah ini&lt;/p>
 &lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-bash" data-lang="bash">$ yay -S dnscrypt-proxy
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>setelah instalasi selesai maka ubah configurasi dnscrypt-proxy yang ada di &lt;code>/etc/dnscrypt-proxy/dnscrypt-proxy.toml&lt;/code> menggunakan teks editor kesayangan kalian. disini saya menggunakan teks editor &lt;code>neovim&lt;/code> yang dipanggil melalui perintah &lt;code>sudoedit&lt;/code>. sampai sini kita akan menambahkan private dns resolver yang kita dapatkan dari nextdns,&lt;/p>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>setelah instalasi selesai maka ubah konfigurasi dnscrypt-proxy yang ada di &lt;code>/etc/dnscrypt-proxy/dnscrypt-proxy.toml&lt;/code> menggunakan teks editor kesayangan kalian. disini saya menggunakan teks editor &lt;code>neovim&lt;/code> yang dipanggil melalui perintah &lt;code>sudoedit&lt;/code>. sampai sini kita akan menambahkan private dns resolver yang kita dapatkan dari nextdns,&lt;/p>
 &lt;p>untuk mendapatkan private dns resolvernya temen temen bisa muka &lt;a class="link" href="https://my.nextdns.io/" target="_blank" rel="noopener"
 >https://my.nextdns.io/&lt;/a> kemudian masuk bagian setup dan scroll kebawah sampai ketemu bagian ini.
 &lt;img src="./mynextdns-setup-dnscrypt.png" alt="my nextdns setup dnscrypt" />&lt;/p>
@@ -28,7 +28,7 @@
 &lt;p>&lt;img src="./networkmanager.png" alt="network manager" />&lt;/p>
 &lt;p>alternative lainnya kalian bisa langsung mengubah file yang ada di &lt;code>/etc/resolv.conf&lt;/code> dan ubah alamat ip dnsnya menjadi &lt;code>127.0.0.1&lt;/code>&lt;/p>
 &lt;p>langkah terakhir test ping ke salah satu domain
-&lt;img src="./test.png" alt="test configurasi" />&lt;/p>
+&lt;img src="./test.png" alt="test konfigurasi" />&lt;/p>
 &lt;h1 id="kesimpulan">Kesimpulan&lt;/h1>
 &lt;p>ternyata si nextdns ini juga menyedian sebuah dns resolver yang menggunakan protocol dnscript untuk berkomunikasi dengan dns client, sehingga user mendapatkan pelayanan yang lebih baik lagi.&lt;/p>
 &lt;blockquote>
@@ -37,7 +37,7 @@
 &lt;li>&lt;a class="link" href="https://www.dnscrypt.org/" target="_blank" rel="noopener"
 >https://www.dnscrypt.org/&lt;/a>&lt;/li>
 &lt;/ul>
-&lt;/blockquote></description></item><item><title>Configurasi Nextdns Client Di Archlinux</title><link>https://mnabila.github.io/p/configurasi-nextdns-client-di-archlinux/</link><pubDate>Sun, 08 Nov 2020 11:26:13 +0700</pubDate><guid>https://mnabila.github.io/p/configurasi-nextdns-client-di-archlinux/</guid><description>&lt;h1 id="intro">Intro&lt;/h1>
+&lt;/blockquote></description></item><item><title>Konfigurasi Nextdns Client Di Archlinux</title><link>https://mnabila.github.io/p/konfigurasi-nextdns-client-di-archlinux/</link><pubDate>Sun, 08 Nov 2020 11:26:13 +0700</pubDate><guid>https://mnabila.github.io/p/konfigurasi-nextdns-client-di-archlinux/</guid><description>&lt;h1 id="intro">Intro&lt;/h1>
 &lt;p>Nextdns merupakan sebuah startup atau perusahaan yang berkerja dibidang penyedia layanan firewall yang bertujuan untuk meningkatkan keamanan pengguna ketika berselancari di internet.
 Nextdns melindungi penggunanya dari berbagai masalah keamanan seperti memblokir iklan yang mengganggu, memblokir pelacakan dari situs yang sedang dikunjunginya dan masih banyak lagi.&lt;/p>
 &lt;h1 id="pembahasan">Pembahasan&lt;/h1>
@@ -68,14 +68,14 @@ alternative lainnya kalian bisa langsung mengubah file yang ada di &lt;code>/etc
 &lt;/li>
 &lt;li>
 &lt;p>langkah terakhir test ping ke salah satu domain
-&lt;img src="./test.png" alt="test configurasi" />&lt;/p>
+&lt;img src="./test.png" alt="test konfigurasi" />&lt;/p>
 &lt;/li>
 &lt;/ul>
 &lt;h1 id="kesimpulan">Kesimpulan&lt;/h1>
 &lt;ul>
 &lt;li>kelebihan
 &lt;ul>
-&lt;li>kesimpulannya yakni instalasinya cukup mudah tidak perlu susah payah ubah file configurasinya secara manual&lt;/li>
+&lt;li>kesimpulannya yakni instalasinya cukup mudah tidak perlu susah payah ubah file konfigurasinya secara manual&lt;/li>
 &lt;li>nextdns client ini tidak memerlukan resouce yang banyak&lt;/li>
 &lt;/ul>
 &lt;/li>
