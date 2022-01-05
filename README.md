@@ -5,13 +5,13 @@
 
 ## Demo
 
-[Example Site](https://theme-stack.jimmycai.com/)
+[Example Site](https://demo.stack.jimmycai.com/)
 
 [![Netlify Status](https://api.netlify.com/api/v1/badges/a2d2807a-a905-4bcb-97da-8da8d847da3d/deploy-status)](https://app.netlify.com/sites/hugo-theme-stack/deploys)
 
-## Documentation & more information
+## Documentation
 
-[Documentation](https://www.notion.so/jimmycai/Hugo-Theme-Stack-511aec5b9ed845ce9b6e3ae0bf7fb6d4) | [中文文档](https://www.notion.so/jimmycai/Hugo-Theme-Stack-511aec5b9ed845ce9b6e3ae0bf7fb6d4)
+[Documentation](https://docs.stack.jimmycai.com/) | [中文文档](https://docs.stack.jimmycai.com/zh/)
 
 ## Introduction
 
@@ -20,33 +20,26 @@ Stack is a simple card-style Hugo theme designed for bloggers, some of its featu
 - Responsive images support
 - Lazy load images
 - Dark mode
+- Local search
 - [PhotoSwipe](https://photoswipe.com/) integration
 - Archive page template
 - Full native JavaScript, no jQuery or any other frameworks are used
 - No CSS framework, keep it simple and minimal
-- External dependencies (like PhotoSwipe's library) are being loaded selectively, or asynchronously
 - Properly cropped thumbnails
-
-The only JavaScript library being used is [node-vibrant](https://github.com/Vibrant-Colors/node-vibrant) for generating colour schemes for articles.
-
-![Page Insight](https://i.imgur.com/0hUWmMh.png)
+- Subsection support
+- Table of contents
 
 ## Requirements
 
-This theme uses SCSS and TypeScript. For that reason, it's necessary to use **Hugo ≥ 0.74.0**.
-
-Use Hugo Extended version if you want to:
-
-* Use the latest feature/fix from `master` branch
-* Edit SCSS files
-  
-**Compiled CSS are updated once per release.**
+It's necessary to use **Hugo Extended ≥ 0.87.0**.
 
 ## Installation
 
-Clone / Download this repository to `theme` folder, and edit your site config following `exampleSite/config.toml`.
+Clone / Download this repository to `theme` folder, and edit your site config following `exampleSite/config.yaml`.
 
-Check [documentation](https://www.notion.so/jimmycai/Hugo-Theme-Stack-511aec5b9ed845ce9b6e3ae0bf7fb6d4) for more details.
+*Note: Remove `config.toml` if there is one in the site folder.*
+
+Check [documentation](https://docs.stack.jimmycai.com/) for more details.
 
 ## Copyright
 
@@ -58,21 +51,30 @@ If you want to port this theme to another blogging platform, please let me know�
 
 ## Sponsoring
 
-If you like this theme, consider supporting its development:
+If you like this theme, give it a star, and consider supporting its development:
 
-<a href="https://www.buymeacoffee.com/jimmycai" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-green.png" alt="Buy Me A Coffee" height="60px" width="217px"></a>
+[![ko-fi](https://www.ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/C0C530AXX)
 
 Your support is greatly appreciated :)
 
 ## Thanks to
 
-  - [Vibrant-Colors/node-vibrant](https://github.com/Vibrant-Colors/node-vibrant)
-  - [Normalize.css](https://necolas.github.io/normalize.css/)
-  - [Tabler icons](https://tablericons.com/)
-  - [Pure CSS implementation of Google Photos / 500px image layout](https://github.com/xieranmaya/blog/issues/6)
-  - [jonsuh/hamburgers](https://github.com/jonsuh/hamburgers)
-  - [PhotoSwipe](https://photoswipe.com/)
-  - [artchen/hexo-theme-element](https://github.com/artchen/hexo-theme-element)
-  - [MunifTanjim/minimo](https://github.com/MunifTanjim/minimo)
-  - [lepture/yue.css](https://github.com/lepture/yue.css)
-  - Markdown gallery syntax from [Typlog](https://typlog.com/)
+| Project | Description | Licence |
+| ------- | ----------- | ------- |
+| [PhotoSwipe](https://photoswipe.com/) | For the lightbox effect | [MIT](https://github.com/dimsemenov/PhotoSwipe/blob/master/LICENSE) |
+| [Normalize.css](https://github.com/necolas/normalize.css) | - | [MIT](https://github.com/necolas/normalize.css/blob/master/LICENSE.md) |
+| [Node Vibrant](https://github.com/Vibrant-Colors/node-vibrant) | To extract the color from images | [MIT](https://github.com/Vibrant-Colors/node-vibrant/blob/master/LICENSE.md)
+| [Tabler icons](https://github.com/tabler/tabler-icons) | Default menu icons | [MIT](https://github.com/tabler/tabler-icons/blob/master/LICENSE) |
+| [jonsuh/hamburgers](https://github.com/jonsuh/hamburgers) | Hamburger icon of menu | [MIT](https://github.com/jonsuh/hamburgers/blob/master/LICENSE) |
+| [lepture/yue.css](https://github.com/lepture/yue.css) | Part of it is used for styling article content | MIT |
+| [Typlog](https://typlog.com/) | Where the markdown gallery syntax is borrowed from | The author gave me the permission | 
+| [Pure CSS implementation of Google Photos / 500px image layout](https://github.com/xieranmaya/blog/issues/6) | Used for image gallery | - |
+
+### References
+
+Some references that I took while building this theme:
+
+| Project | Licence|
+| ------- | ------|
+| [artchen/hexo-theme-element](https://github.com/artchen/hexo-theme-element) | [MIT](https://github.com/artchen/hexo-theme-element/blob/master/LICENSE) |
+| [MunifTanjim/minimo](https://github.com/MunifTanjim/minimo) | [MIT](https://github.com/MunifTanjim/minimo/blob/master/LICENSE) |
