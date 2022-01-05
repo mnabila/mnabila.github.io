@@ -5,8 +5,11 @@
         {{- block "head" . -}}{{ end }}
     </head>
     <body class="{{ block `body-class` . }}{{ end }}">
-        <div class="container flex on-phone--column align-items--flex-start {{ if .Site.Params.widgets.enabled }}extended{{ else }}compact{{ end }} {{ block `container-class` . }}{{end}}">
-            {{ partial "sidebar/left.html" . }}
+        {{- partial "head/colorScheme" . -}}
+        <div class="container main-container flex {{ block `container-class` . }}on-phone--column {{ if .Site.Params.widgets.enabled }}extended{{ else }}compact{{ end }}{{ end }}">
+            {{- block "left-sidebar" . -}}
+                {{ partial "sidebar/left.html" . }}
+            {{- end -}}
             <main class="main full-width">
                 {{- block "main" . }}{{- end }}
             </main>
