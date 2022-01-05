@@ -1,0 +1,242 @@
+baseurl: https://mnabila.github.io
+languageCode: en-us
+theme: hugo-theme-stack
+paginate: 5
+
+title: mnabila
+
+# Change it to your Disqus shortname before using
+disqusShortname: mnabila
+
+# GA Tracking ID
+googleAnalytics:
+
+# Theme i18n support
+# Available values: en, fr, id, ja, ko, pt-br, zh-cn, zh-tw, es, de, nl, it, th, el, uk
+DefaultContentLanguage: en
+
+# Set hasCJKLanguage to true if DefaultContentLanguage is in [zh-cn ja ko]
+# This will make .Summary and .WordCount behave correctly for CJK languages.
+hasCJKLanguage: false
+
+permalinks:
+  post: /p/:slug/
+  page: /:slug/
+
+params:
+  mainSections:
+    - post
+  featuredImageField: image
+  rssFullContent: true
+  favicon:
+
+  footer:
+    since: 2020
+    customText:
+
+  dateFormat:
+    published: Jan 02, 2006
+    lastUpdated: Jan 02, 2006 15:04 MST
+
+  sidebar:
+    emoji: 😴
+    subtitle: 'media online yang dipergumanakan untuk mendokumentasi kegiatan belajar penulis'
+    avatar:
+      enabled: true
+      local: false
+      src: https://avatars.githubusercontent.com/u/37516576?v=4
+
+  article:
+    math: false
+    toc: true
+    readingTime: true
+    license:
+      enabled: true
+      default: Licensed under CC BY-NC-SA 4.0
+
+  comments:
+    enabled: true
+    provider: disqus
+
+    disqusjs:
+      shortname:
+      apiUrl:
+      apiKey:
+      admin:
+      adminLabel:
+
+    # Waline client configuration see: https://waline.js.org/en/reference/client.html
+    waline:
+      serverURL:
+      lang:
+      visitor:
+      avatar:
+      emoji:
+        - https://cdn.jsdelivr.net/gh/walinejs/emojis/weibo
+      requiredMeta:
+        - name
+        - email
+        - url
+      placeholder:
+      locale:
+        admin: Admin
+
+    twikoo:
+      envId:
+      region:
+      path:
+      lang:
+
+    giscus:
+      repo:
+      repoID:
+      category:
+      categoryID:
+      mapping:
+      lightTheme:
+      darkTheme:
+      reactionsEnabled: 1
+      emitMetadata: 0
+
+    gitalk:
+      owner:
+      admin:
+      repo:
+      clientID:
+      clientSecret:
+
+    cusdis:
+      host:
+      id:
+
+  widgets:
+    enabled:
+      - search
+      - archives
+      - tag-cloud
+
+    archives:
+      limit: 5
+
+    tagCloud:
+      limit: 10
+
+  opengraph:
+    twitter:
+      # Your Twitter username
+      site:
+
+      # Available values: summary, summary_large_image
+      card: summary_large_image
+
+  defaultImage:
+    opengraph:
+      enabled: false
+      local: false
+      src:
+
+  colorScheme:
+    # Display toggle
+    toggle: true
+
+    # Available values: auto, light, dark
+    default: dark
+
+  imageProcessing:
+    cover:
+      enabled: true
+    content:
+      enabled: true
+
+### Custom menu
+### See https://docs.stack.jimmycai.com/configuration/custom-menu.html
+### To remove about, archive and search page menu item, remove `menu` field from their FrontMatter
+menu:
+  main:
+    - identifier: home
+      name: Home
+      url: /
+      weight: -100
+      params:
+        newTab: false
+        icon: home
+
+    - identifier : archives
+      name : Archives
+      url : /archives
+      weight : -90
+      params:
+        newTab: false
+        icon: archives
+
+    - identifier : search
+      name : Search
+      url : /search
+      weight : -80
+      params:
+        newTab: false
+        icon: search
+
+    - identifier : dotfiles
+      name : Dotfiles
+      url : /search
+      weight : -70
+      params:
+        newTab: false
+        icon: user
+
+  social:
+    - identifier: github
+      name: GitHub
+      url: https://github.com/mnabila/
+      params:
+        icon: brand-github
+
+    - identifier: twitter
+      name: Twitter
+      url: https://twitter.com/mnabiladani
+      params:
+        icon: brand-twitter
+
+related:
+  includeNewer: true
+  threshold: 60
+  toLower: false
+  indices:
+    - name: tags
+      weight: 100
+
+    - name: categories
+      weight: 200
+
+markup:
+  goldmark:
+    renderer:
+      ## Set to true if you have HTML content inside Markdown
+      unsafe: false
+  tableOfContents:
+    endLevel: 4
+    ordered: true
+    startLevel: 2
+  highlight:
+    noClasses: false
+
+security:
+  enableInlineShortcodes: false
+  exec:
+    allow:
+      - ^dart-sass-embedded$
+      - ^go$
+      - ^npx$
+      - ^postcss$
+      - ^asciidoctor$
+    osEnv:
+      - (?i)^(PATH|PATHEXT|APPDATA|TMP|TEMP|TERM)$
+  funcs:
+    getenv:
+      - ^HUGO_
+  http:
+    methods:
+      - (?i)GET|POST
+    urls:
+      - .*
