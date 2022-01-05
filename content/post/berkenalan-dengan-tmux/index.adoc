@@ -61,8 +61,8 @@ set -g status-justify centre
 ## Right
 set -g status-right-length 40
 set -g status-right "#{prefix_highlight} #[fg=black,bg=yellow, bold]   #[fg=black,bg=white, bold] #(lsb_release -d | cut -f 2) "
-
 ----
+
 bonus untuk judul pada terminal yang dibuka
 
 [source, conf]
@@ -77,6 +77,13 @@ setw -g window-active-style "fg=brightwhite bg=black"
 
 == Hasil
 setelah potongan kode di atas ditambahkan kedalam `.tmux.conf` maka hasilnya akan seperti berikut ini.
-
 image:./img/hasil.png[tmux preview]
+ps: hasil ini diambil dari `terminal emulator` bukan dari tty langsung, kenapa ? aku ga tahu cara screenshot di tty gimana 🤣
 
+
+== Referensi
+* Tmux manpages(man tmux) Diakses pada: 2019-05-25
+
+* link:https://agung-setiawan.com/panduan-minimal-belajar-tmux/[panduan-minimal-belajar-tmux] Diakses pada: 2019-05-25
+
+* link:https://wiki.archlinux.org/index.php/tmux[Archwiki Tmux] Diakses pada: 2019-05-25
