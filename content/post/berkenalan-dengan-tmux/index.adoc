@@ -6,6 +6,8 @@ tags: ["tmux"]
 draft: true
 ---
 
+:toc:
+
 Tmux atau Terminal Multiplexer adalah sebuah terminal yang memungkinkan kita membuka banyak sesi terminal dalam satu window, sehingga dalam satu window ini pengguna memungkinkan untuk menjalankan banyak aplikasi sekaligus. Bagiku tmux ini sangat membantu apabila sedang berurusan dengan banyak aplikasi dalam sebuah  tty alias `the real true terminal` yang dimiliki oleh sistem operasi GNU/Linux 😆.
 
 == Permasalahan
