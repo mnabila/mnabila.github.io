@@ -67,4 +67,4 @@ image:./img/test.png[test konfigurasi]
   ** ada limitasi query perbulannya yakni 300k query jadi klok lebih dari itu perlu upgrade sayan
 
 == Referensi
-* https://github.com/nextdns/nextdns/wiki
+* https://github.com/nextdns/nextdns/wiki Diakses pada: 2020-11-08
