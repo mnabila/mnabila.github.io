@@ -40,7 +40,7 @@ params:
 
   sidebar:
     emoji: 😴
-    subtitle: 'media online yang dipergumanakan untuk mendokumentasi kegiatan belajar penulis'
+    subtitle: 'Catatan kecil yang dimiliki penulis'
     avatar:
       enabled: true
       local: false
@@ -64,50 +64,6 @@ params:
       apiKey:
       admin:
       adminLabel:
-
-    # Waline client configuration see: https://waline.js.org/en/reference/client.html
-    waline:
-      serverURL:
-      lang:
-      visitor:
-      avatar:
-      emoji:
-        - https://cdn.jsdelivr.net/gh/walinejs/emojis/weibo
-      requiredMeta:
-        - name
-        - email
-        - url
-      placeholder:
-      locale:
-        admin: Admin
-
-    twikoo:
-      envId:
-      region:
-      path:
-      lang:
-
-    giscus:
-      repo:
-      repoID:
-      category:
-      categoryID:
-      mapping:
-      lightTheme:
-      darkTheme:
-      reactionsEnabled: 1
-      emitMetadata: 0
-
-    gitalk:
-      owner:
-      admin:
-      repo:
-      clientID:
-      clientSecret:
-
-    cusdis:
-      host:
-      id:
 
   widgets:
     enabled:
