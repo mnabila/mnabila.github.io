@@ -3,7 +3,6 @@ title: "Berkenalan Dengan tmux"
 date: 2019-05-27T16:25:05+07:00
 categories: ["terminal", "application"]
 tags: ["tmux"]
-draft: true
 ---
 
 :toc:

@@ -3,7 +3,6 @@ title: "Implementasi Gnu Stow Untuk Management Dotfiles Di Archlinux"
 date: 2022-01-05T13:16:00+07:00
 categories: ["terminal", "application"]
 tags: ["stow"]
-draft: true
 ---
 
 :toc:
@@ -68,11 +67,13 @@ $ tree -a /home/$USER/Dotfiles/zathura
 Seperti yang sudah kusinggung di section sebelumnya yakni kuncinya terletak di struktur folder yang akan distow jadi isi dari folder packagenya mirip path yang akan dituju.
 
 Setelah folder package dibuat maka dilanjutkan dengan tahap instalasi si package zathura, pastikan posisi pwd berada di folder `stow directory`
+
 ----
 $ stow zathura
 ----
 
 maka hasilnya seperti dibawah ini 
+
 ----
 $ ls -l /home/$USER/.config | grep zathura
 lrwxrwxrwx   1 nabil users    35 Jan 23 2020 zathura -> ../Dotfiles/zathura/.config/zathura
