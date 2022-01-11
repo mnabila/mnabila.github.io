@@ -1,9 +1,8 @@
 ---
 title: "Lf Si File Manager Baruku"
 date: 2022-01-11T08:27:24+07:00
-categories: ["application"]
-tags: ["tui"]
-draft: true
+categories: ["terminal", "application"]
+tags: ["tui", "file manager"]
 ---
 
 :toc:
