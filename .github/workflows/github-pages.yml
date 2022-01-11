@@ -19,6 +19,9 @@ jobs:
         with:
           hugo-version: "latest"
 
+      - name: Install asciidocs
+        run: sudo apt install -y asciidoctor
+
       - name: Build
         run: hugo --minify
 

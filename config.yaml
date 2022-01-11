@@ -40,7 +40,7 @@ params:
 
   sidebar:
     emoji: 😴
-    subtitle: 'Catatan kecil yang dimiliki penulis'
+    subtitle: 'Catatan asbun si penulis'
     avatar:
       enabled: true
       local: false
@@ -96,7 +96,7 @@ params:
     toggle: true
 
     # Available values: auto, light, dark
-    default: dark
+    default: light
 
   imageProcessing:
     cover:
