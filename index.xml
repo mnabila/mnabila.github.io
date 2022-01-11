@@ -1,4 +1,286 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>mnabila</title><link>https://mnabila.github.io/</link><description>Recent content on mnabila</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Wed, 05 Jan 2022 13:16:00 +0700</lastBuildDate><atom:link href="https://mnabila.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>Implementasi Gnu Stow Untuk Management Dotfiles Di Archlinux</title><link>https://mnabila.github.io/p/implementasi-gnu-stow-untuk-management-dotfiles-di-archlinux/</link><pubDate>Wed, 05 Jan 2022 13:16:00 +0700</pubDate><guid>https://mnabila.github.io/p/implementasi-gnu-stow-untuk-management-dotfiles-di-archlinux/</guid><description>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>mnabila</title><link>https://mnabila.github.io/</link><description>Recent content on mnabila</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Tue, 11 Jan 2022 08:27:24 +0700</lastBuildDate><atom:link href="https://mnabila.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>Lf Si File Manager Baruku</title><link>https://mnabila.github.io/p/lf-si-file-manager-baruku/</link><pubDate>Tue, 11 Jan 2022 08:27:24 +0700</pubDate><guid>https://mnabila.github.io/p/lf-si-file-manager-baruku/</guid><description>
+&lt;div class="sect1">
+&lt;h2 id="_alasan_selingkuh">alasan selingkuh&lt;/h2>
+&lt;div class="sectionbody">
+&lt;div class="paragraph">
+&lt;p>Berawal dari temen sekarang jadi mantan, kalimat ini sepertinya cocok untuk menggambarkan pergantian file manager yang kugunakan saat ini. Sebelumnya aku menggunakan ranger untuk file manager utamaku, akan tetapi sewaktu menggunakan ranger aku sering mengalami hal-hal ghaib seperti file manager berhenti sendiri sewaktu copy file, cpu usage tiba-tiba naik 100% gara gara file previewer dan tak hanya itu terkadang si ranger ini agak males klok disuruh gerak cepet maunya ngajakin santai.&lt;/p>
+&lt;/div>
+&lt;div class="paragraph">
+&lt;p>Dikarenakan beberapa hal ghaib itu tiba-tiba setan dari pedalaman dotfiles menghantuiku untuk mencari selingkuhan baru, karna imanku tipis alhasilnya aku coba jalan jalan di gang github siapa tahu dapet gebetan baru dan bump dapet 2 calon (hiahiahia), calon pertama &lt;code>nnn&lt;/code> dan calon yang kedua adalah &lt;code>lf&lt;/code>.&lt;/p>
+&lt;/div>
+&lt;div class="paragraph">
+&lt;p>Sebelum memutuskan pilih yang mana, aku buatkan 3 kriteria meliputi User Interface(UI), File Konfigurasinya, dan Workflownya. Dari ketika kriteria ini lf adalah yang paling pas denganku karna dari UI dan workflownya lf cenderung mirip dengan ranger, sedangkan untuk file Konfigurasinya si lf ini cukup menarik jika dibandingkan ranger dan nnn.&lt;/p>
+&lt;/div>
+&lt;/div>
+&lt;/div>
+&lt;div class="sect1">
+&lt;h2 id="_kelebihan_adalah_kekurangan">Kelebihan adalah kekurangan&lt;/h2>
+&lt;div class="sectionbody">
+&lt;div class="paragraph">
+&lt;p>Kelebihannya banyak kekurangannya, yups tapi ini beneran bukan becandaan. Lf ini bisa kubilang file manager minimalist keduaku setelah si mc(midnight commander) jika dibandingkan dengan ranger yang kupakek. Karna secara default lf hanya menyediakan fitur alakadarnya saja ga ada yang magic yang membuatku tekesan. Tapi karna minimnya fitur yang disediakan oleh lf pengguna dibebaskan membuat fitur sendiri sesuai dengan yang mereka inginkan yang bisa dituliskan melalui file konfignya. Dibawah ini adalah beberapa gambaran kenapa aku pindah dari ranger ke lf&lt;/p>
+&lt;/div>
+&lt;table class="tableblock frame-all grid-all stretch">
+&lt;caption class="title">Table 1. Perbandingan lf dan ranger&lt;/caption>
+&lt;colgroup>
+&lt;col style="width: 50%;"/>
+&lt;col style="width: 50%;"/>
+&lt;/colgroup>
+&lt;thead>
+&lt;tr>
+&lt;th class="tableblock halign-left valign-top">Lf&lt;/th>
+&lt;th class="tableblock halign-left valign-top">Ranger&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td class="tableblock halign-left valign-top" colspan="2">&lt;p class="tableblock">&lt;strong>fitur&lt;/strong>&lt;/p>&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td class="tableblock halign-left valign-top">&lt;p class="tableblock">Fitur ? builtin fiturnya sedikit banget, tapi karna file konfignya bisa ditulis dengan shell script pengguna memungkinkan menambahkan fitur yang sesuai dengan keinginan pengguna.&lt;/p>&lt;/td>
+&lt;td class="tableblock halign-left valign-top">&lt;p class="tableblock">Jelas secara fitur ranger lebih lengkap daripada lf no debat, akan tetapi dibalik kelengkapan dari fitur ranger aku masih belum bisa memanfaatkan semua fiturnya. belum lagi si ranger ini juga bisa ditambahkan fitur baru oleh penggunanya yang ditulis dengan bahasa pemrograman python.&lt;/p>&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td class="tableblock halign-left valign-top" colspan="2">&lt;p class="tableblock">&lt;strong>konfig&lt;/strong>&lt;/p>&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td class="tableblock halign-left valign-top">&lt;p class="tableblock">default konfignya minimalist dan mudah dipahami, akan tetapi dibaliknya tedapat sesuatu yang tidak bisa diungkapkan dengan kata kata (haha)&lt;/p>&lt;/td>
+&lt;td class="tableblock halign-left valign-top">&lt;p class="tableblock">default konfignya mayan banyak dan agak membingungkan pemula jika ingin diutak atik lebih lanjut&lt;/p>&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td class="tableblock halign-left valign-top" colspan="2">&lt;p class="tableblock">&lt;strong>Performa&lt;/strong>&lt;/p>&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td class="tableblock halign-left valign-top">&lt;p class="tableblock">Secara performa lf lebih cepat dibandingkan ranger tapi aku ga berani bilang sangat cepat walaupun terasa ga sampe sedetik udah kebuka ini file manager 🤣. Tapi karna masi baru beberapa hari pakek aku belum bisa berkomentar banyak soal ini file manager (nanti akan diupdate jika sudah mulai muncul hal hal ghaib di lf)&lt;/p>&lt;/td>
+&lt;td class="tableblock halign-left valign-top">&lt;p class="tableblock">Performa dari ranger sendiri cukup cepat menurutku akan tetapi terkadang bisa sangat lambat apalagi klok ketemu removabledisk seperti flashdrive terkadang list file yang ditampilkan tidak sesua, walaupun sudah direstart sekalipun list filenya tidak terupdate (solusi buka tutup ranger)&lt;/p>&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td class="tableblock halign-left valign-top" colspan="2">&lt;p class="tableblock">&lt;strong>Kenyamana&lt;/strong>&lt;/p>&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td class="tableblock halign-left valign-top">&lt;p class="tableblock">Dari segi kenyamanan jelas lf diawal tidak nyaman sama sekali terutama untuk handle multiple file yang dibuka dalam satu instance, aku sendiri udah beberapa hari mencari pendekatan yang tepat untuk mengatasi masalah ini.&lt;/p>&lt;/td>
+&lt;td class="tableblock halign-left valign-top">&lt;p class="tableblock">Kenyaman di ranger udah ga perlu diragukan lagi buatku karna aku terjebak zona nyaman sama dia hampir 2 tahun lebih kayaknya aku pakek ini file manager.&lt;/p>&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td class="tableblock halign-left valign-top" colspan="2">&lt;p class="tableblock">&lt;strong>Tampilan&lt;/strong>&lt;/p>&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td class="tableblock halign-left valign-top" colspan="2">&lt;p class="tableblock">Kembar tapi tak sama, keduanya sama sama bagus. Akan tetapi untuk lf kurang informatif untuk proses memindahkan dan menyalin filenya (cuman muncul persentase dipojokan bukan bar mirip ranger)&lt;/p>&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;/div>
+&lt;/div>
+&lt;div class="sect1">
+&lt;h2 id="_konfigurasi">Konfigurasi&lt;/h2>
+&lt;div class="sectionbody">
+&lt;div class="paragraph">
+&lt;p>Seperti yang sudah kusinggung di intro, lf ini menggunakan shell scripting untuk file konfigurasinya. Penggunaan shell scripting ini menurutku suatu kelebihan tersendiri dikarenakan dengan shell scripting pengguna bisa bebas menambahkan command kedalam file manager ini. Untuk mendapatkan default file konfigurasi lf kalian bisa ambil &lt;a href="https://github.com/gokcehan/lf/blob/master/etc/lfrc.example">disini&lt;/a>.&lt;/p>
+&lt;/div>
+&lt;div class="paragraph">
+&lt;p>Dibawah ini adalah beberapa potongan konfigurasi yang aku gunakan, dikarenakan aku menganut paham konfig panjang wajib dimodularin maka aku pisah menjadi beberapa bagian meliputi options, keymap, command kemudian di source kedalam lfrc.&lt;/p>
+&lt;/div>
+&lt;div class="paragraph">
+&lt;p>&lt;strong>keymap&lt;/strong>&lt;/p>
+&lt;/div>
+&lt;div class="listingblock">
+&lt;div class="content">
+&lt;pre class="highlight">&lt;code class="language-sh" data-lang="sh">#!/bin/sh
+map f fzf_select
+map D delete
+map x %dragon -a -x $fx 2&amp;amp;&amp;gt; /dev/null &amp;amp;
+map R reload
+# removable disk
+map &amp;lt;f-12&amp;gt;u %udiskie-umount &amp;#34;$fx&amp;#34;
+map &amp;lt;f-12&amp;gt;d %udiskie-umount &amp;#34;$fx&amp;#34; --force --detach
+map &amp;lt;f-12&amp;gt;e %udiskie-umount &amp;#34;$fx&amp;#34; --force --eject
+map &amp;lt;f-12&amp;gt;l %udiskie-umount &amp;#34;$fx&amp;#34; --lock
+# iso file
+map &amp;lt;f-11&amp;gt;m %udisksctl loop-setup --file &amp;#34;$f&amp;#34;
+map &amp;lt;f-11&amp;gt;u %dmenu_iso &amp;amp;
+map &amp;lt;f-11&amp;gt;c %dir2iso &amp;#34;$f&amp;#34;
+# Directory
+map gi cd /run/media/
+map gm cd /mnt/
+# split window
+map &amp;lt;a-H&amp;gt; %tmux split -hb lf
+map &amp;lt;a-J&amp;gt; %tmux split lf
+map &amp;lt;a-K&amp;gt; %tmux split -vb lf
+map &amp;lt;a-L&amp;gt; %tmux split -h lf
+# select window
+map &amp;lt;a-h&amp;gt; %tmux select-pane -L
+map &amp;lt;a-j&amp;gt; %tmux select-pane -D
+map &amp;lt;a-k&amp;gt; %tmux select-pane -U
+map &amp;lt;a-l&amp;gt; %tmux select-pane -R
+# file archive
+map ae extract
+map aa archive&lt;/code>&lt;/pre>
+&lt;/div>
+&lt;/div>
+&lt;div class="paragraph">
+&lt;p>&lt;strong>command&lt;/strong>&lt;/p>
+&lt;/div>
+&lt;div class="listingblock">
+&lt;div class="content">
+&lt;pre class="highlight">&lt;code class="language-sh" data-lang="sh">#!/bin/sh
+cmd open ${{
+case $(file --mime-type &amp;#34;$f&amp;#34; -bL) in
+text/*) $EDITOR &amp;#34;$fx&amp;#34; ;;
+image/*) sxiv &amp;#34;$fx&amp;#34; 2&amp;amp;&amp;gt;/dev/null &amp;amp;;;
+application/x-iso9660-image) udisksctl loop-setup --file &amp;#34;$f&amp;#34;;;
+application/x-executable) lf -remote &amp;#34;send $id echo $id&amp;#34;;;
+*) xdg-open &amp;#34;$f&amp;#34; &amp;amp;&amp;gt;/dev/null &amp;amp; ;;
+esac
+}}
+# compress current file or selected files with tar and gunzip
+cmd tar ${{
+set -f
+mkdir $1
+cp -r $fx $1
+tar czf $1.tar.gz $1
+rm -rf $1
+}}
+# compress current file or selected files with zip
+cmd zip ${{
+set -f
+mkdir $1
+cp -r $fx $1
+zip -r $1.zip $1
+rm -rf $1
+}}
+# extract current file or selected files
+cmd extract ${{
+set -f
+case $f in
+*.tar.bz|*.tar.bz2|*.tbz|*.tbz2|*.tar.gz|*.tgz|*.tar.xz|*.txz|*.zip|*.rar|*.7z) atool --extract --each &amp;#34;$fx&amp;#34;;;
+esac
+}}
+cmd mkdir ${{
+printf &amp;#34;Directory Name: &amp;#34;
+read name
+if [ ! -z &amp;#34;$name&amp;#34; ]; then
+mkdir &amp;#34;$name&amp;#34;
+fi
+}}
+cmd mkfile ${{
+printf &amp;#34;File Name: &amp;#34;
+read name
+if [ ! -z &amp;#34;$name&amp;#34; ]; then
+$EDITOR &amp;#34;$name&amp;#34;
+fi
+}}
+cmd bulkrename ${{
+old=&amp;#34;$(mktemp)&amp;#34;
+new=&amp;#34;$(mktemp)&amp;#34;
+[ -n &amp;#34;$fs&amp;#34; ] &amp;amp;&amp;amp; fs=&amp;#34;$(ls)&amp;#34;
+printf &amp;#39;%s\n&amp;#39; &amp;#34;$fs&amp;#34; &amp;gt;&amp;#34;$old&amp;#34;
+printf &amp;#39;%s\n&amp;#39; &amp;#34;$fs&amp;#34; &amp;gt;&amp;#34;$new&amp;#34;
+$EDITOR &amp;#34;$new&amp;#34;
+[ &amp;#34;$(wc -l &amp;lt; &amp;#34;$new&amp;#34;)&amp;#34; -ne &amp;#34;$(wc -l &amp;lt; &amp;#34;$old&amp;#34;)&amp;#34; ] &amp;amp;&amp;amp; exit
+paste &amp;#34;$old&amp;#34; &amp;#34;$new&amp;#34; | while IFS= read -r names; do
+src=&amp;#34;$(printf &amp;#39;%s&amp;#39; &amp;#34;$names&amp;#34; | cut -f1)&amp;#34;
+dst=&amp;#34;$(printf &amp;#39;%s&amp;#39; &amp;#34;$names&amp;#34; | cut -f2)&amp;#34;
+if [ &amp;#34;$src&amp;#34; = &amp;#34;$dst&amp;#34; ] || [ -e &amp;#34;$dst&amp;#34; ]; then
+continue
+fi
+mv -- &amp;#34;$src&amp;#34; &amp;#34;$dst&amp;#34;
+done
+rm -- &amp;#34;$old&amp;#34; &amp;#34;$new&amp;#34;
+lf -remote &amp;#34;send $id unselect&amp;#34;
+}}
+cmd fzf_select ${{
+res=&amp;#34;$(find -L . \( -path &amp;#39;*/\.*&amp;#39; -o -fstype &amp;#39;dev&amp;#39; -o -fstype &amp;#39;proc&amp;#39; \) -prune -o -print 2&amp;gt; /dev/null | sed 1d | cut -b3- | fzf +m)&amp;#34;
+if [ -d &amp;#34;$res&amp;#34; ]; then
+cmd=&amp;#34;cd&amp;#34;
+else
+cmd=&amp;#34;select&amp;#34;
+fi
+lf -remote &amp;#34;send $id $cmd \&amp;#34;$res\&amp;#34;&amp;#34;
+}}
+cmd yank2clipboard ${{
+xclip -selection clipboard -i &amp;#34;$f&amp;#34; -t $(file --mime-type &amp;#34;$f&amp;#34; | cut -d &amp;#34;:&amp;#34; -f 2 | xargs)
+}}
+cmd recoll ${{
+w=$(tput cols)
+if [ $w -le 80 ]; then
+lf -remote &amp;#34;send $id set ratios 1:2&amp;#34;
+elif [ $w -le 160 ]; then
+lf -remote &amp;#34;send $id set ratios 1:2:3&amp;#34;
+else
+lf -remote &amp;#34;send $id set ratios 1:2:3:5&amp;#34;
+fi
+}}&lt;/code>&lt;/pre>
+&lt;/div>
+&lt;/div>
+&lt;div class="paragraph">
+&lt;p>&lt;strong>options&lt;/strong>&lt;/p>
+&lt;/div>
+&lt;div class="listingblock">
+&lt;div class="content">
+&lt;pre class="highlight">&lt;code class="language-sh" data-lang="sh">#!/bin/sh
+set ignorecase true
+set icons
+set ratios 1:3:2
+set previewer mediainfo&lt;/code>&lt;/pre>
+&lt;/div>
+&lt;/div>
+&lt;div class="paragraph">
+&lt;p>&lt;strong>lfrc&lt;/strong>&lt;/p>
+&lt;/div>
+&lt;div class="listingblock">
+&lt;div class="content">
+&lt;pre class="highlight">&lt;code class="language-sh" data-lang="sh">#!/bin/sh
+# source another config
+source ~/.config/lf/config.d/options
+source ~/.config/lf/config.d/keymap
+source ~/.config/lf/config.d/command&lt;/code>&lt;/pre>
+&lt;/div>
+&lt;/div>
+&lt;/div>
+&lt;/div>
+&lt;div class="sect1">
+&lt;h2 id="_apakah_ranger_akan_ditinggalkan">Apakah ranger akan ditinggalkan ?&lt;/h2>
+&lt;div class="sectionbody">
+&lt;div class="paragraph">
+&lt;p>Ya enggak dong walaupun udah mantan, tapi kita harus tetep menjaga silaturahmi. Saat ini si ranger kumanfaatkan sebagai file manager keduaku siapa tahu nanti bakalan CLBK lagi (hiahiahia). Selain dimanfaatkan sebagai file manager kedua, ranger juga kumanfaatkan sebagai file chooser untuk qutebrowserku dan file picker untuk neomuttku karna di lf sendiri fitur ini masih belum ada.&lt;/p>
+&lt;/div>
+&lt;/div>
+&lt;/div>
+&lt;div class="sect1">
+&lt;h2 id="_preview_lf">Preview lf&lt;/h2>
+&lt;div class="sectionbody">
+&lt;div class="videoblock">
+&lt;div class="content">
+&lt;video src="./video/video-220111-2106-00.mp4" width="700" controls="">
+Your browser does not support the video tag.
+&lt;/video>
+&lt;/div>
+&lt;/div>
+&lt;div class="paragraph">
+&lt;p>Dikarenakan lf tidak mengusung fitur tabnya si ranger jadi kita memerlukan tmux untuk bermanufer seperti diatas.&lt;/p>
+&lt;/div>
+&lt;/div>
+&lt;/div>
+&lt;div class="sect1">
+&lt;h2 id="_kesimpulan">Kesimpulan&lt;/h2>
+&lt;div class="sectionbody">
+&lt;div class="paragraph">
+&lt;p>Lf si file manager yang penuh dengan kejutan, banyak fitur yang belum tersedia jadi pengguna dipaksa membuat fitur sendiri sesuai dengan keinginannya.
+Lf ini cocok buat mereka yang suka tantangan dan memiliki pemikiran yang kreatif seperti penulis 🤣.&lt;/p>
+&lt;/div>
+&lt;/div>
+&lt;/div>
+&lt;div class="sect1">
+&lt;h2 id="_referensi">Referensi&lt;/h2>
+&lt;div class="sectionbody">
+&lt;div class="ulist">
+&lt;ul>
+&lt;li>
+&lt;p>&lt;a href="https://github.com/gokcehan/lf/wiki">LF wiki&lt;/a> Diakses pada 2022-01-11&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;/div>
+&lt;/div>
+&lt;/div></description></item><item><title>Implementasi Gnu Stow Untuk Management Dotfiles Di Archlinux</title><link>https://mnabila.github.io/p/implementasi-gnu-stow-untuk-management-dotfiles-di-archlinux/</link><pubDate>Wed, 05 Jan 2022 13:16:00 +0700</pubDate><guid>https://mnabila.github.io/p/implementasi-gnu-stow-untuk-management-dotfiles-di-archlinux/</guid><description>
 &lt;div class="sect1">
 &lt;h2 id="_curhat_sebentar">curhat sebentar&lt;/h2>
 &lt;div class="sectionbody">
