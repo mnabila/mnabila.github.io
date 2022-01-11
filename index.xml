@@ -1,94 +1,475 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>mnabila</title><link>https://mnabila.github.io/</link><description>Recent content on mnabila</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Sun, 08 Nov 2020 11:29:06 +0700</lastBuildDate><atom:link href="https://mnabila.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>Konfigurasi Nextdns Menggunakan Dnscrypt-Proxy Di Archlinux</title><link>https://mnabila.github.io/p/konfigurasi-nextdns-menggunakan-dnscrypt-proxy-di-archlinux/</link><pubDate>Sun, 08 Nov 2020 11:29:06 +0700</pubDate><guid>https://mnabila.github.io/p/konfigurasi-nextdns-menggunakan-dnscrypt-proxy-di-archlinux/</guid><description>&lt;h1 id="intro">Intro&lt;/h1>
-&lt;p>Sebelum berpindah ke nextdns, saya sebenernya pengguna dnscrypt-proxy akan tetapi karna di nextdns ada fitur yang menurut saya menarik alhasil saya bermigrasi ke nextdns client.&lt;/p>
-&lt;p>Nah disisilain saya memiliki 2 aplikasi yang memiliki fungsi sama tapi mau uninstall dnscrypt-proxy kok masih sayang, mengingat protocol dnscrypt lebih aman dibandingkan protocol yang digunakan di nextdns-client yang mana di nextdns-client ini mengggunakan protocol DOT(Dns Over TLS). Karna hal itu saya jadi kepikiran bagaimana cara mengimplementasikan si nextdns ini kedalam dnscrypt-proxy.&lt;/p>
-&lt;blockquote>
-&lt;p>untuk penjelasan lebih lanjut mengenai protocol dnscrypt sama DOT temen temen bisa baca disini &lt;a class="link" href="https://dnscrypt.info/faq" target="_blank" rel="noopener"
->https://dnscrypt.info&lt;/a>&lt;/p>
-&lt;/blockquote>
-&lt;h1 id="pembahasan">Pembahasan&lt;/h1>
-&lt;p>Sebelum ke pembahasan utama, sepertinya saya perlu mengulas sedikit mengenai dnscrypt yang akan saya gunakan. Dnscrypt merupakan sebuah protocol yang digunakan untuk mengautentikasi komunikasi antara &lt;code>dns client&lt;/code> menuju &lt;code>dns resolver&lt;/code> yang bertujuan untuk menghindari terjadinya &lt;code>dns spoofing&lt;/code>.&lt;/p>
-&lt;p>Ketika &lt;code>dns client&lt;/code> mengirimkan request ke &lt;code>dns resolver&lt;/code>, dnscrypt ini mengenkripsi data yang dikirimkan baik dari &lt;code>dns client&lt;/code> maupun dari &lt;code>dns resolver&lt;/code> sehingga data yang diterima oleh &lt;code>dns client&lt;/code> tidak dapat dirubah oleh pihak pihak yang tidak bertanggung jawab.&lt;/p>
-&lt;p>nah begitulan sedikit penjelasan mengenai protocol dnscrypt ini, selanjutnya adalah pembahasan mengenai aplikasi dnscrypt-proxy&lt;/p>
-&lt;h2 id="implementasi-nextdns-kedalam-konfigurasi-dnscrypt-proxy">implementasi nextdns kedalam konfigurasi dnscrypt-proxy&lt;/h2>
-&lt;p>langkah pertama yang jelas adalah kita harus punya akun nextdns.io terbelih dahulu, baru dilanjut melakukan instalasi dnscrypt-proxy, instalasi dnscrypt-proxy ini cukup mudah yakni dengan perintah seperti dibawah ini&lt;/p>
-&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-bash" data-lang="bash">$ yay -S dnscrypt-proxy
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>setelah instalasi selesai maka ubah konfigurasi dnscrypt-proxy yang ada di &lt;code>/etc/dnscrypt-proxy/dnscrypt-proxy.toml&lt;/code> menggunakan teks editor kesayangan kalian. disini saya menggunakan teks editor &lt;code>neovim&lt;/code> yang dipanggil melalui perintah &lt;code>sudoedit&lt;/code>. sampai sini kita akan menambahkan private dns resolver yang kita dapatkan dari nextdns,&lt;/p>
-&lt;p>untuk mendapatkan private dns resolvernya temen temen bisa muka &lt;a class="link" href="https://my.nextdns.io/" target="_blank" rel="noopener"
->https://my.nextdns.io/&lt;/a> kemudian masuk bagian setup dan scroll kebawah sampai ketemu bagian ini.
-&lt;img src="./mynextdns-setup-dnscrypt.png" alt="my nextdns setup dnscrypt" />&lt;/p>
-&lt;p>setelah mendapatkan private dns resolvernya temen temen bisa mengimplementasikan seperti gambar di bawah ini.
-&lt;img src="./dnscrypt-servername.png" alt="dnscrypt-proxy.toml" />
-&lt;img src="./dnscrypt-static.png" alt="dnscrypt-proxy.toml" />&lt;/p>
-&lt;p>setelah private dns resolvernya ditambahkan langkah terakhir tinggal melakukan restart service dnscrypt-proxynya dengan perintah&lt;/p>
-&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-bash" data-lang="bash">$ sudo systemctl restart dnscrypt-proxy
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>Pada tahap ini pastikan dnscrypt-proxynya sudah berjalan atau belum menggunakan perintah dibawah ini&lt;/p>
-&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-bash" data-lang="bash">$ sudo systemctl status dnscrypt-proxy
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;img src="./dnscrypt-service.png" alt="status dnscrypt-proxy" />&lt;/p>
-&lt;p>Selanjutnya bukanetwork manager yang kalian gunakan sebagai contoh saya disini menggunakan &lt;strong>NetworkManager&lt;/strong>. kemudian masukkan &lt;code>127.0.0.1&lt;/code> dibagian dns server dan search domainnya.&lt;/p>
-&lt;p>&lt;img src="./networkmanager.png" alt="network manager" />&lt;/p>
-&lt;p>alternative lainnya kalian bisa langsung mengubah file yang ada di &lt;code>/etc/resolv.conf&lt;/code> dan ubah alamat ip dnsnya menjadi &lt;code>127.0.0.1&lt;/code>&lt;/p>
-&lt;p>langkah terakhir test ping ke salah satu domain
-&lt;img src="./test.png" alt="test konfigurasi" />&lt;/p>
-&lt;h1 id="kesimpulan">Kesimpulan&lt;/h1>
-&lt;p>ternyata si nextdns ini juga menyedian sebuah dns resolver yang menggunakan protocol dnscript untuk berkomunikasi dengan dns client, sehingga user mendapatkan pelayanan yang lebih baik lagi.&lt;/p>
-&lt;blockquote>
-&lt;p>Referensi&lt;/p>
-&lt;ul>
-&lt;li>&lt;a class="link" href="https://www.dnscrypt.org/" target="_blank" rel="noopener"
->https://www.dnscrypt.org/&lt;/a>&lt;/li>
-&lt;/ul>
-&lt;/blockquote></description></item><item><title>Konfigurasi Nextdns Client Di Archlinux</title><link>https://mnabila.github.io/p/konfigurasi-nextdns-client-di-archlinux/</link><pubDate>Sun, 08 Nov 2020 11:26:13 +0700</pubDate><guid>https://mnabila.github.io/p/konfigurasi-nextdns-client-di-archlinux/</guid><description>&lt;h1 id="intro">Intro&lt;/h1>
-&lt;p>Nextdns merupakan sebuah startup atau perusahaan yang berkerja dibidang penyedia layanan firewall yang bertujuan untuk meningkatkan keamanan pengguna ketika berselancari di internet.
-Nextdns melindungi penggunanya dari berbagai masalah keamanan seperti memblokir iklan yang mengganggu, memblokir pelacakan dari situs yang sedang dikunjunginya dan masih banyak lagi.&lt;/p>
-&lt;h1 id="pembahasan">Pembahasan&lt;/h1>
-&lt;p>Pada kesempatakn kali ini saya mencoba mengimplementasikan nextdns pada archlinuxku sebagai alternativenya si dnscrypt yang kupakek sekarang.
-Untuk installasinya cukup mudah yakni tinggal copas perintah dibawah ini, tapi jangan lupa bikin akun dulu di &lt;a class="link" href="https://nextdns.io" target="_blank" rel="noopener"
->https://nextdns.io&lt;/a>&lt;/p>
-&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-bash" data-lang="bash">$ yay -S nextdns
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;img src="./instalasi.png" alt="yay -S nextdns" />&lt;/p>
-&lt;p>setelah installasi selesai maka dilanjutkan dengan mengaktifkan service nextdnsnya dan jangan lupa pastikan nextdns sudah beneran berjalan atau belum.&lt;/p>
-&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-bash" data-lang="bash">$ sudo systemctl start mextdns
-$ sudo systemctl status mextdns
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;img src="./nextdns-status.png" alt="sudo systemctl status mextdns" />&lt;/p>
-&lt;p>Belum selesai sampai sini jadi perlu lanjut lagi ketahap berikutnya yakni memasukkan nextdns idnya, langkah langkahnya sebagai berikut ini&lt;/p>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>mnabila</title><link>https://mnabila.github.io/</link><description>Recent content on mnabila</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Wed, 05 Jan 2022 13:16:00 +0700</lastBuildDate><atom:link href="https://mnabila.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>Implementasi Gnu Stow Untuk Management Dotfiles Di Archlinux</title><link>https://mnabila.github.io/p/implementasi-gnu-stow-untuk-management-dotfiles-di-archlinux/</link><pubDate>Wed, 05 Jan 2022 13:16:00 +0700</pubDate><guid>https://mnabila.github.io/p/implementasi-gnu-stow-untuk-management-dotfiles-di-archlinux/</guid><description>
+&lt;div class="sect1">
+&lt;h2 id="_curhat_sebentar">curhat sebentar&lt;/h2>
+&lt;div class="sectionbody">
+&lt;div class="paragraph">
+&lt;p>Sebenernya sudah lama ingin membahas ini topik, tapi karna aku sendirinya males nulis baru sekarang bisa tereksekusi, ya bisa dibilang ini topik mangkrak hampir 2 tahun 🤣 eh genap 2 tahun kayaknya karna dari tahun 2020 sampe 2022. curhatnya segini aja ga usah panjang panjang langsung ke point utamanya aja lah males nulis akunya.&lt;/p>
+&lt;/div>
+&lt;/div>
+&lt;/div>
+&lt;div class="sect1">
+&lt;h2 id="_apa_sih_gnustow_itu">Apa sih GNU/Stow itu ?&lt;/h2>
+&lt;div class="sectionbody">
+&lt;div class="paragraph">
+&lt;p>GNU/Stow atau mungkin yang dikenal sebagai stow oleh kawan-kawan perias desktop, merupakan sebuah symlink farm manager atau lebih mudah dipahami dengan symlink manager sehingga pengguna tidak direpotkan lagi mengetikkan semua pathnya apabila ingin melakukan symlink dari folder asal ke folder tujuan.&lt;/p>
+&lt;/div>
+&lt;div class="paragraph">
+&lt;p>Pada dasarnya stow diperuntukkan memanagement berkas dalam paket aplikasi namun tidak menutup kemungkinan stow ini digunakan untuk tujuan lain seperti memfasilitasi pengelolaan file konfigurasi yang ada di directori home pengguna, terutama jika digabungkan dengan &lt;code>version control system(vcs)&lt;/code> seperti git atau yang lainnya.&lt;/p>
+&lt;/div>
+&lt;div class="paragraph">
+&lt;p>Berdasarkan pengalamanku pakek stow yang dikombinasikan dengan git subtree untuk memanagement &lt;a href="https://github.com/mnabila/dotfiles">dotfiles&lt;/a> bener bener nyaman jika dibandingkan tanpa stow, karna aku tidak perlu lagi memindahkan konfig dari folder &lt;code>~/.config&lt;/code> ke folder dotfiles lagi.&lt;/p>
+&lt;/div>
+&lt;/div>
+&lt;/div>
+&lt;div class="sect1">
+&lt;h2 id="_bagaimaa_sih_cara_kerja_gnustow_itu">Bagaimaa sih cara kerja GNU/stow itu ?&lt;/h2>
+&lt;div class="sectionbody">
+&lt;div class="paragraph">
+&lt;p>Cara kerja dari stow sendiri sebenernya cukup sederhana yakni stow akan membuatkan symlink file/folder secara dinamis jadi pengguna tidak perlu lagi mengetikkan sumber dan tujuan dari file yang akan dibuatkan symlinknya. Kunci untuk memahami cara kerja dari stow yakni terletak pada &lt;strong>struktur directory&lt;/strong> yang ada dalam sumber tersebut.&lt;/p>
+&lt;/div>
+&lt;/div>
+&lt;/div>
+&lt;div class="sect1">
+&lt;h2 id="_implementasi">Implementasi&lt;/h2>
+&lt;div class="sectionbody">
+&lt;div class="paragraph">
+&lt;p>Sebelum mencoba mengimplementasikan si stow ini, perlu tahu terlebih dahulu mengenai &lt;strong>package&lt;/strong>, &lt;strong>target directory&lt;/strong> dan &lt;strong>stow directory&lt;/strong>.&lt;/p>
+&lt;/div>
+&lt;table class="tableblock frame-all grid-all stretch">
+&lt;colgroup>
+&lt;col style="width: 20%;"/>
+&lt;col style="width: 80%;"/>
+&lt;/colgroup>
+&lt;tbody>
+&lt;tr>
+&lt;td class="tableblock halign-left valign-top">&lt;p class="tableblock">Item&lt;/p>&lt;/td>
+&lt;td class="tableblock halign-left valign-top">&lt;p class="tableblock">Value&lt;/p>&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td class="tableblock halign-left valign-top">&lt;p class="tableblock">&lt;strong>package&lt;/strong>&lt;/p>&lt;/td>
+&lt;td class="tableblock halign-left valign-top">&lt;p class="tableblock">merupakan sekumpulan folder atau file yang akan dikelola atau diiinstal ketika stow dijalankan.&lt;/p>&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td class="tableblock halign-left valign-top">&lt;p class="tableblock">&lt;strong>target directory&lt;/strong>&lt;/p>&lt;/td>
+&lt;td class="tableblock halign-left valign-top">&lt;p class="tableblock">merupakan folder tujuan dimana si &lt;code>package&lt;/code> akan diinstall, biasanya letak &lt;code>target directory&lt;/code> ini adalah parent dirnya &lt;code>stow directory&lt;/code>.&lt;/p>&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td class="tableblock halign-left valign-top">&lt;p class="tableblock">&lt;strong>stow directory&lt;/strong>&lt;/p>&lt;/td>
+&lt;td class="tableblock halign-left valign-top">&lt;p class="tableblock">merupakan root direktori yang berisikan paket-paket yang nanti akan diinstall menggunakan stow.&lt;/p>&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;div class="sect2">
+&lt;h3 id="_contoh_implementasi">Contoh Implementasi&lt;/h3>
+&lt;div class="paragraph">
+&lt;p>Folder dotfiles berada di &lt;code>/home/$USER/Dotfiles&lt;/code> sedangkan folder confignya berada di &lt;code>/home/$USER/.config/zathura&lt;/code>, jadi bisa kita definisikan seperti dibawah ini.&lt;/p>
+&lt;/div>
+&lt;table class="tableblock frame-all grid-all stretch">
+&lt;colgroup>
+&lt;col style="width: 20%;"/>
+&lt;col style="width: 80%;"/>
+&lt;/colgroup>
+&lt;tbody>
+&lt;tr>
+&lt;td class="tableblock halign-left valign-top">&lt;p class="tableblock">&lt;strong>package&lt;/strong>&lt;/p>&lt;/td>
+&lt;td class="tableblock halign-left valign-top">&lt;p class="tableblock">zathura&lt;/p>&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td class="tableblock halign-left valign-top">&lt;p class="tableblock">&lt;strong>struktur package&lt;/strong>&lt;/p>&lt;/td>
+&lt;td class="tableblock halign-left valign-top">&lt;p class="tableblock">zathura/.config/zathura&lt;/p>&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td class="tableblock halign-left valign-top">&lt;p class="tableblock">&lt;strong>target directory&lt;/strong>&lt;/p>&lt;/td>
+&lt;td class="tableblock halign-left valign-top">&lt;p class="tableblock">/home/$USER&lt;/p>&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td class="tableblock halign-left valign-top">&lt;p class="tableblock">&lt;strong>stow directory&lt;/strong>&lt;/p>&lt;/td>
+&lt;td class="tableblock halign-left valign-top">&lt;p class="tableblock">/home/$USER/Dotfiles&lt;/p>&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;div class="paragraph">
+&lt;p>jadi struktur folder packagenya adalah sebagai berikut ini.&lt;/p>
+&lt;/div>
+&lt;div class="listingblock">
+&lt;div class="content">
+&lt;pre>$ tree -a /home/$USER/Dotfiles/zathura
+/home/nabil/Dotfiles/zathura/
+└── .config
+└── zathura
+└── zathurarc (ini file confignya)
+2 directories, 1 file&lt;/pre>
+&lt;/div>
+&lt;/div>
+&lt;div class="paragraph">
+&lt;p>Seperti yang sudah kusinggung di section sebelumnya yakni kuncinya terletak di struktur folder yang akan distow jadi isi dari folder packagenya mirip path yang akan dituju.&lt;/p>
+&lt;/div>
+&lt;div class="paragraph">
+&lt;p>Setelah folder package dibuat maka dilanjutkan dengan tahap instalasi si package zathura, pastikan posisi pwd berada di folder &lt;code>stow directory&lt;/code>&lt;/p>
+&lt;/div>
+&lt;div class="listingblock">
+&lt;div class="content">
+&lt;pre>$ stow zathura&lt;/pre>
+&lt;/div>
+&lt;/div>
+&lt;div class="paragraph">
+&lt;p>maka hasilnya seperti dibawah ini&lt;/p>
+&lt;/div>
+&lt;div class="listingblock">
+&lt;div class="content">
+&lt;pre>$ ls -l /home/$USER/.config | grep zathura
+lrwxrwxrwx 1 nabil users 35 Jan 23 2020 zathura -&amp;gt; ../Dotfiles/zathura/.config/zathura&lt;/pre>
+&lt;/div>
+&lt;/div>
+&lt;div class="paragraph">
+&lt;p>Tapi bagaimana jika package ingin diinstall target instalasinya berbeda contoh &lt;code>/etc/&lt;/code> sedangkan folder dotfilesnya berada di &lt;code>/home/$USER/Dotfiles&lt;/code> ?&lt;/p>
+&lt;/div>
+&lt;div class="paragraph">
+&lt;p>jadi bisa kita definisikan seperti dibawah ini.&lt;/p>
+&lt;/div>
+&lt;table class="tableblock frame-all grid-all stretch">
+&lt;colgroup>
+&lt;col style="width: 20%;"/>
+&lt;col style="width: 80%;"/>
+&lt;/colgroup>
+&lt;tbody>
+&lt;tr>
+&lt;td class="tableblock halign-left valign-top">&lt;p class="tableblock">&lt;strong>package&lt;/strong>&lt;/p>&lt;/td>
+&lt;td class="tableblock halign-left valign-top">&lt;p class="tableblock">mkinitcpio&lt;/p>&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td class="tableblock halign-left valign-top">&lt;p class="tableblock">&lt;strong>struktur package&lt;/strong>&lt;/p>&lt;/td>
+&lt;td class="tableblock halign-left valign-top">&lt;p class="tableblock">mkinitcpio/etc&lt;/p>&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td class="tableblock halign-left valign-top">&lt;p class="tableblock">&lt;strong>target directory&lt;/strong>&lt;/p>&lt;/td>
+&lt;td class="tableblock halign-left valign-top">&lt;p class="tableblock">/(root)&lt;/p>&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td class="tableblock halign-left valign-top">&lt;p class="tableblock">&lt;strong>stow directory&lt;/strong>&lt;/p>&lt;/td>
+&lt;td class="tableblock halign-left valign-top">&lt;p class="tableblock">/home/$USER/Dotfiles&lt;/p>&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;div class="paragraph">
+&lt;p>Kenapa target directorynya berada di &lt;code>/(root)&lt;/code> bukan mengarah ke &lt;code>/etc&lt;/code> ?
+Sebenernya bisa saja mengarah ke /etc akan tetapi terkadang kita lupa ini paket mengarah kemana maka dari itu minimal dikasi 1 subfolder dalam paket tersebut agar pengguna nanti tahu arah installasinya kemana.&lt;/p>
+&lt;/div>
+&lt;div class="paragraph">
+&lt;p>dibawah ini contoh struktur dari paket mkinitcpio&lt;/p>
+&lt;/div>
+&lt;div class="listingblock">
+&lt;div class="content">
+&lt;pre>❯ tree -a /home/$USER/Dotfiles/mkinitcpio/
+/home/nabil/Dotfiles/mkinitcpio/
+└── etc
+└── mkinitcpio.conf
+1 directory, 1 file&lt;/pre>
+&lt;/div>
+&lt;/div>
+&lt;div class="paragraph">
+&lt;p>Jika target instalasinya berbeda dengan target directory kita cukup memainkan parameter &lt;code>-t&lt;/code> yakni untuk mengubah target directorynya.&lt;/p>
+&lt;/div>
+&lt;div class="listingblock">
+&lt;div class="content">
+&lt;pre>$ sudo stow -t / mkinitcpio&lt;/pre>
+&lt;/div>
+&lt;/div>
+&lt;div class="paragraph">
+&lt;p>maka hasilnya seperti dibawah ini&lt;/p>
+&lt;/div>
+&lt;div class="listingblock">
+&lt;div class="content">
+&lt;pre>❯ ls -l /etc/ | grep mkinitcpio
+lrwxrwxrwx 1 root root 53 Jan 28 2020 mkinitcpio.conf -&amp;gt; ../home/nabil/Dotfiles/mkinitcpio/etc/mkinitcpio.conf
+-rw-r--r-- 1 root root 2510 Des 3 17:11 mkinitcpio.conf.pacnew
+drwxr-xr-x 2 root root 4096 Des 28 12:26 mkinitcpio.d&lt;/pre>
+&lt;/div>
+&lt;/div>
+&lt;/div>
+&lt;/div>
+&lt;/div>
+&lt;div class="sect1">
+&lt;h2 id="_kesimpulan">Kesimpulan&lt;/h2>
+&lt;div class="sectionbody">
+&lt;div class="paragraph">
+&lt;p>Dengan adanya GNU/Stow ini pengguna sedikit terbantu karna tidak perlu lagi copy manual config dari folder dotfiles ke folder configurasi yang ada.&lt;/p>
+&lt;/div>
+&lt;/div>
+&lt;/div>
+&lt;div class="sect1">
+&lt;h2 id="_referensi">Referensi&lt;/h2>
+&lt;div class="sectionbody">
+&lt;div class="ulist">
 &lt;ul>
 &lt;li>
-&lt;p>sekarang buka &lt;a class="link" href="https://my.nextdns.io" target="_blank" rel="noopener"
->my.nextdns.io&lt;/a> lalu salin nextdns idnya (lihat gambar biar lebih jelas)
-&lt;img src="./mynextdns.png" alt="my.nextdns.io dashboard" />&lt;/p>
+&lt;p>manpage stow(man stow) Diakses pada: 2021-01-06&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;/div>
+&lt;/div>
+&lt;/div></description></item><item><title>Konfigurasi Nextdns Client Di Archlinux</title><link>https://mnabila.github.io/p/konfigurasi-nextdns-client-di-archlinux/</link><pubDate>Sun, 08 Nov 2020 11:26:13 +0700</pubDate><guid>https://mnabila.github.io/p/konfigurasi-nextdns-client-di-archlinux/</guid><description>
+&lt;div class="paragraph">
+&lt;p>Pada kesempatakn kali ini aku sedang mencoba mengimplementasikan nextdns sebagai alternative si dnscrypt yang kupakek sekarang. Nextdns merupakan sebuah penyedia layanan firewall yang bertujuan untuk meningkatkan keamanan pengguna ketika berselancari di internet. Tidak hanya itu nextdns juga memberikan beberapa perlindugngan dari berbagai masalah keamanan seperti memblokir iklan yang mengganggu, memblokir pelacakan dari situs yang sedang dikunjunginya dan masih banyak lagi.&lt;/p>
+&lt;/div>
+&lt;div class="sect1">
+&lt;h2 id="_instalasi">instalasi&lt;/h2>
+&lt;div class="sectionbody">
+&lt;div class="paragraph">
+&lt;p>disini aku mencoba mengimplementasikan nextdns ini kedalam beberapa service, seperti:&lt;/p>
+&lt;/div>
+&lt;div class="ulist">
+&lt;ul>
+&lt;li>
+&lt;p>nextdns-client&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>systemd-resolved&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>dnscrypt-proxy&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;/div>
+&lt;div class="sect2">
+&lt;h3 id="_nextdns_client">nextdns-client&lt;/h3>
+&lt;div class="paragraph">
+&lt;p>untuk instalasi nextdns-client cukup ketikkan perintah dibawah ini jika anda menggunakan distro archlinux, dikarenakan nextdns-client ini berada di repository AUR(Arch User Repository)&lt;/p>
+&lt;/div>
+&lt;div class="listingblock">
+&lt;div class="content">
+&lt;pre>$ yay -S nextdns&lt;/pre>
+&lt;/div>
+&lt;/div>
+&lt;div class="paragraph">
+&lt;p>&lt;span class="image">&lt;img src="./img/instalasi.png" alt="instalasi"/>&lt;/span>&lt;/p>
+&lt;/div>
+&lt;div class="paragraph">
+&lt;p>setelah installasi dilanjutkan dengan mengaktifkan service nextdnsnya&lt;/p>
+&lt;/div>
+&lt;div class="listingblock">
+&lt;div class="content">
+&lt;pre>$ sudo systemctl start mextdns&lt;/pre>
+&lt;/div>
+&lt;/div>
+&lt;div class="paragraph">
+&lt;p>dan jangan lupa pastikan nextdns sudah beneran berjalan atau belum.&lt;/p>
+&lt;/div>
+&lt;div class="listingblock">
+&lt;div class="content">
+&lt;pre>$ sudo systemctl status mextdns&lt;/pre>
+&lt;/div>
+&lt;/div>
+&lt;div class="paragraph">
+&lt;p>&lt;span class="image">&lt;img src="./img/nextdns-status.png" alt="sudo systemctl status mextdns"/>&lt;/span>&lt;/p>
+&lt;/div>
+&lt;div class="paragraph">
+&lt;p>setelah service nextdnsnya aktif maka dilanjutkan dengan memasukkan id. langkah-langkahnya sebagai berikut ini:&lt;/p>
+&lt;/div>
+&lt;div class="ulist">
+&lt;ul>
+&lt;li>
+&lt;p>buka &lt;a href="https://my.nextdns.io">my.nextdns.io&lt;/a> lalu salin nextdns idnya (lihat gambar biar lebih jelas)
+&lt;span class="image">&lt;img src="./img/mynextdns.png" alt="my.nextdns.io dashboard"/>&lt;/span>&lt;/p>
 &lt;/li>
 &lt;li>
 &lt;p>Setelah nextdns id didapatkan ketikkan perintah dibawah ini&lt;/p>
-&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-bash" data-lang="bash">$ sudo nextdns install -config &amp;lt;nextdns-id&amp;gt; -setup-router
-&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;div class="literalblock">
+&lt;div class="content">
+&lt;pre>$ sudo nextdns install -config &amp;lt;nextdns-id&amp;gt; -setup-router&lt;/pre>
+&lt;/div>
+&lt;/div>
+&lt;/li>
+&lt;/ul>
+&lt;/div>
+&lt;/div>
+&lt;/div>
+&lt;/div>
+&lt;div class="sect1">
+&lt;h2 id="_uji_coba">Uji Coba&lt;/h2>
+&lt;div class="sectionbody">
+&lt;div class="paragraph">
+&lt;p>Buka network manager yang kalian gunakan sebagai contoh saya disini menggunakan &lt;strong>NetworkManager&lt;/strong>. kemudian masukkan &lt;code>127.0.0.1&lt;/code> dibagian dns server dan search domainnya.&lt;/p>
+&lt;/div>
+&lt;div class="paragraph">
+&lt;p>&lt;span class="image">&lt;img src="./img/networkmanager.png" alt="network manager"/>&lt;/span>&lt;/p>
+&lt;/div>
+&lt;div class="paragraph">
+&lt;p>alternative lainnya kalian bisa langsung mengubah file yang ada di &lt;code>/etc/resolv.conf&lt;/code> dan ubah alamat ip dnsnya menjadi &lt;code>127.0.0.1&lt;/code>
+langkah terakhir test ping ke salah satu domain&lt;/p>
+&lt;/div>
+&lt;div class="paragraph">
+&lt;p>&lt;span class="image">&lt;img src="./img/test.png" alt="test konfigurasi"/>&lt;/span>&lt;/p>
+&lt;/div>
+&lt;/div>
+&lt;/div>
+&lt;div class="sect1">
+&lt;h2 id="_kesimpulan">Kesimpulan&lt;/h2>
+&lt;div class="sectionbody">
+&lt;div class="ulist">
+&lt;ul>
 &lt;li>
-&lt;p>Buka network manager yang kalian gunakan sebagai contoh saya disini menggunakan &lt;strong>NetworkManager&lt;/strong>. kemudian masukkan &lt;code>127.0.0.1&lt;/code> dibagian dns server dan search domainnya.
-&lt;img src="./networkmanager.png" alt="network manager" />
-alternative lainnya kalian bisa langsung mengubah file yang ada di &lt;code>/etc/resolv.conf&lt;/code> dan ubah alamat ip dnsnya menjadi &lt;code>127.0.0.1&lt;/code>&lt;/p>
+&lt;p>&lt;strong>kelebihan&lt;/strong>&lt;/p>
+&lt;div class="ulist">
+&lt;ul>
+&lt;li>
+&lt;p>instalasinya cukup mudah tidak perlu susah payah ubah file konfigurasinya secara manual&lt;/p>
 &lt;/li>
 &lt;li>
-&lt;p>langkah terakhir test ping ke salah satu domain
-&lt;img src="./test.png" alt="test konfigurasi" />&lt;/p>
+&lt;p>nextdns client ini tidak memerlukan resouce yang banyak&lt;/p>
 &lt;/li>
 &lt;/ul>
-&lt;h1 id="kesimpulan">Kesimpulan&lt;/h1>
-&lt;ul>
-&lt;li>kelebihan
-&lt;ul>
-&lt;li>kesimpulannya yakni instalasinya cukup mudah tidak perlu susah payah ubah file konfigurasinya secara manual&lt;/li>
-&lt;li>nextdns client ini tidak memerlukan resouce yang banyak&lt;/li>
-&lt;/ul>
+&lt;/div>
 &lt;/li>
-&lt;li>kekurangan
+&lt;li>
+&lt;p>&lt;strong>kekurangan&lt;/strong>&lt;/p>
+&lt;div class="ulist">
 &lt;ul>
-&lt;li>ada limitasi query perbulannya yakni 300k query jadi klok lebih dari itu perlu upgrade sayan&lt;/li>
-&lt;/ul>
+&lt;li>
+&lt;p>ada limitasi query perbulannya yakni 300k query jadi klok lebih dari itu perlu upgrade sayan&lt;/p>
 &lt;/li>
 &lt;/ul>
-&lt;blockquote>
-&lt;p>Referensi&lt;/p>
-&lt;ul>
-&lt;li>&lt;a class="link" href="https://github.com/nextdns/nextdns/wiki" target="_blank" rel="noopener"
->https://github.com/nextdns/nextdns&lt;/a>&lt;/li>
+&lt;/div>
+&lt;/li>
 &lt;/ul>
-&lt;/blockquote></description></item></channel></rss>
+&lt;/div>
+&lt;/div>
+&lt;/div>
+&lt;div class="sect1">
+&lt;h2 id="_referensi">Referensi&lt;/h2>
+&lt;div class="sectionbody">
+&lt;div class="ulist">
+&lt;ul>
+&lt;li>
+&lt;p>&lt;a href="https://github.com/nextdns/nextdns/wiki" class="bare">https://github.com/nextdns/nextdns/wiki&lt;/a> Diakses pada: 2020-11-08&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;/div>
+&lt;/div>
+&lt;/div></description></item><item><title>Berkenalan Dengan tmux</title><link>https://mnabila.github.io/p/berkenalan-dengan-tmux/</link><pubDate>Mon, 27 May 2019 16:25:05 +0700</pubDate><guid>https://mnabila.github.io/p/berkenalan-dengan-tmux/</guid><description>
+&lt;div class="paragraph">
+&lt;p>Tmux atau Terminal Multiplexer adalah sebuah terminal yang memungkinkan kita membuka banyak sesi terminal dalam satu window, sehingga dalam satu window ini pengguna memungkinkan untuk menjalankan banyak aplikasi sekaligus. Bagiku tmux ini sangat membantu apabila sedang berurusan dengan banyak aplikasi dalam sebuah tty alias &lt;code>the real true terminal&lt;/code> yang dimiliki oleh sistem operasi GNU/Linux 😆.&lt;/p>
+&lt;/div>
+&lt;div class="sect1">
+&lt;h2 id="_permasalahan">Permasalahan&lt;/h2>
+&lt;div class="sectionbody">
+&lt;div class="paragraph">
+&lt;p>Untuk pengguna baru tmux rata-rata kesulitan untuk mengakses key bindingnya dikarenakan belum terlalu hafal bahkan belum tahu tentang key binding yang ada di tmux. Sehingga tmux memiliki kesan cukup merepotkan atau susah untuk pengguna baru padahal tmux adalah salah satu inverstasi tools yang dapat memudahkan aku untuk menjalankan banyak program dalam satu sesi terminal.&lt;/p>
+&lt;/div>
+&lt;/div>
+&lt;/div>
+&lt;div class="sect1">
+&lt;h2 id="_instalasi">Instalasi&lt;/h2>
+&lt;div class="sectionbody">
+&lt;div class="paragraph">
+&lt;p>untuk instalasi tmux cukup ketikkan perintah dibawah ini (jika kamu menggunakan distro archlinux dan turunannya)&lt;/p>
+&lt;/div>
+&lt;div class="listingblock">
+&lt;div class="content">
+&lt;pre class="highlight">&lt;code class="language-sh" data-lang="sh">$ sudo pacman -S tmux&lt;/code>&lt;/pre>
+&lt;/div>
+&lt;/div>
+&lt;/div>
+&lt;/div>
+&lt;div class="sect1">
+&lt;h2 id="_konfigurasi">Konfigurasi&lt;/h2>
+&lt;div class="sectionbody">
+&lt;div class="paragraph">
+&lt;p>Setelah berhasi memasang paket aplikasi tmux, tahap selanjutnya yakni melakukan konfigurasi, tujuannya untuk memudahkan kita saat menggunakannya nanti serta enak dilihat dan tidak terkesan biasa.
+adapun yang akan dikonfigurasi yakni :&lt;/p>
+&lt;/div>
+&lt;div class="ulist">
+&lt;ul>
+&lt;li>
+&lt;p>Ubah default prefix key&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>Ubah tampilan status bar&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;/div>
+&lt;div class="paragraph">
+&lt;p>Pada umumnya file konfigurasi tmux berada di &lt;code>~/.tmux.conf&lt;/code> untuk setiap user, sedangkan untuk configurasi global berada di &lt;code>/etc/tmux.conf&lt;/code>.&lt;/p>
+&lt;/div>
+&lt;div class="sect2">
+&lt;h3 id="_konfigurasi_default_prefix_key">Konfigurasi default prefix key&lt;/h3>
+&lt;div class="paragraph">
+&lt;p>Secara default prefix key-nya menggunakan Ctrl-b, sebagai contoh saat kita ingin memuat tampilan tmux menjadi dual sesi dengan mode split kita harus menekan prefix kemudian diikuti dengan &lt;code>%&lt;/code> atau &lt;code>Ctrl-b %&lt;/code>. Akan tetapi apabila belum terbiasa akan cukup sulit mengingat posisinya cukup berjauhan sehingga membutuhkan waktu lebih apabila ingin menggunakan keybinding.sehingga aku mengggantinya menjadi Ctrl-a agar memudahkan aku ketika mengakses prefix tersebut. Untuk mengubah key binding menjadi Ctrl-a cukup tambahkan kode dibawah ini pada file .tmux.conf-nya&lt;/p>
+&lt;/div>
+&lt;div class="listingblock">
+&lt;div class="content">
+&lt;pre>unbind C-b
+set -g prefix C-a
+bind C-a send-prefix&lt;/pre>
+&lt;/div>
+&lt;/div>
+&lt;/div>
+&lt;div class="sect2">
+&lt;h3 id="_konfigurasi_status_bar">Konfigurasi status bar&lt;/h3>
+&lt;div class="paragraph">
+&lt;p>Tampilan awal status bar dari Tmux cukup sederhana dan terkesan biasa, maka dari itu saya melakukan perubahan sedikit sehingga enak dilihat dan tidak terkesan monoton. sehingga saya menambhkan potongan kode berikut ini kedalam file .tmux.conf-nya&lt;/p>
+&lt;/div>
+&lt;div class="listingblock">
+&lt;div class="content">
+&lt;pre class="highlight">&lt;code class="language-conf" data-lang="conf"># STATUS
+set -g status-position bottom
+set -g status on
+set -g status-interval 60
+set -g status-style &amp;#34;fg=brightwhite, bg=black&amp;#34;
+## Left
+set -g status-left-length 40
+set -g status-left &amp;#34;#[fg=black,bg=yellow, bold]  #[fg=black,bg=white, bold] #(whoami) &amp;#34;
+## Center
+set -g window-status-format &amp;#34;#[fg=black,bg=brightblack] #I #{pane_current_command} &amp;#34;
+set -g window-status-current-format &amp;#34;#[fg=black,bg=yellow, bold] #I #{pane_current_command} &amp;#34;
+set -g window-status-separator &amp;#34; &amp;#34;
+set -g status-justify centre
+## Right
+set -g status-right-length 40
+set -g status-right &amp;#34;#{prefix_highlight} #[fg=black,bg=yellow, bold]  #[fg=black,bg=white, bold] #(lsb_release -d | cut -f 2) &amp;#34;&lt;/code>&lt;/pre>
+&lt;/div>
+&lt;/div>
+&lt;div class="paragraph">
+&lt;p>bonus untuk judul pada terminal yang dibuka&lt;/p>
+&lt;/div>
+&lt;div class="listingblock">
+&lt;div class="content">
+&lt;pre class="highlight">&lt;code class="language-conf" data-lang="conf"># WINDOW
+set -g base-index 1
+set -g renumber-windows on
+setw -g automatic-rename on
+setw -g window-style &amp;#34;fg=white bg=black&amp;#34;
+setw -g window-active-style &amp;#34;fg=brightwhite bg=black&amp;#34;&lt;/code>&lt;/pre>
+&lt;/div>
+&lt;/div>
+&lt;/div>
+&lt;/div>
+&lt;/div>
+&lt;div class="sect1">
+&lt;h2 id="_hasil">Hasil&lt;/h2>
+&lt;div class="sectionbody">
+&lt;div class="paragraph">
+&lt;p>setelah potongan kode di atas ditambahkan kedalam &lt;code>.tmux.conf&lt;/code> maka hasilnya akan seperti berikut ini.
+&lt;span class="image">&lt;img src="./img/hasil.png" alt="tmux preview"/>&lt;/span>
+ps: hasil ini diambil dari &lt;code>terminal emulator&lt;/code> bukan dari tty langsung, kenapa ? aku ga tahu cara screenshot di tty gimana 🤣&lt;/p>
+&lt;/div>
+&lt;/div>
+&lt;/div>
+&lt;div class="sect1">
+&lt;h2 id="_referensi">Referensi&lt;/h2>
+&lt;div class="sectionbody">
+&lt;div class="ulist">
+&lt;ul>
+&lt;li>
+&lt;p>Tmux manpages(man tmux) Diakses pada: 2019-05-25&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;a href="https://agung-setiawan.com/panduan-minimal-belajar-tmux/">panduan-minimal-belajar-tmux&lt;/a> Diakses pada: 2019-05-25&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;a href="https://wiki.archlinux.org/index.php/tmux">Archwiki Tmux&lt;/a> Diakses pada: 2019-05-25&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;/div>
+&lt;/div>
+&lt;/div></description></item></channel></rss>

@@ -1,17 +1,17 @@
 <!doctype html><html lang=en-us>
 <head><meta charset=utf-8>
-<meta name=viewport content="width=device-width,initial-scale=1"><meta name=description content="Pada kesempatakn kali ini aku sedang mencoba mengimplementasikan nextdns sebagai alternative si dnscrypt yang kupakek sekarang. Nextdns merupakan sebuah penyedia layanan firewall yang bertujuan untuk meningkatkan keamanan pengguna ketika berselancari di internet. Tidak hanya itu nextdns juga memberikan beberapa perlindugngan dari berbagai masalah keamanan seperti memblokir iklan yang mengganggu, memblokir pelacakan dari situs yang sedang dikunjunginya dan masih banyak lagi.
- instalasi disini aku mencoba mengimplementasikan nextdns ini kedalam beberapa service, seperti:"><title>Konfigurasi Nextdns Client Di Archlinux</title>
-<link rel=canonical href=https://mnabila.github.io/p/konfigurasi-nextdns-client-di-archlinux/>
-<link rel=stylesheet href=/scss/style.min.775dbd4fd34fda61c5273b4bc3415f7c9666414fb6c40aab164a7ded4397da98.css><meta property="og:title" content="Konfigurasi Nextdns Client Di Archlinux">
-<meta property="og:description" content="Pada kesempatakn kali ini aku sedang mencoba mengimplementasikan nextdns sebagai alternative si dnscrypt yang kupakek sekarang. Nextdns merupakan sebuah penyedia layanan firewall yang bertujuan untuk meningkatkan keamanan pengguna ketika berselancari di internet. Tidak hanya itu nextdns juga memberikan beberapa perlindugngan dari berbagai masalah keamanan seperti memblokir iklan yang mengganggu, memblokir pelacakan dari situs yang sedang dikunjunginya dan masih banyak lagi.
- instalasi disini aku mencoba mengimplementasikan nextdns ini kedalam beberapa service, seperti:">
-<meta property="og:url" content="https://mnabila.github.io/p/konfigurasi-nextdns-client-di-archlinux/">
+<meta name=viewport content="width=device-width,initial-scale=1"><meta name=description content="Tmux atau Terminal Multiplexer adalah sebuah terminal yang memungkinkan kita membuka banyak sesi terminal dalam satu window, sehingga dalam satu window ini pengguna memungkinkan untuk menjalankan banyak aplikasi sekaligus. Bagiku tmux ini sangat membantu apabila sedang berurusan dengan banyak aplikasi dalam sebuah tty alias the real true terminal yang dimiliki oleh sistem operasi GNU/Linux 😆.
+ Permasalahan Untuk pengguna baru tmux rata-rata kesulitan untuk mengakses key bindingnya dikarenakan belum terlalu hafal bahkan belum tahu tentang key binding yang ada di tmux."><title>Berkenalan Dengan tmux</title>
+<link rel=canonical href=https://mnabila.github.io/p/berkenalan-dengan-tmux/>
+<link rel=stylesheet href=/scss/style.min.775dbd4fd34fda61c5273b4bc3415f7c9666414fb6c40aab164a7ded4397da98.css><meta property="og:title" content="Berkenalan Dengan tmux">
+<meta property="og:description" content="Tmux atau Terminal Multiplexer adalah sebuah terminal yang memungkinkan kita membuka banyak sesi terminal dalam satu window, sehingga dalam satu window ini pengguna memungkinkan untuk menjalankan banyak aplikasi sekaligus. Bagiku tmux ini sangat membantu apabila sedang berurusan dengan banyak aplikasi dalam sebuah tty alias the real true terminal yang dimiliki oleh sistem operasi GNU/Linux 😆.
+ Permasalahan Untuk pengguna baru tmux rata-rata kesulitan untuk mengakses key bindingnya dikarenakan belum terlalu hafal bahkan belum tahu tentang key binding yang ada di tmux.">
+<meta property="og:url" content="https://mnabila.github.io/p/berkenalan-dengan-tmux/">
 <meta property="og:site_name" content="mnabila">
-<meta property="og:type" content="article"><meta property="article:section" content="Post"><meta property="article:tag" content="nextdns"><meta property="article:tag" content="dns"><meta property="article:tag" content="blockads"><meta property="article:published_time" content="2020-11-08T11:26:13+07:00"><meta property="article:modified_time" content="2022-01-05T00:00:00+00:00">
-<meta name=twitter:title content="Konfigurasi Nextdns Client Di Archlinux">
-<meta name=twitter:description content="Pada kesempatakn kali ini aku sedang mencoba mengimplementasikan nextdns sebagai alternative si dnscrypt yang kupakek sekarang. Nextdns merupakan sebuah penyedia layanan firewall yang bertujuan untuk meningkatkan keamanan pengguna ketika berselancari di internet. Tidak hanya itu nextdns juga memberikan beberapa perlindugngan dari berbagai masalah keamanan seperti memblokir iklan yang mengganggu, memblokir pelacakan dari situs yang sedang dikunjunginya dan masih banyak lagi.
- instalasi disini aku mencoba mengimplementasikan nextdns ini kedalam beberapa service, seperti:"><meta name=google-site-verification content="mMcREQE4zOpE3CZmZYYDENqN1maSeWn7DphaWdNf0ds">
+<meta property="og:type" content="article"><meta property="article:section" content="Post"><meta property="article:tag" content="tmux"><meta property="article:published_time" content="2019-05-27T16:25:05+07:00"><meta property="article:modified_time" content="2019-05-27T16:25:05+07:00">
+<meta name=twitter:title content="Berkenalan Dengan tmux">
+<meta name=twitter:description content="Tmux atau Terminal Multiplexer adalah sebuah terminal yang memungkinkan kita membuka banyak sesi terminal dalam satu window, sehingga dalam satu window ini pengguna memungkinkan untuk menjalankan banyak aplikasi sekaligus. Bagiku tmux ini sangat membantu apabila sedang berurusan dengan banyak aplikasi dalam sebuah tty alias the real true terminal yang dimiliki oleh sistem operasi GNU/Linux 😆.
+ Permasalahan Untuk pengguna baru tmux rata-rata kesulitan untuk mengakses key bindingnya dikarenakan belum terlalu hafal bahkan belum tahu tentang key binding yang ada di tmux."><meta name=google-site-verification content="mMcREQE4zOpE3CZmZYYDENqN1maSeWn7DphaWdNf0ds">
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-7NVMRSNZL7"></script>
 <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date),gtag('config','G-7NVMRSNZL7')</script>
 </head>
@@ -29,23 +29,23 @@ extended">
 <header class=article-header>
 <div class=article-details>
 <header class=article-category>
-<a href=/categories/network/>
-network
+<a href=/categories/terminal/>
+terminal
 </a>
 <a href=/categories/application/>
 application
 </a>
 </header>
 <h2 class=article-title>
-<a href=/p/konfigurasi-nextdns-client-di-archlinux/>Konfigurasi Nextdns Client Di Archlinux</a>
+<a href=/p/berkenalan-dengan-tmux/>Berkenalan Dengan tmux</a>
 </h2>
 <footer class=article-time>
 <div><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><path d="M11.795 21H5a2 2 0 01-2-2V7a2 2 0 012-2h12a2 2 0 012 2v4"/><circle cx="18" cy="18" r="4"/><path d="M15 3v4"/><path d="M7 3v4"/><path d="M3 11h16"/><path d="M18 16.496V18l1 1"/></svg>
-<time class=article-time--published>Nov 08, 2020</time>
+<time class=article-time--published>May 27, 2019</time>
 </div>
 <div><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/></svg>
 <time class=article-time--reading>
-2 minute read
+3 minute read
 </time>
 </div>
 </footer>
@@ -53,128 +53,113 @@ application
 </header>
 <section class=article-content>
 <div class=paragraph>
-<p>Pada kesempatakn kali ini aku sedang mencoba mengimplementasikan nextdns sebagai alternative si dnscrypt yang kupakek sekarang. Nextdns merupakan sebuah penyedia layanan firewall yang bertujuan untuk meningkatkan keamanan pengguna ketika berselancari di internet. Tidak hanya itu nextdns juga memberikan beberapa perlindugngan dari berbagai masalah keamanan seperti memblokir iklan yang mengganggu, memblokir pelacakan dari situs yang sedang dikunjunginya dan masih banyak lagi.</p>
+<p>Tmux atau Terminal Multiplexer adalah sebuah terminal yang memungkinkan kita membuka banyak sesi terminal dalam satu window, sehingga dalam satu window ini pengguna memungkinkan untuk menjalankan banyak aplikasi sekaligus. Bagiku tmux ini sangat membantu apabila sedang berurusan dengan banyak aplikasi dalam sebuah tty alias <code>the real true terminal</code> yang dimiliki oleh sistem operasi GNU/Linux 😆.</p>
 </div>
 <div class=sect1>
-<h2 id=_instalasi>instalasi</h2>
+<h2 id=_permasalahan>Permasalahan</h2>
 <div class=sectionbody>
 <div class=paragraph>
-<p>disini aku mencoba mengimplementasikan nextdns ini kedalam beberapa service, seperti:</p>
+<p>Untuk pengguna baru tmux rata-rata kesulitan untuk mengakses key bindingnya dikarenakan belum terlalu hafal bahkan belum tahu tentang key binding yang ada di tmux. Sehingga tmux memiliki kesan cukup merepotkan atau susah untuk pengguna baru padahal tmux adalah salah satu inverstasi tools yang dapat memudahkan aku untuk menjalankan banyak program dalam satu sesi terminal.</p>
+</div>
+</div>
+</div>
+<div class=sect1>
+<h2 id=_instalasi>Instalasi</h2>
+<div class=sectionbody>
+<div class=paragraph>
+<p>untuk instalasi tmux cukup ketikkan perintah dibawah ini (jika kamu menggunakan distro archlinux dan turunannya)</p>
+</div>
+<div class=listingblock>
+<div class=content>
+<pre class=highlight><code class=language-sh data-lang=sh>$ sudo pacman -S tmux</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class=sect1>
+<h2 id=_konfigurasi>Konfigurasi</h2>
+<div class=sectionbody>
+<div class=paragraph>
+<p>Setelah berhasi memasang paket aplikasi tmux, tahap selanjutnya yakni melakukan konfigurasi, tujuannya untuk memudahkan kita saat menggunakannya nanti serta enak dilihat dan tidak terkesan biasa.
+adapun yang akan dikonfigurasi yakni :</p>
 </div>
 <div class=ulist>
 <ul>
 <li>
-<p>nextdns-client</p>
+<p>Ubah default prefix key</p>
 </li>
 <li>
-<p>systemd-resolved</p>
-</li>
-<li>
-<p>dnscrypt-proxy</p>
+<p>Ubah tampilan status bar</p>
 </li>
 </ul>
+</div>
+<div class=paragraph>
+<p>Pada umumnya file konfigurasi tmux berada di <code>~/.tmux.conf</code> untuk setiap user, sedangkan untuk configurasi global berada di <code>/etc/tmux.conf</code>.</p>
 </div>
 <div class=sect2>
-<h3 id=_nextdns_client>nextdns-client</h3>
+<h3 id=_konfigurasi_default_prefix_key>Konfigurasi default prefix key</h3>
 <div class=paragraph>
-<p>untuk instalasi nextdns-client cukup ketikkan perintah dibawah ini jika anda menggunakan distro archlinux, dikarenakan nextdns-client ini berada di repository AUR(Arch User Repository)</p>
+<p>Secara default prefix key-nya menggunakan Ctrl-b, sebagai contoh saat kita ingin memuat tampilan tmux menjadi dual sesi dengan mode split kita harus menekan prefix kemudian diikuti dengan <code>%</code> atau <code>Ctrl-b %</code>. Akan tetapi apabila belum terbiasa akan cukup sulit mengingat posisinya cukup berjauhan sehingga membutuhkan waktu lebih apabila ingin menggunakan keybinding.sehingga aku mengggantinya menjadi Ctrl-a agar memudahkan aku ketika mengakses prefix tersebut. Untuk mengubah key binding menjadi Ctrl-a cukup tambahkan kode dibawah ini pada file .tmux.conf-nya</p>
 </div>
 <div class=listingblock>
 <div class=content>
-<pre>$ yay -S nextdns</pre>
+<pre>unbind C-b
+set -g prefix C-a
+bind C-a send-prefix</pre>
 </div>
 </div>
+</div>
+<div class=sect2>
+<h3 id=_konfigurasi_status_bar>Konfigurasi status bar</h3>
 <div class=paragraph>
-<p><span class=image><img src=./img/instalasi.png alt=instalasi></span></p>
-</div>
-<div class=paragraph>
-<p>setelah installasi dilanjutkan dengan mengaktifkan service nextdnsnya</p>
+<p>Tampilan awal status bar dari Tmux cukup sederhana dan terkesan biasa, maka dari itu saya melakukan perubahan sedikit sehingga enak dilihat dan tidak terkesan monoton. sehingga saya menambhkan potongan kode berikut ini kedalam file .tmux.conf-nya</p>
 </div>
 <div class=listingblock>
 <div class=content>
-<pre>$ sudo systemctl start mextdns</pre>
+<pre class=highlight><code class=language-conf data-lang=conf># STATUS
+set -g status-position bottom
+set -g status on
+set -g status-interval 60
+set -g status-style &#34;fg=brightwhite, bg=black&#34;
+
+## Left
+set -g status-left-length 40
+set -g status-left &#34;#[fg=black,bg=yellow, bold]   #[fg=black,bg=white, bold] #(whoami) &#34;
+
+## Center
+set -g window-status-format &#34;#[fg=black,bg=brightblack] #I #{pane_current_command} &#34;
+set -g window-status-current-format &#34;#[fg=black,bg=yellow, bold] #I #{pane_current_command} &#34;
+set -g window-status-separator &#34; &#34;
+set -g status-justify centre
+
+## Right
+set -g status-right-length 40
+set -g status-right &#34;#{prefix_highlight} #[fg=black,bg=yellow, bold]   #[fg=black,bg=white, bold] #(lsb_release -d | cut -f 2) &#34;</code></pre>
 </div>
 </div>
 <div class=paragraph>
-<p>dan jangan lupa pastikan nextdns sudah beneran berjalan atau belum.</p>
+<p>bonus untuk judul pada terminal yang dibuka</p>
 </div>
 <div class=listingblock>
 <div class=content>
-<pre>$ sudo systemctl status mextdns</pre>
+<pre class=highlight><code class=language-conf data-lang=conf># WINDOW
+set -g base-index 1
+set -g renumber-windows on
+setw -g automatic-rename on
+setw -g window-style &#34;fg=white bg=black&#34;
+setw -g window-active-style &#34;fg=brightwhite bg=black&#34;</code></pre>
 </div>
-</div>
-<div class=paragraph>
-<p><span class=image><img src=./img/nextdns-status.png alt="sudo systemctl status mextdns"></span></p>
-</div>
-<div class=paragraph>
-<p>setelah service nextdnsnya aktif maka dilanjutkan dengan memasukkan id. langkah-langkahnya sebagai berikut ini:</p>
-</div>
-<div class=ulist>
-<ul>
-<li>
-<p>buka <a href=https://my.nextdns.io>my.nextdns.io</a> lalu salin nextdns idnya (lihat gambar biar lebih jelas)
-<span class=image><img src=./img/mynextdns.png alt="my.nextdns.io dashboard"></span></p>
-</li>
-<li>
-<p>Setelah nextdns id didapatkan ketikkan perintah dibawah ini</p>
-<div class=literalblock>
-<div class=content>
-<pre>$ sudo nextdns install -config &lt;nextdns-id&gt; -setup-router</pre>
-</div>
-</div>
-</li>
-</ul>
 </div>
 </div>
 </div>
 </div>
 <div class=sect1>
-<h2 id=_uji_coba>Uji Coba</h2>
+<h2 id=_hasil>Hasil</h2>
 <div class=sectionbody>
 <div class=paragraph>
-<p>Buka network manager yang kalian gunakan sebagai contoh saya disini menggunakan <strong>NetworkManager</strong>. kemudian masukkan <code>127.0.0.1</code> dibagian dns server dan search domainnya.</p>
-</div>
-<div class=paragraph>
-<p><span class=image><img src=./img/networkmanager.png alt="network manager"></span></p>
-</div>
-<div class=paragraph>
-<p>alternative lainnya kalian bisa langsung mengubah file yang ada di <code>/etc/resolv.conf</code> dan ubah alamat ip dnsnya menjadi <code>127.0.0.1</code>
-langkah terakhir test ping ke salah satu domain</p>
-</div>
-<div class=paragraph>
-<p><span class=image><img src=./img/test.png alt="test konfigurasi"></span></p>
-</div>
-</div>
-</div>
-<div class=sect1>
-<h2 id=_kesimpulan>Kesimpulan</h2>
-<div class=sectionbody>
-<div class=ulist>
-<ul>
-<li>
-<p><strong>kelebihan</strong></p>
-<div class=ulist>
-<ul>
-<li>
-<p>instalasinya cukup mudah tidak perlu susah payah ubah file konfigurasinya secara manual</p>
-</li>
-<li>
-<p>nextdns client ini tidak memerlukan resouce yang banyak</p>
-</li>
-</ul>
-</div>
-</li>
-<li>
-<p><strong>kekurangan</strong></p>
-<div class=ulist>
-<ul>
-<li>
-<p>ada limitasi query perbulannya yakni 300k query jadi klok lebih dari itu perlu upgrade sayan</p>
-</li>
-</ul>
-</div>
-</li>
-</ul>
+<p>setelah potongan kode di atas ditambahkan kedalam <code>.tmux.conf</code> maka hasilnya akan seperti berikut ini.
+<span class=image><img src=./img/hasil.png alt="tmux preview"></span>
+ps: hasil ini diambil dari <code>terminal emulator</code> bukan dari tty langsung, kenapa ? aku ga tahu cara screenshot di tty gimana 🤣</p>
 </div>
 </div>
 </div>
@@ -184,7 +169,13 @@ langkah terakhir test ping ke salah satu domain</p>
 <div class=ulist>
 <ul>
 <li>
-<p><a href=https://github.com/nextdns/nextdns/wiki class=bare>https://github.com/nextdns/nextdns/wiki</a> Diakses pada: 2020-11-08</p>
+<p>Tmux manpages(man tmux) Diakses pada: 2019-05-25</p>
+</li>
+<li>
+<p><a href=https://agung-setiawan.com/panduan-minimal-belajar-tmux/>panduan-minimal-belajar-tmux</a> Diakses pada: 2019-05-25</p>
+</li>
+<li>
+<p><a href=https://wiki.archlinux.org/index.php/tmux>Archwiki Tmux</a> Diakses pada: 2019-05-25</p>
 </li>
 </ul>
 </div>
@@ -193,18 +184,12 @@ langkah terakhir test ping ke salah satu domain</p>
 </section>
 <footer class=article-footer>
 <section class=article-tags>
-<a href=/tags/nextdns/>nextdns</a>
-<a href=/tags/dns/>dns</a>
-<a href=/tags/blockads/>blockads</a>
+<a href=/tags/tmux/>tmux</a>
 </section>
 <section class=article-copyright><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="12" r="9"/><path d="M14.5 9a3.5 4 0 100 6"/></svg>
 <span>Licensed under CC BY-NC-SA 4.0</span>
 </section>
-<section class=article-lastmod><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/></svg>
-<span>
-Last updated on Jan 05, 2022 00:00 UTC
-</span>
-</section></footer>
+</footer>
 </article>
 <aside class=related-contents--wrapper>
 <h2 class=section-title>Related contents</h2>
@@ -218,9 +203,9 @@ Last updated on Jan 05, 2022 00:00 UTC
 </a>
 </article>
 <article>
-<a href=/p/berkenalan-dengan-tmux/>
+<a href=/p/konfigurasi-nextdns-client-di-archlinux/>
 <div class=article-details>
-<h2 class=article-title>Berkenalan Dengan tmux</h2>
+<h2 class=article-title>Konfigurasi Nextdns Client Di Archlinux</h2>
 </div>
 </a>
 </article>
@@ -291,13 +276,15 @@ Theme <b><a href=https://github.com/CaiJimmy/hugo-theme-stack target=_blank rel=
 <div class=widget--toc>
 <nav id=TableOfContents>
 <ol>
-<li><a href=#_instalasi>instalasi</a>
+<li><a href=#_permasalahan>Permasalahan</a></li>
+<li><a href=#_instalasi>Instalasi</a></li>
+<li><a href=#_konfigurasi>Konfigurasi</a>
 <ol>
-<li><a href=#_nextdns_client>nextdns-client</a></li>
+<li><a href=#_konfigurasi_default_prefix_key>Konfigurasi default prefix key</a></li>
+<li><a href=#_konfigurasi_status_bar>Konfigurasi status bar</a></li>
 </ol>
 </li>
-<li><a href=#_uji_coba>Uji Coba</a></li>
-<li><a href=#_kesimpulan>Kesimpulan</a></li>
+<li><a href=#_hasil>Hasil</a></li>
 <li><a href=#_referensi>Referensi</a></li>
 </ol>
 </nav>
