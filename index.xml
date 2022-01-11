@@ -9,7 +9,7 @@
 &lt;p>Dikarenakan beberapa hal ghaib itu tiba-tiba setan dari pedalaman dotfiles menghantuiku untuk mencari selingkuhan baru, karna imanku tipis alhasilnya aku coba jalan jalan di gang github siapa tahu dapet gebetan baru dan bump dapet 2 calon (hiahiahia), calon pertama &lt;code>nnn&lt;/code> dan calon yang kedua adalah &lt;code>lf&lt;/code>.&lt;/p>
 &lt;/div>
 &lt;div class="paragraph">
-&lt;p>Sebelum memutuskan pilih yang mana, aku buatkan 3 kriteria meliputi User Interface(UI), File Konfigurasinya, dan Workflownya. Dari ketika kriteria ini lf adalah yang paling pas denganku karna dari UI dan workflownya lf cenderung mirip dengan ranger, sedangkan untuk file Konfigurasinya si lf ini cukup menarik jika dibandingkan ranger dan nnn.&lt;/p>
+&lt;p>Sebelum memutuskan pilih yang mana, aku buatkan 3 kriteria meliputi user interface(UI), file konfigurasinya, dan workflownya. Dari ketika kriteria ini lf adalah yang paling pas denganku karna dari UI dan workflownya lf cenderung mirip dengan ranger, sedangkan untuk file Konfigurasinya si lf ini cukup menarik jika dibandingkan ranger dan nnn.&lt;/p>
 &lt;/div>
 &lt;/div>
 &lt;/div>
@@ -17,7 +17,7 @@
 &lt;h2 id="_kelebihan_adalah_kekurangan">Kelebihan adalah kekurangan&lt;/h2>
 &lt;div class="sectionbody">
 &lt;div class="paragraph">
-&lt;p>Kelebihannya banyak kekurangannya, yups tapi ini beneran bukan becandaan. Lf ini bisa kubilang file manager minimalist keduaku setelah si mc(midnight commander) jika dibandingkan dengan ranger yang kupakek. Karna secara default lf hanya menyediakan fitur alakadarnya saja ga ada yang magic yang membuatku tekesan. Tapi karna minimnya fitur yang disediakan oleh lf pengguna dibebaskan membuat fitur sendiri sesuai dengan yang mereka inginkan yang bisa dituliskan melalui file konfignya. Dibawah ini adalah beberapa gambaran kenapa aku pindah dari ranger ke lf&lt;/p>
+&lt;p>Kelebihannya banyak kekurangannya, yups tapi ini beneran bukan becandaan. Lf ini bisa kubilang file manager minimalist keduaku setelah si mc(midnight commander) jika dibandingkan dengan ranger yang kupakek. Karna secara default lf hanya menyediakan fitur alakadarnya saja ga ada yang magic yang membuatku tekesan. Tapi karna minimnya fitur yang disediakan oleh lf pengguna dibebaskan membuat fitur sendiri sesuai dengan yang mereka inginkan yang bisa dituliskan melalui file konfignya. Dibawah ini adalah beberapa gambaran kenapa aku pindah dari ranger ke lf.&lt;/p>
 &lt;/div>
 &lt;table class="tableblock frame-all grid-all stretch">
 &lt;caption class="title">Table 1. Perbandingan lf dan ranger&lt;/caption>
@@ -87,7 +87,6 @@
 &lt;pre class="highlight">&lt;code class="language-sh" data-lang="sh">#!/bin/sh
 map f fzf_select
 map D delete
-map x %dragon -a -x $fx 2&amp;amp;&amp;gt; /dev/null &amp;amp;
 map R reload
 # removable disk
 map &amp;lt;f-12&amp;gt;u %udiskie-umount &amp;#34;$fx&amp;#34;
@@ -256,7 +255,7 @@ Your browser does not support the video tag.
 &lt;/div>
 &lt;/div>
 &lt;div class="paragraph">
-&lt;p>Dikarenakan lf tidak mengusung fitur tabnya si ranger jadi kita memerlukan tmux untuk bermanufer seperti diatas.&lt;/p>
+&lt;p>Dikarenakan lf tidak mengusung fitur tabnya si ranger jadi kita memerlukan tmux untuk bermanuver seperti diatas.&lt;/p>
 &lt;/div>
 &lt;/div>
 &lt;/div>
