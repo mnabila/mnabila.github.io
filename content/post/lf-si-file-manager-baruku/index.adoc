@@ -12,10 +12,10 @@ Berawal dari temen sekarang jadi mantan, kalimat ini sepertinya cocok untuk meng
 
 Dikarenakan beberapa hal ghaib itu tiba-tiba setan dari pedalaman dotfiles menghantuiku untuk mencari selingkuhan baru, karna imanku tipis alhasilnya aku coba jalan jalan di gang github siapa tahu dapet gebetan baru dan bump dapet 2 calon (hiahiahia), calon pertama `nnn` dan calon yang kedua adalah `lf`.
 
-Sebelum memutuskan pilih yang mana, aku buatkan 3 kriteria meliputi User Interface(UI), File Konfigurasinya, dan Workflownya. Dari ketika kriteria ini lf adalah yang paling pas denganku karna dari UI dan workflownya lf cenderung mirip dengan ranger, sedangkan untuk file Konfigurasinya si lf ini cukup menarik jika dibandingkan ranger dan nnn.
+Sebelum memutuskan pilih yang mana, aku buatkan 3 kriteria meliputi user interface(UI), file konfigurasinya, dan workflownya. Dari ketika kriteria ini lf adalah yang paling pas denganku karna dari UI dan workflownya lf cenderung mirip dengan ranger, sedangkan untuk file Konfigurasinya si lf ini cukup menarik jika dibandingkan ranger dan nnn.
 
 == Kelebihan adalah kekurangan
-Kelebihannya banyak kekurangannya, yups tapi ini beneran bukan becandaan. Lf ini bisa kubilang file manager minimalist keduaku setelah si mc(midnight commander) jika dibandingkan dengan ranger yang kupakek. Karna secara default lf hanya menyediakan fitur alakadarnya saja ga ada yang magic yang membuatku tekesan. Tapi karna minimnya fitur yang disediakan oleh lf pengguna dibebaskan membuat fitur sendiri sesuai dengan yang mereka inginkan yang bisa dituliskan melalui file konfignya. Dibawah ini adalah beberapa gambaran kenapa aku pindah dari ranger ke lf
+Kelebihannya banyak kekurangannya, yups tapi ini beneran bukan becandaan. Lf ini bisa kubilang file manager minimalist keduaku setelah si mc(midnight commander) jika dibandingkan dengan ranger yang kupakek. Karna secara default lf hanya menyediakan fitur alakadarnya saja ga ada yang magic yang membuatku tekesan. Tapi karna minimnya fitur yang disediakan oleh lf pengguna dibebaskan membuat fitur sendiri sesuai dengan yang mereka inginkan yang bisa dituliskan melalui file konfignya. Dibawah ini adalah beberapa gambaran kenapa aku pindah dari ranger ke lf.
 
 .Perbandingan lf dan ranger
 |===
@@ -56,7 +56,6 @@ Dibawah ini adalah beberapa potongan konfigurasi yang aku gunakan, dikarenakan a
 
 map f fzf_select
 map D delete
-map x %dragon -a -x $fx 2&> /dev/null &
 map R reload
 
 # removable disk
@@ -224,7 +223,7 @@ Ya enggak dong walaupun udah mantan, tapi kita harus tetep menjaga silaturahmi. 
 
 == Preview lf
 video::./video/video-220111-2106-00.mp4[width=700]
-Dikarenakan lf tidak mengusung fitur tabnya si ranger jadi kita memerlukan tmux untuk bermanufer seperti diatas.
+Dikarenakan lf tidak mengusung fitur tabnya si ranger jadi kita memerlukan tmux untuk bermanuver seperti diatas.
 
 == Kesimpulan
 Lf si file manager yang penuh dengan kejutan, banyak fitur yang belum tersedia jadi pengguna dipaksa membuat fitur sendiri sesuai dengan keinginannya. 
