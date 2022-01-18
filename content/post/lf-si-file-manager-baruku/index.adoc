@@ -2,7 +2,8 @@
 title: "Lf Si File Manager Baruku"
 date: 2022-01-11T08:27:24+07:00
 categories: ["terminal", "application"]
-tags: ["tui", "file manager"]
+tags: ["tui", "file manager", "lf", "ranger"]
+lastmod : 2022-01-15T12:43:24+07:00
 ---
 
 :toc:
@@ -56,6 +57,7 @@ Dibawah ini adalah beberapa potongan konfigurasi yang aku gunakan, dikarenakan a
 
 map f fzf_select
 map D delete
+map x %dragon -a -x "$fx" 2&> /dev/null &
 map R reload
 
 # removable disk
@@ -84,10 +86,6 @@ map <a-h> %tmux select-pane -L
 map <a-j> %tmux select-pane -D
 map <a-k> %tmux select-pane -U
 map <a-l> %tmux select-pane -R
-
-# file archive
-map ae extract
-map aa archive
 ----
 
 *command*
@@ -96,42 +94,18 @@ map aa archive
 ----
 #!/bin/sh
 
+# file opener
 cmd open ${{
     case $(file --mime-type "$f" -bL) in
         text/*) $EDITOR "$fx" ;;
         image/*) sxiv "$fx" 2&>/dev/null &;;
         application/x-iso9660-image) udisksctl loop-setup --file "$f";;
-        application/x-executable) lf -remote "send $id echo $id";;
+        application/x-executable) lf -remote "send $id echo 'not allowed'";;
         *) xdg-open "$f" &>/dev/null & ;;
     esac
 }}
 
-# compress current file or selected files with tar and gunzip
-cmd tar ${{
-    set -f
-    mkdir $1
-    cp -r $fx $1
-    tar czf $1.tar.gz $1
-    rm -rf $1
-}}
-
-# compress current file or selected files with zip
-cmd zip ${{
-    set -f
-    mkdir $1
-    cp -r $fx $1
-    zip -r $1.zip $1
-    rm -rf $1
-}}
-
-# extract current file or selected files
-cmd extract ${{
-    set -f
-    case $f in
-        *.tar.bz|*.tar.bz2|*.tbz|*.tbz2|*.tar.gz|*.tgz|*.tar.xz|*.txz|*.zip|*.rar|*.7z) atool --extract --each "$fx";;
-    esac
-}}
-
+# create directory
 cmd mkdir ${{
     printf "Directory Name: "
     read name
@@ -140,7 +114,8 @@ cmd mkdir ${{
     fi
 }}
 
-cmd mkfile ${{
+# create file
+cmd touch ${{
     printf "File Name: "
     read name
     if [ ! -z "$name" ]; then
@@ -148,6 +123,7 @@ cmd mkfile ${{
     fi
 }}
 
+# rename selected file/folder
 cmd bulkrename ${{
     old="$(mktemp)"
     new="$(mktemp)"
@@ -168,6 +144,7 @@ cmd bulkrename ${{
     lf -remote "send $id unselect"
 }}
 
+# fuzzy finder
 cmd fzf_select ${{
     res="$(find -L . \( -path '*/\.*' -o -fstype 'dev' -o -fstype 'proc' \) -prune -o -print 2> /dev/null | sed 1d | cut -b3- | fzf +m)"
     if [ -d "$res" ]; then
@@ -178,20 +155,72 @@ cmd fzf_select ${{
     lf -remote "send $id $cmd \"$res\""
 }}
 
-
+# copy file to clipboard
 cmd yank2clipboard ${{
     xclip -selection clipboard -i "$f" -t $(file --mime-type "$f" | cut -d ":" -f 2 | xargs)
 }}
 
-cmd recoll ${{
-    w=$(tput cols)
-    if [ $w -le 80 ]; then
-        lf -remote "send $id set ratios 1:2"
-    elif [ $w -le 160 ]; then
-        lf -remote "send $id set ratios 1:2:3"
-    else
-        lf -remote "send $id set ratios 1:2:3:5"
-    fi
+
+# print mimetype
+cmd mimetype &{{
+    mim=$(file --mime-type -bL "$f")
+    lf -remote "send $id echomsg 'mimetype : $mim'" &
+}}
+
+# extract current file or selected files
+cmd extract ${{
+    set -f
+    case "$f" in
+        *.tar.bz|*.tar.bz2|*.tbz|*.tbz2) tar xjvf "$f";;
+        *.tar.gz|*.tgz) tar xzvf "$f";;
+        *.tar.xz|*.txz) tar xJvf "$f";;
+        *.zip) unzip "$f";;
+        *.rar) unrar x "$f";;
+        *.7z) 7z x "$f";;
+    esac
+}}
+
+# compress current file or selected files with tar and gunzip
+cmd tar ${{
+    set -f
+    mkdir "$1"
+    cp -r $fx "$1"
+    tar czf "$1.tar.gz" "$1"
+    rm -rf "$1"
+}}
+
+# compress current file or selected files with zip
+cmd zip ${{
+    set -f
+    mkdir "$1"
+    cp -r $fx "$1"
+    zip -r "$1.zip" "$1"
+    rm -rf "$1"
+}}
+
+# compress current file or selected files with 7z
+cmd 7z ${{
+    set -f
+    mkdir "$1"
+    cp -r $fx "$1"
+    7z a "$1.7z" "$1"
+    rm -rf "$1"
+}}
+
+
+cmd rclone ${{
+    function rmount () {
+        if [ ! -d "/tmp/rclone" ]; then
+            mkdir /tmp/lfrclone
+        fi
+        rclone mount "$1" /tmp/lfrclone --daemon && notify-send "LF - Rclone" "Success Mount $1"
+    }
+
+    case $1 in
+        m|mount) rmount "$2";;
+        u|umount) fusermount -u /tmp/lfrclone && rmdir /tmp/lfrclone && notify-send "LF - Rclone" "Success Umount" ;;
+        *) lf -remote "send $id echo example: rclone m remote:/path and rclone u"
+    esac
 }}
 ----
 
@@ -201,10 +230,14 @@ cmd recoll ${{
 ----
 #!/bin/sh
 
+set shell sh
+set shellopts "-eu"
+set ifs "\n"
 set ignorecase true
+set scrolloff 10
 set icons
-set ratios 1:3:2
-set previewer mediainfo
+set ratios 1:2:3
+set promptfmt "\033[32;1m%u\033[0m ❱ \033[34;1m%d\033[0m\033[1m%f\033[0m"
 ----
 
 *lfrc*
@@ -217,6 +250,8 @@ source ~/.config/lf/config.d/options
 source ~/.config/lf/config.d/keymap
 source ~/.config/lf/config.d/command
 ----
+
+**Catatan:** potongan konfigurasi diatas didapatkan dari eksplorasiku di lf -doc dan wiki akan tetapi ada beberapa snippet dari wiki lf yang menurutku itu bukanlah sebuah tips tapi malah nambah masalah jadi mau ga mau harus eksporasi sendiri. contohnya ? cmd open bagian all file, klok kita pilih beberapa file dan ingin dibuka dalam single instance maka jatuhnya malah tiap file jadi satu instance jadi klok kita select 10 video maka nanti akan muncul 10 window video player bukan menjadi sebuah playlist 
 
 == Apakah ranger akan ditinggalkan ?
 Ya enggak dong walaupun udah mantan, tapi kita harus tetep menjaga silaturahmi. Saat ini si ranger kumanfaatkan sebagai file manager keduaku siapa tahu nanti bakalan CLBK lagi (hiahiahia). Selain dimanfaatkan sebagai file manager kedua, ranger juga kumanfaatkan sebagai file chooser untuk qutebrowserku dan file picker untuk neomuttku karna di lf sendiri fitur ini masih belum ada.
