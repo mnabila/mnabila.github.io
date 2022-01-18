@@ -1,4 +1,95 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>mnabila</title><link>https://mnabila.github.io/</link><description>Recent content on mnabila</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Tue, 11 Jan 2022 08:27:24 +0700</lastBuildDate><atom:link href="https://mnabila.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>Lf Si File Manager Baruku</title><link>https://mnabila.github.io/p/lf-si-file-manager-baruku/</link><pubDate>Tue, 11 Jan 2022 08:27:24 +0700</pubDate><guid>https://mnabila.github.io/p/lf-si-file-manager-baruku/</guid><description>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>mnabila</title><link>https://mnabila.github.io/</link><description>Recent content on mnabila</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Tue, 18 Jan 2022 19:43:54 +0700</lastBuildDate><atom:link href="https://mnabila.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>Handle Multiple File Di Lf</title><link>https://mnabila.github.io/p/handle-multiple-file-di-lf/</link><pubDate>Tue, 18 Jan 2022 19:43:54 +0700</pubDate><guid>https://mnabila.github.io/p/handle-multiple-file-di-lf/</guid><description>
+&lt;div class="sect1">
+&lt;h2 id="_biasa_intro">Biasa intro 🤣&lt;/h2>
+&lt;div class="sectionbody">
+&lt;div class="paragraph">
+&lt;p>Seperti yang sudah pernah kusinggung di catatan asbun sebelumnya, bahwa kelebihan dari lf file manager ini adalah banyak kekurangannya salah satunya untuk menghandle masalah multiple file yang akan dibuka dalam satu instance atau gambaran gampangnya pengen bikin sebuah playlist di pemutar video dari beberapa file yang di pilih.&lt;/p>
+&lt;/div>
+&lt;/div>
+&lt;/div>
+&lt;div class="sect1">
+&lt;h2 id="_pembahasan">Pembahasan&lt;/h2>
+&lt;div class="sectionbody">
+&lt;div class="paragraph">
+&lt;p>Untuk menghandle multiple file di lf ini cukup susah asli aku ga becanda sampe sampe beberapa hari lalu aku coba ubah source code lf dibagian os.go akan tetapi walaupun berhasil membuat output yang sesuai ternyata hal ini mempengaruhi fitur yang lain, bukannya menjadi fitur malah jadi bug baru alhasil kuurungkan niatku haha.&lt;/p>
+&lt;/div>
+&lt;div class="paragraph">
+&lt;p>Setelah keliling dibeberapa issue ternyata ada yang menanyakan hal serupa jadi aku tidak perlu membuat issue lagi dan langsung nimbrung pembahasan disana dengan skill bahasa lingginya level expert via google translate akhirnya mendapatkan beberapa kesimpulan, meliputi&lt;/p>
+&lt;/div>
+&lt;div class="ulist">
+&lt;ul>
+&lt;li>
+&lt;p>penggunaan environment IFS yang benar&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>pemberian double quote pada nama file yang memiliki karakter space&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;/div>
+&lt;div class="paragraph">
+&lt;p>Untuk penggunaan environment IFS sendiri di lf secara default memiliki value nill/kosong, apabila environment IFS ini diset ke karakter new line maka akan mempengaruhi output dari environment fx (list selected file lf).&lt;/p>
+&lt;/div>
+&lt;div class="paragraph">
+&lt;p>Pemberian double quote (bisa juga pakek single quote) pada nama file ini menurutku wajib walaupun nama filenya tidak mengandung karakter space sama sekali. Hal ini bertujuan untuk berjaga-jaga apabila bertemu nama file yang memiliki karakter space didalamnya command tidak error.&lt;/p>
+&lt;/div>
+&lt;div class="paragraph">
+&lt;p>udah dulu pembahasannya sekarang masuk ke implementasinya, pada &lt;code>lfrc&lt;/code> aku membuat dua buah command yakni command open dan multifile&lt;/p>
+&lt;/div>
+&lt;div class="paragraph">
+&lt;p>&lt;strong>multiple&lt;/strong>&lt;/p>
+&lt;/div>
+&lt;div class="listingblock">
+&lt;div class="content">
+&lt;pre class="highlight">&lt;code class="language-bash" data-lang="bash"># multiple file handler
+cmd multifile &amp;amp;{{
+IFS=&amp;#34;&amp;#34;;eval &amp;#34;$1 $(echo $fx | awk &amp;#39;{ printf &amp;#34;\&amp;#34;%s\&amp;#34; &amp;#34;, $0 }&amp;#39;)&amp;#34;
+}}&lt;/code>&lt;/pre>
+&lt;/div>
+&lt;/div>
+&lt;div class="paragraph">
+&lt;p>&lt;strong>Open&lt;/strong>&lt;/p>
+&lt;/div>
+&lt;div class="listingblock">
+&lt;div class="content">
+&lt;pre class="highlight">&lt;code class="language-bash" data-lang="bash"># file opener
+cmd open ${{
+case $(file --mime-type &amp;#34;$f&amp;#34; -bL) in
+video/*) lf -remote &amp;#34;send $id multifile mpv&amp;#34;;;
+esac
+}}&lt;/code>&lt;/pre>
+&lt;/div>
+&lt;/div>
+&lt;div class="paragraph">
+&lt;p>pada command open ini aku hanya mencontohkan penggunaan dari command multifile untuk menghandle file video yang dibuka dengan program mpv.&lt;/p>
+&lt;/div>
+&lt;/div>
+&lt;/div>
+&lt;div class="sect1">
+&lt;h2 id="_kesimpulan">kesimpulan&lt;/h2>
+&lt;div class="sectionbody">
+&lt;div class="paragraph">
+&lt;p>jangan coba lf klok ga mau ribet 🤣&lt;/p>
+&lt;/div>
+&lt;/div>
+&lt;/div>
+&lt;div class="sect1">
+&lt;h2 id="_referensi">Referensi&lt;/h2>
+&lt;div class="sectionbody">
+&lt;div class="olist arabic">
+&lt;ol class="arabic">
+&lt;li>
+&lt;p>&lt;a href="https://unix.stackexchange.com/questions/223677/how-to-add-double-quotes-to-every-line-and-then-add-a-comma-at-the-end-of-the-li">Add double quotes to every line and then add a comma at the end of the line&lt;/a> Diakses pada 2022-01-18&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;a href="https://github.com/gokcehan/lf/issues/719">Open multiple files with the same instance&lt;/a> Diakses pada 2022-01-18&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;a href="https://github.com/gokcehan/lf/issues/719#issuecomment-1015368978">Komentarku di issue lf&lt;/a> Diakses pada 2022-01-18&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;/div>
+&lt;/div>
+&lt;/div></description></item><item><title>Lf Si File Manager Baruku</title><link>https://mnabila.github.io/p/lf-si-file-manager-baruku/</link><pubDate>Tue, 11 Jan 2022 08:27:24 +0700</pubDate><guid>https://mnabila.github.io/p/lf-si-file-manager-baruku/</guid><description>
 &lt;div class="sect1">
 &lt;h2 id="_alasan_selingkuh">alasan selingkuh&lt;/h2>
 &lt;div class="sectionbody">
@@ -87,6 +178,7 @@
 &lt;pre class="highlight">&lt;code class="language-sh" data-lang="sh">#!/bin/sh
 map f fzf_select
 map D delete
+map x %dragon -a -x &amp;#34;$fx&amp;#34; 2&amp;amp;&amp;gt; /dev/null &amp;amp;
 map R reload
 # removable disk
 map &amp;lt;f-12&amp;gt;u %udiskie-umount &amp;#34;$fx&amp;#34;
@@ -109,10 +201,7 @@ map &amp;lt;a-L&amp;gt; %tmux split -h lf
 map &amp;lt;a-h&amp;gt; %tmux select-pane -L
 map &amp;lt;a-j&amp;gt; %tmux select-pane -D
 map &amp;lt;a-k&amp;gt; %tmux select-pane -U
-map &amp;lt;a-l&amp;gt; %tmux select-pane -R
-# file archive
-map ae extract
-map aa archive&lt;/code>&lt;/pre>
+map &amp;lt;a-l&amp;gt; %tmux select-pane -R&lt;/code>&lt;/pre>
 &lt;/div>
 &lt;/div>
 &lt;div class="paragraph">
@@ -121,38 +210,17 @@ map aa archive&lt;/code>&lt;/pre>
 &lt;div class="listingblock">
 &lt;div class="content">
 &lt;pre class="highlight">&lt;code class="language-sh" data-lang="sh">#!/bin/sh
+# file opener
 cmd open ${{
 case $(file --mime-type &amp;#34;$f&amp;#34; -bL) in
 text/*) $EDITOR &amp;#34;$fx&amp;#34; ;;
 image/*) sxiv &amp;#34;$fx&amp;#34; 2&amp;amp;&amp;gt;/dev/null &amp;amp;;;
 application/x-iso9660-image) udisksctl loop-setup --file &amp;#34;$f&amp;#34;;;
-application/x-executable) lf -remote &amp;#34;send $id echo $id&amp;#34;;;
+application/x-executable) lf -remote &amp;#34;send $id echo &amp;#39;not allowed&amp;#39;&amp;#34;;;
 *) xdg-open &amp;#34;$f&amp;#34; &amp;amp;&amp;gt;/dev/null &amp;amp; ;;
 esac
 }}
-# compress current file or selected files with tar and gunzip
-cmd tar ${{
-set -f
-mkdir $1
-cp -r $fx $1
-tar czf $1.tar.gz $1
-rm -rf $1
-}}
-# compress current file or selected files with zip
-cmd zip ${{
-set -f
-mkdir $1
-cp -r $fx $1
-zip -r $1.zip $1
-rm -rf $1
-}}
-# extract current file or selected files
-cmd extract ${{
-set -f
-case $f in
-*.tar.bz|*.tar.bz2|*.tbz|*.tbz2|*.tar.gz|*.tgz|*.tar.xz|*.txz|*.zip|*.rar|*.7z) atool --extract --each &amp;#34;$fx&amp;#34;;;
-esac
-}}
+# create directory
 cmd mkdir ${{
 printf &amp;#34;Directory Name: &amp;#34;
 read name
@@ -160,13 +228,15 @@ if [ ! -z &amp;#34;$name&amp;#34; ]; then
 mkdir &amp;#34;$name&amp;#34;
 fi
 }}
-cmd mkfile ${{
+# create file
+cmd touch ${{
 printf &amp;#34;File Name: &amp;#34;
 read name
 if [ ! -z &amp;#34;$name&amp;#34; ]; then
 $EDITOR &amp;#34;$name&amp;#34;
 fi
 }}
+# rename selected file/folder
 cmd bulkrename ${{
 old=&amp;#34;$(mktemp)&amp;#34;
 new=&amp;#34;$(mktemp)&amp;#34;
@@ -186,6 +256,7 @@ done
 rm -- &amp;#34;$old&amp;#34; &amp;#34;$new&amp;#34;
 lf -remote &amp;#34;send $id unselect&amp;#34;
 }}
+# fuzzy finder
 cmd fzf_select ${{
 res=&amp;#34;$(find -L . \( -path &amp;#39;*/\.*&amp;#39; -o -fstype &amp;#39;dev&amp;#39; -o -fstype &amp;#39;proc&amp;#39; \) -prune -o -print 2&amp;gt; /dev/null | sed 1d | cut -b3- | fzf +m)&amp;#34;
 if [ -d &amp;#34;$res&amp;#34; ]; then
@@ -195,18 +266,63 @@ cmd=&amp;#34;select&amp;#34;
 fi
 lf -remote &amp;#34;send $id $cmd \&amp;#34;$res\&amp;#34;&amp;#34;
 }}
+# copy file to clipboard
 cmd yank2clipboard ${{
 xclip -selection clipboard -i &amp;#34;$f&amp;#34; -t $(file --mime-type &amp;#34;$f&amp;#34; | cut -d &amp;#34;:&amp;#34; -f 2 | xargs)
 }}
-cmd recoll ${{
-w=$(tput cols)
-if [ $w -le 80 ]; then
-lf -remote &amp;#34;send $id set ratios 1:2&amp;#34;
-elif [ $w -le 160 ]; then
-lf -remote &amp;#34;send $id set ratios 1:2:3&amp;#34;
-else
-lf -remote &amp;#34;send $id set ratios 1:2:3:5&amp;#34;
+# print mimetype
+cmd mimetype &amp;amp;{{
+mim=$(file --mime-type -bL &amp;#34;$f&amp;#34;)
+lf -remote &amp;#34;send $id echomsg &amp;#39;mimetype : $mim&amp;#39;&amp;#34; &amp;amp;
+}}
+# extract current file or selected files
+cmd extract ${{
+set -f
+case &amp;#34;$f&amp;#34; in
+*.tar.bz|*.tar.bz2|*.tbz|*.tbz2) tar xjvf &amp;#34;$f&amp;#34;;;
+*.tar.gz|*.tgz) tar xzvf &amp;#34;$f&amp;#34;;;
+*.tar.xz|*.txz) tar xJvf &amp;#34;$f&amp;#34;;;
+*.zip) unzip &amp;#34;$f&amp;#34;;;
+*.rar) unrar x &amp;#34;$f&amp;#34;;;
+*.7z) 7z x &amp;#34;$f&amp;#34;;;
+esac
+}}
+# compress current file or selected files with tar and gunzip
+cmd tar ${{
+set -f
+mkdir &amp;#34;$1&amp;#34;
+cp -r $fx &amp;#34;$1&amp;#34;
+tar czf &amp;#34;$1.tar.gz&amp;#34; &amp;#34;$1&amp;#34;
+rm -rf &amp;#34;$1&amp;#34;
+}}
+# compress current file or selected files with zip
+cmd zip ${{
+set -f
+mkdir &amp;#34;$1&amp;#34;
+cp -r $fx &amp;#34;$1&amp;#34;
+zip -r &amp;#34;$1.zip&amp;#34; &amp;#34;$1&amp;#34;
+rm -rf &amp;#34;$1&amp;#34;
+}}
+# compress current file or selected files with 7z
+cmd 7z ${{
+set -f
+mkdir &amp;#34;$1&amp;#34;
+cp -r $fx &amp;#34;$1&amp;#34;
+7z a &amp;#34;$1.7z&amp;#34; &amp;#34;$1&amp;#34;
+rm -rf &amp;#34;$1&amp;#34;
+}}
+cmd rclone ${{
+function rmount () {
+if [ ! -d &amp;#34;/tmp/rclone&amp;#34; ]; then
+mkdir /tmp/lfrclone
 fi
+rclone mount &amp;#34;$1&amp;#34; /tmp/lfrclone --daemon &amp;amp;&amp;amp; notify-send &amp;#34;LF - Rclone&amp;#34; &amp;#34;Success Mount $1&amp;#34;
+}
+case $1 in
+m|mount) rmount &amp;#34;$2&amp;#34;;;
+u|umount) fusermount -u /tmp/lfrclone &amp;amp;&amp;amp; rmdir /tmp/lfrclone &amp;amp;&amp;amp; notify-send &amp;#34;LF - Rclone&amp;#34; &amp;#34;Success Umount&amp;#34; ;;
+*) lf -remote &amp;#34;send $id echo example: rclone m remote:/path and rclone u&amp;#34;
+esac
 }}&lt;/code>&lt;/pre>
 &lt;/div>
 &lt;/div>
@@ -216,10 +332,14 @@ fi
 &lt;div class="listingblock">
 &lt;div class="content">
 &lt;pre class="highlight">&lt;code class="language-sh" data-lang="sh">#!/bin/sh
+set shell sh
+set shellopts &amp;#34;-eu&amp;#34;
+set ifs &amp;#34;\n&amp;#34;
 set ignorecase true
+set scrolloff 10
 set icons
-set ratios 1:3:2
-set previewer mediainfo&lt;/code>&lt;/pre>
+set ratios 1:2:3
+set promptfmt &amp;#34;\033[32;1m%u\033[0m ❱ \033[34;1m%d\033[0m\033[1m%f\033[0m&amp;#34;&lt;/code>&lt;/pre>
 &lt;/div>
 &lt;/div>
 &lt;div class="paragraph">
@@ -233,6 +353,9 @@ source ~/.config/lf/config.d/options
 source ~/.config/lf/config.d/keymap
 source ~/.config/lf/config.d/command&lt;/code>&lt;/pre>
 &lt;/div>
+&lt;/div>
+&lt;div class="paragraph">
+&lt;p>&lt;strong>Catatan:&lt;/strong> potongan konfigurasi diatas didapatkan dari eksplorasiku di lf -doc dan wiki akan tetapi ada beberapa snippet dari wiki lf yang menurutku itu bukanlah sebuah tips tapi malah nambah masalah jadi mau ga mau harus eksporasi sendiri. contohnya ? cmd open bagian all file, klok kita pilih beberapa file dan ingin dibuka dalam single instance maka jatuhnya malah tiap file jadi satu instance jadi klok kita select 10 video maka nanti akan muncul 10 window video player bukan menjadi sebuah playlist&lt;/p>
 &lt;/div>
 &lt;/div>
 &lt;/div>
