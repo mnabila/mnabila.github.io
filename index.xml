@@ -39,7 +39,15 @@ done&lt;/code>&lt;/pre>
 &lt;/div>
 &lt;/div>
 &lt;div class="paragraph">
-&lt;p>Dari kedua metode diatas menurutku metode update package lebih cocok dikarenakan proses yang dibutuhkan cukup singkat dibandingkan metode query package, karna waktu proses query package si pacman perlu menampilkan keseluruhan informasi tiap paketnya. Informasi-informasi tersebut kemudian diolah menggunakan awk (overkill menurutku) sehingga hasilnya kurang cepat. Berbeda dengan metode update package, metode ini si pacman langsung memberikan informasi yang kubutuhkan sehingga bisa langsung masuk tahap sorting berdasarkan size update paketnya&lt;/p>
+&lt;p>Dari kedua metode diatas menurutku metode update package lebih cocok dikarenakan proses yang dibutuhkan cukup singkat dibandingkan metode query package, karna waktu proses query package si pacman perlu menampilkan keseluruhan informasi tiap paketnya. Informasi-informasi tersebut kemudian diolah menggunakan awk (overkill menurutku) sehingga hasilnya kurang cepat. Berbeda dengan metode update package, metode ini si pacman langsung memberikan informasi yang kubutuhkan sehingga bisa langsung masuk tahap sorting berdasarkan size update paketnya.&lt;/p>
+&lt;/div>
+&lt;div class="paragraph">
+&lt;p>Setelah menjalankan perintah script diatas baru dilanjutkan dengan proses install.&lt;/p>
+&lt;/div>
+&lt;div class="listingblock">
+&lt;div class="content">
+&lt;pre class="highlight">&lt;code class="language-sh" data-lang="sh">sudo pacman -Su&lt;/code>&lt;/pre>
+&lt;/div>
 &lt;/div>
 &lt;/div>
 &lt;/div>
