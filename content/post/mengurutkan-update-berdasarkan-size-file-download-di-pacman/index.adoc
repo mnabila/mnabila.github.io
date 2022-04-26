@@ -3,6 +3,7 @@ title: "Mengurutkan Update Berdasarkan Size File Download Di Pacman"
 date: 2022-04-26T10:40:14+07:00
 categories: ["tips",]
 tags: ["pacman", "update", "bash"]
+lastmod : 2022-04-26T15:52:00+07:00
 ---
 
 :toc:
@@ -35,8 +36,14 @@ LC_ALL=C pacman -Su --print-format "%s %n" | sort -h | while read line; do
 done
 ----
 
-Dari kedua metode diatas menurutku metode update package lebih cocok dikarenakan proses yang dibutuhkan cukup singkat dibandingkan metode query package, karna waktu proses query package si pacman perlu menampilkan keseluruhan informasi tiap paketnya. Informasi-informasi tersebut kemudian diolah menggunakan awk (overkill menurutku) sehingga hasilnya kurang cepat. Berbeda dengan metode update package, metode ini si pacman langsung memberikan informasi yang kubutuhkan sehingga bisa langsung masuk tahap sorting berdasarkan size update paketnya
+Dari kedua metode diatas menurutku metode update package lebih cocok dikarenakan proses yang dibutuhkan cukup singkat dibandingkan metode query package, karna waktu proses query package si pacman perlu menampilkan keseluruhan informasi tiap paketnya. Informasi-informasi tersebut kemudian diolah menggunakan awk (overkill menurutku) sehingga hasilnya kurang cepat. Berbeda dengan metode update package, metode ini si pacman langsung memberikan informasi yang kubutuhkan sehingga bisa langsung masuk tahap sorting berdasarkan size update paketnya.
 
+Setelah menjalankan perintah script diatas baru dilanjutkan dengan proses install.
+
+[source, sh]
+----
+sudo pacman -Su
+----
 
 == Kesimpulan
 pakek aja metode update package, karna lebih cepet (wkwkwkw)
