@@ -1,4 +1,72 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>mnabila</title><link>https://mnabila.github.io/</link><description>Recent content on mnabila</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Tue, 18 Jan 2022 19:43:54 +0700</lastBuildDate><atom:link href="https://mnabila.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>Handle Multiple File Di Lf</title><link>https://mnabila.github.io/p/handle-multiple-file-di-lf/</link><pubDate>Tue, 18 Jan 2022 19:43:54 +0700</pubDate><guid>https://mnabila.github.io/p/handle-multiple-file-di-lf/</guid><description>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>mnabila</title><link>https://mnabila.github.io/</link><description>Recent content on mnabila</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Tue, 26 Apr 2022 10:40:14 +0700</lastBuildDate><atom:link href="https://mnabila.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>Mengurutkan Update Berdasarkan Size File Download Di Pacman</title><link>https://mnabila.github.io/p/mengurutkan-update-berdasarkan-size-file-download-di-pacman/</link><pubDate>Tue, 26 Apr 2022 10:40:14 +0700</pubDate><guid>https://mnabila.github.io/p/mengurutkan-update-berdasarkan-size-file-download-di-pacman/</guid><description>
+&lt;div class="sect1">
+&lt;h2 id="_intro">Intro&lt;/h2>
+&lt;div class="sectionbody">
+&lt;div class="paragraph">
+&lt;p>Yah dikarenakan saat ini aku sedang menggunakan koneksi internet yang cukup lelet, akupun mengalami kesuliat saat mau melakukan upgrade package yang ada didalam system archlinuxku, sampe sampe sudah beberapa bulan tak update karna hal tersebut. Karna udah jenuh dengan hal itu pengen ngerasain paket yang lebih baru akupun mendapatkan sebuah ide yang cukup mantab (hahahaha) yakni menggunakan metode sorting berdasarkan size update packagenya.&lt;/p>
+&lt;/div>
+&lt;/div>
+&lt;/div>
+&lt;div class="sect1">
+&lt;h2 id="_pembahasan">Pembahasan&lt;/h2>
+&lt;div class="sectionbody">
+&lt;div class="paragraph">
+&lt;p>Disini aku mendapatkan dua metode yang bisa digunakan yakni menggunakan metode query package dam menggunakan metode update package pada pacman.&lt;/p>
+&lt;/div>
+&lt;div class="sect2">
+&lt;h3 id="_metode_query_package">metode query package&lt;/h3>
+&lt;div class="listingblock">
+&lt;div class="content">
+&lt;pre class="highlight">&lt;code class="language-sh" data-lang="sh">#!/bin/bash
+LC_ALL=C pacman -Qui | awk &amp;#39;/^Name/{name=$3} /^Installed Size/{print $4$5, name}&amp;#39; | sort -h | cut -d &amp;#34; &amp;#34; -f 2 | while read line; do
+sudo pacman -Sw --noconfirm $line
+done&lt;/code>&lt;/pre>
+&lt;/div>
+&lt;/div>
+&lt;/div>
+&lt;div class="sect2">
+&lt;h3 id="_metode_update_package">metode update package&lt;/h3>
+&lt;div class="listingblock">
+&lt;div class="content">
+&lt;pre class="highlight">&lt;code class="language-sh" data-lang="sh">#!/bin/bash
+LC_ALL=C pacman -Su --print-format &amp;#34;%s %n&amp;#34; | sort -h | while read line; do
+size=$(echo $line | cut -d &amp;#34; &amp;#34; -f 1)
+name=$(echo $line | cut -d &amp;#34; &amp;#34; -f 2)
+if (($size &amp;gt; 0)); then
+sudo pacman -Sdw --noconfirm $name
+fi
+done&lt;/code>&lt;/pre>
+&lt;/div>
+&lt;/div>
+&lt;div class="paragraph">
+&lt;p>Dari kedua metode diatas menurutku metode update package lebih cocok dikarenakan proses yang dibutuhkan cukup singkat dibandingkan metode query package, karna waktu proses query package si pacman perlu menampilkan keseluruhan informasi tiap paketnya. Informasi-informasi tersebut kemudian diolah menggunakan awk (overkill menurutku) sehingga hasilnya kurang cepat. Berbeda dengan metode update package, metode ini si pacman langsung memberikan informasi yang kubutuhkan sehingga bisa langsung masuk tahap sorting berdasarkan size update paketnya&lt;/p>
+&lt;/div>
+&lt;/div>
+&lt;/div>
+&lt;/div>
+&lt;div class="sect1">
+&lt;h2 id="_kesimpulan">Kesimpulan&lt;/h2>
+&lt;div class="sectionbody">
+&lt;div class="paragraph">
+&lt;p>pakek aja metode update package, karna lebih cepet (wkwkwkw)&lt;/p>
+&lt;/div>
+&lt;/div>
+&lt;/div>
+&lt;div class="sect1">
+&lt;h2 id="_referensi">Referensi&lt;/h2>
+&lt;div class="sectionbody">
+&lt;div class="ulist">
+&lt;ul>
+&lt;li>
+&lt;p>&lt;a href="https://wiki.archlinux.org/title/Pacman/Tips_and_tricks">Wiki Archlinux&lt;/a> Diakses pada 2022-04-26&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;code>man pacman&lt;/code> Diakses pada 2022-04-26&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;/div>
+&lt;/div>
+&lt;/div></description></item><item><title>Handle Multiple File Di Lf</title><link>https://mnabila.github.io/p/handle-multiple-file-di-lf/</link><pubDate>Tue, 18 Jan 2022 19:43:54 +0700</pubDate><guid>https://mnabila.github.io/p/handle-multiple-file-di-lf/</guid><description>
 &lt;div class="sect1">
 &lt;h2 id="_biasa_intro">Biasa intro 🤣&lt;/h2>
 &lt;div class="sectionbody">
