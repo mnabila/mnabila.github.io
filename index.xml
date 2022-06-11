@@ -1,257 +1,127 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>mnabila</title><link>https://mnabila.github.io/</link><description>Recent content on mnabila</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Tue, 26 Apr 2022 10:40:14 +0700</lastBuildDate><atom:link href="https://mnabila.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>Mengurutkan Update Berdasarkan Size File Download Di Pacman</title><link>https://mnabila.github.io/p/mengurutkan-update-berdasarkan-size-file-download-di-pacman/</link><pubDate>Tue, 26 Apr 2022 10:40:14 +0700</pubDate><guid>https://mnabila.github.io/p/mengurutkan-update-berdasarkan-size-file-download-di-pacman/</guid><description>
-&lt;div class="sect1">
-&lt;h2 id="_intro">Intro&lt;/h2>
-&lt;div class="sectionbody">
-&lt;div class="paragraph">
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>mnabila</title><link>https://mnabila.github.io/</link><description>Recent content on mnabila</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Tue, 26 Apr 2022 10:40:14 +0700</lastBuildDate><atom:link href="https://mnabila.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>Mengurutkan Update Berdasarkan Size File Download Di Pacman</title><link>https://mnabila.github.io/p/mengurutkan-update-berdasarkan-size-file-download-di-pacman/</link><pubDate>Tue, 26 Apr 2022 10:40:14 +0700</pubDate><guid>https://mnabila.github.io/p/mengurutkan-update-berdasarkan-size-file-download-di-pacman/</guid><description>&lt;h1 id="intro">Intro&lt;/h1>
 &lt;p>Yah dikarenakan saat ini aku sedang menggunakan koneksi internet yang cukup lelet, akupun mengalami kesuliat saat mau melakukan upgrade package yang ada didalam system archlinuxku, sampe sampe sudah beberapa bulan tak update karna hal tersebut. Karna udah jenuh dengan hal itu pengen ngerasain paket yang lebih baru akupun mendapatkan sebuah ide yang cukup mantab (hahahaha) yakni menggunakan metode sorting berdasarkan size update packagenya.&lt;/p>
-&lt;/div>
-&lt;/div>
-&lt;/div>
-&lt;div class="sect1">
-&lt;h2 id="_pembahasan">Pembahasan&lt;/h2>
-&lt;div class="sectionbody">
-&lt;div class="paragraph">
+&lt;h1 id="pembahasan">Pembahasan&lt;/h1>
 &lt;p>Disini aku mendapatkan dua metode yang bisa digunakan yakni menggunakan metode query package dam menggunakan metode update package pada pacman.&lt;/p>
-&lt;/div>
-&lt;div class="sect2">
-&lt;h3 id="_metode_query_package">metode query package&lt;/h3>
-&lt;div class="listingblock">
-&lt;div class="content">
-&lt;pre class="highlight">&lt;code class="language-sh" data-lang="sh">#!/bin/bash
+&lt;h2 id="metode-query-package">metode query package&lt;/h2>
+&lt;pre tabindex="0">&lt;code>#!/bin/bash
 LC_ALL=C pacman -Qui | awk &amp;#39;/^Name/{name=$3} /^Installed Size/{print $4$5, name}&amp;#39; | sort -h | cut -d &amp;#34; &amp;#34; -f 2 | while read line; do
 sudo pacman -Sw --noconfirm $line
-done&lt;/code>&lt;/pre>
-&lt;/div>
-&lt;/div>
-&lt;/div>
-&lt;div class="sect2">
-&lt;h3 id="_metode_update_package">metode update package&lt;/h3>
-&lt;div class="listingblock">
-&lt;div class="content">
-&lt;pre class="highlight">&lt;code class="language-sh" data-lang="sh">#!/bin/bash
+done
+&lt;/code>&lt;/pre>&lt;h2 id="metode-update-package">metode update package&lt;/h2>
+&lt;pre tabindex="0">&lt;code>#!/bin/bash
 LC_ALL=C pacman -Su --print-format &amp;#34;%s %n&amp;#34; | sort -h | while read line; do
 size=$(echo $line | cut -d &amp;#34; &amp;#34; -f 1)
 name=$(echo $line | cut -d &amp;#34; &amp;#34; -f 2)
 if (($size &amp;gt; 0)); then
 sudo pacman -Sdw --noconfirm $name
 fi
-done&lt;/code>&lt;/pre>
-&lt;/div>
-&lt;/div>
-&lt;div class="paragraph">
-&lt;p>Dari kedua metode diatas menurutku metode update package lebih cocok dikarenakan proses yang dibutuhkan cukup singkat dibandingkan metode query package, karna waktu proses query package si pacman perlu menampilkan keseluruhan informasi tiap paketnya. Informasi-informasi tersebut kemudian diolah menggunakan awk (overkill menurutku) sehingga hasilnya kurang cepat. Berbeda dengan metode update package, metode ini si pacman langsung memberikan informasi yang kubutuhkan sehingga bisa langsung masuk tahap sorting berdasarkan size update paketnya.&lt;/p>
-&lt;/div>
-&lt;div class="paragraph">
+done
+&lt;/code>&lt;/pre>&lt;p>Dari kedua metode diatas menurutku metode update package lebih cocok dikarenakan proses yang dibutuhkan cukup singkat dibandingkan metode query package, karna waktu proses query package si pacman perlu menampilkan keseluruhan informasi tiap paketnya. Informasi-informasi tersebut kemudian diolah menggunakan awk (overkill menurutku) sehingga hasilnya kurang cepat. Berbeda dengan metode update package, metode ini si pacman langsung memberikan informasi yang kubutuhkan sehingga bisa langsung masuk tahap sorting berdasarkan size update paketnya.&lt;/p>
 &lt;p>Setelah menjalankan perintah script diatas baru dilanjutkan dengan proses install.&lt;/p>
-&lt;/div>
-&lt;div class="listingblock">
-&lt;div class="content">
-&lt;pre class="highlight">&lt;code class="language-sh" data-lang="sh">sudo pacman -Su&lt;/code>&lt;/pre>
-&lt;/div>
-&lt;/div>
-&lt;/div>
-&lt;/div>
-&lt;/div>
-&lt;div class="sect1">
-&lt;h2 id="_kesimpulan">Kesimpulan&lt;/h2>
-&lt;div class="sectionbody">
-&lt;div class="paragraph">
+&lt;pre tabindex="0">&lt;code>sudo pacman -Su
+&lt;/code>&lt;/pre>&lt;h1 id="kesimpulan">Kesimpulan&lt;/h1>
 &lt;p>pakek aja metode update package, karna lebih cepet (wkwkwkw)&lt;/p>
-&lt;/div>
-&lt;/div>
-&lt;/div>
-&lt;div class="sect1">
-&lt;h2 id="_referensi">Referensi&lt;/h2>
-&lt;div class="sectionbody">
-&lt;div class="ulist">
+&lt;h1 id="referensi">Referensi&lt;/h1>
 &lt;ul>
-&lt;li>
-&lt;p>&lt;a href="https://wiki.archlinux.org/title/Pacman/Tips_and_tricks">Wiki Archlinux&lt;/a> Diakses pada 2022-04-26&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>&lt;code>man pacman&lt;/code> Diakses pada 2022-04-26&lt;/p>
-&lt;/li>
-&lt;/ul>
-&lt;/div>
-&lt;/div>
-&lt;/div></description></item><item><title>Handle Multiple File Di Lf</title><link>https://mnabila.github.io/p/handle-multiple-file-di-lf/</link><pubDate>Tue, 18 Jan 2022 19:43:54 +0700</pubDate><guid>https://mnabila.github.io/p/handle-multiple-file-di-lf/</guid><description>
-&lt;div class="sect1">
-&lt;h2 id="_biasa_intro">Biasa intro 🤣&lt;/h2>
-&lt;div class="sectionbody">
-&lt;div class="paragraph">
+&lt;li>&lt;a class="link" href="https://wiki.archlinux.org/title/Pacman/Tips_and_tricks" target="_blank" rel="noopener"
+>Wiki Archlinux&lt;/a> Diakses pada 2022-04-26&lt;/li>
+&lt;li>&lt;code>man pacman&lt;/code> Diakses pada 2022-04-26&lt;/li>
+&lt;/ul></description></item><item><title>Handle Multiple File Di Lf</title><link>https://mnabila.github.io/p/handle-multiple-file-di-lf/</link><pubDate>Tue, 18 Jan 2022 19:43:54 +0700</pubDate><guid>https://mnabila.github.io/p/handle-multiple-file-di-lf/</guid><description>&lt;h2 id="biasa-intro-">Biasa intro 🤣&lt;/h2>
 &lt;p>Seperti yang sudah pernah kusinggung di catatan asbun sebelumnya, bahwa kelebihan dari lf file manager ini adalah banyak kekurangannya salah satunya untuk menghandle masalah multiple file yang akan dibuka dalam satu instance atau gambaran gampangnya pengen bikin sebuah playlist di pemutar video dari beberapa file yang di pilih.&lt;/p>
-&lt;/div>
-&lt;/div>
-&lt;/div>
-&lt;div class="sect1">
-&lt;h2 id="_pembahasan">Pembahasan&lt;/h2>
-&lt;div class="sectionbody">
-&lt;div class="paragraph">
+&lt;h2 id="pembahasan">Pembahasan&lt;/h2>
 &lt;p>Untuk menghandle multiple file di lf ini cukup susah asli aku ga becanda sampe sampe beberapa hari lalu aku coba ubah source code lf dibagian os.go akan tetapi walaupun berhasil membuat output yang sesuai ternyata hal ini mempengaruhi fitur yang lain, bukannya menjadi fitur malah jadi bug baru alhasil kuurungkan niatku haha.&lt;/p>
-&lt;/div>
-&lt;div class="paragraph">
 &lt;p>Setelah keliling dibeberapa issue ternyata ada yang menanyakan hal serupa jadi aku tidak perlu membuat issue lagi dan langsung nimbrung pembahasan disana dengan skill bahasa lingginya level expert via google translate akhirnya mendapatkan beberapa kesimpulan, meliputi&lt;/p>
-&lt;/div>
-&lt;div class="ulist">
 &lt;ul>
-&lt;li>
-&lt;p>penggunaan environment IFS yang benar&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>pemberian double quote pada nama file yang memiliki karakter space&lt;/p>
-&lt;/li>
+&lt;li>penggunaan environment IFS yang benar&lt;/li>
+&lt;li>pemberian double quote pada nama file yang memiliki karakter space&lt;/li>
 &lt;/ul>
-&lt;/div>
-&lt;div class="paragraph">
 &lt;p>Untuk penggunaan environment IFS sendiri di lf secara default memiliki value nill/kosong, apabila environment IFS ini diset ke karakter new line maka akan mempengaruhi output dari environment fx (list selected file lf).&lt;/p>
-&lt;/div>
-&lt;div class="paragraph">
 &lt;p>Pemberian double quote (bisa juga pakek single quote) pada nama file ini menurutku wajib walaupun nama filenya tidak mengandung karakter space sama sekali. Hal ini bertujuan untuk berjaga-jaga apabila bertemu nama file yang memiliki karakter space didalamnya command tidak error.&lt;/p>
-&lt;/div>
-&lt;div class="paragraph">
 &lt;p>udah dulu pembahasannya sekarang masuk ke implementasinya, pada &lt;code>lfrc&lt;/code> aku membuat dua buah command yakni command open dan multifile&lt;/p>
-&lt;/div>
-&lt;div class="paragraph">
-&lt;p>&lt;strong>multiple&lt;/strong>&lt;/p>
-&lt;/div>
-&lt;div class="listingblock">
-&lt;div class="content">
-&lt;pre class="highlight">&lt;code class="language-bash" data-lang="bash"># multiple file handler
+&lt;h3 id="multiple">Multiple&lt;/h3>
+&lt;pre tabindex="0">&lt;code># multiple file handler
 cmd multifile &amp;amp;{{
 IFS=&amp;#34;&amp;#34;;eval &amp;#34;$1 $(echo $fx | awk &amp;#39;{ printf &amp;#34;\&amp;#34;%s\&amp;#34; &amp;#34;, $0 }&amp;#39;)&amp;#34;
-}}&lt;/code>&lt;/pre>
-&lt;/div>
-&lt;/div>
-&lt;div class="paragraph">
-&lt;p>&lt;strong>Open&lt;/strong>&lt;/p>
-&lt;/div>
-&lt;div class="listingblock">
-&lt;div class="content">
-&lt;pre class="highlight">&lt;code class="language-bash" data-lang="bash"># file opener
+}}
+&lt;/code>&lt;/pre>&lt;h3 id="open">Open&lt;/h3>
+&lt;pre tabindex="0">&lt;code># file opener
 cmd open ${{
 case $(file --mime-type &amp;#34;$f&amp;#34; -bL) in
 video/*) lf -remote &amp;#34;send $id multifile mpv&amp;#34;;;
 esac
-}}&lt;/code>&lt;/pre>
-&lt;/div>
-&lt;/div>
-&lt;div class="paragraph">
-&lt;p>pada command open ini aku hanya mencontohkan penggunaan dari command multifile untuk menghandle file video yang dibuka dengan program mpv.&lt;/p>
-&lt;/div>
-&lt;/div>
-&lt;/div>
-&lt;div class="sect1">
-&lt;h2 id="_kesimpulan">kesimpulan&lt;/h2>
-&lt;div class="sectionbody">
-&lt;div class="paragraph">
+}}
+&lt;/code>&lt;/pre>&lt;p>pada command open ini aku hanya mencontohkan penggunaan dari command multifile untuk menghandle file video yang dibuka dengan program mpv.&lt;/p>
+&lt;h2 id="kesimpulan">Kesimpulan&lt;/h2>
 &lt;p>jangan coba lf klok ga mau ribet 🤣&lt;/p>
-&lt;/div>
-&lt;/div>
-&lt;/div>
-&lt;div class="sect1">
-&lt;h2 id="_referensi">Referensi&lt;/h2>
-&lt;div class="sectionbody">
-&lt;div class="olist arabic">
-&lt;ol class="arabic">
-&lt;li>
-&lt;p>&lt;a href="https://unix.stackexchange.com/questions/223677/how-to-add-double-quotes-to-every-line-and-then-add-a-comma-at-the-end-of-the-li">Add double quotes to every line and then add a comma at the end of the line&lt;/a> Diakses pada 2022-01-18&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>&lt;a href="https://github.com/gokcehan/lf/issues/719">Open multiple files with the same instance&lt;/a> Diakses pada 2022-01-18&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>&lt;a href="https://github.com/gokcehan/lf/issues/719#issuecomment-1015368978">Komentarku di issue lf&lt;/a> Diakses pada 2022-01-18&lt;/p>
-&lt;/li>
-&lt;/ol>
-&lt;/div>
-&lt;/div>
-&lt;/div></description></item><item><title>Lf Si File Manager Baruku</title><link>https://mnabila.github.io/p/lf-si-file-manager-baruku/</link><pubDate>Tue, 11 Jan 2022 08:27:24 +0700</pubDate><guid>https://mnabila.github.io/p/lf-si-file-manager-baruku/</guid><description>
-&lt;div class="sect1">
-&lt;h2 id="_alasan_selingkuh">alasan selingkuh&lt;/h2>
-&lt;div class="sectionbody">
-&lt;div class="paragraph">
+&lt;h2 id="referensi">Referensi&lt;/h2>
+&lt;p>. &lt;a class="link" href="https://unix.stackexchange.com/questions/223677/how-to-add-double-quotes-to-every-line-and-then-add-a-comma-at-the-end-of-the-li" target="_blank" rel="noopener"
+>Add double quotes to every line and then add a comma at the end of the line&lt;/a> Diakses pada 2022-01-18
+. &lt;a class="link" href="https://github.com/gokcehan/lf/issues/719" target="_blank" rel="noopener"
+>Open multiple files with the same instance&lt;/a> Diakses pada 2022-01-18
+. &lt;a class="link" href="https://github.com/gokcehan/lf/issues/719#issuecomment-1015368978" target="_blank" rel="noopener"
+>Komentarku di issue lf&lt;/a> Diakses pada 2022-01-18&lt;/p></description></item><item><title>Lf Si File Manager Baruku</title><link>https://mnabila.github.io/p/lf-si-file-manager-baruku/</link><pubDate>Tue, 11 Jan 2022 08:27:24 +0700</pubDate><guid>https://mnabila.github.io/p/lf-si-file-manager-baruku/</guid><description>&lt;h1 id="alasan-selingkuh">alasan selingkuh&lt;/h1>
 &lt;p>Berawal dari temen sekarang jadi mantan, kalimat ini sepertinya cocok untuk menggambarkan pergantian file manager yang kugunakan saat ini. Sebelumnya aku menggunakan ranger untuk file manager utamaku, akan tetapi sewaktu menggunakan ranger aku sering mengalami hal-hal ghaib seperti file manager berhenti sendiri sewaktu copy file, cpu usage tiba-tiba naik 100% gara gara file previewer dan tak hanya itu terkadang si ranger ini agak males klok disuruh gerak cepet maunya ngajakin santai.&lt;/p>
-&lt;/div>
-&lt;div class="paragraph">
 &lt;p>Dikarenakan beberapa hal ghaib itu tiba-tiba setan dari pedalaman dotfiles menghantuiku untuk mencari selingkuhan baru, karna imanku tipis alhasilnya aku coba jalan jalan di gang github siapa tahu dapet gebetan baru dan bump dapet 2 calon (hiahiahia), calon pertama &lt;code>nnn&lt;/code> dan calon yang kedua adalah &lt;code>lf&lt;/code>.&lt;/p>
-&lt;/div>
-&lt;div class="paragraph">
 &lt;p>Sebelum memutuskan pilih yang mana, aku buatkan 3 kriteria meliputi user interface(UI), file konfigurasinya, dan workflownya. Dari ketika kriteria ini lf adalah yang paling pas denganku karna dari UI dan workflownya lf cenderung mirip dengan ranger, sedangkan untuk file Konfigurasinya si lf ini cukup menarik jika dibandingkan ranger dan nnn.&lt;/p>
-&lt;/div>
-&lt;/div>
-&lt;/div>
-&lt;div class="sect1">
-&lt;h2 id="_kelebihan_adalah_kekurangan">Kelebihan adalah kekurangan&lt;/h2>
-&lt;div class="sectionbody">
-&lt;div class="paragraph">
+&lt;h1 id="kelebihan-adalah-kekurangan">Kelebihan adalah kekurangan&lt;/h1>
 &lt;p>Kelebihannya banyak kekurangannya, yups tapi ini beneran bukan becandaan. Lf ini bisa kubilang file manager minimalist keduaku setelah si mc(midnight commander) jika dibandingkan dengan ranger yang kupakek. Karna secara default lf hanya menyediakan fitur alakadarnya saja ga ada yang magic yang membuatku tekesan. Tapi karna minimnya fitur yang disediakan oleh lf pengguna dibebaskan membuat fitur sendiri sesuai dengan yang mereka inginkan yang bisa dituliskan melalui file konfignya. Dibawah ini adalah beberapa gambaran kenapa aku pindah dari ranger ke lf.&lt;/p>
-&lt;/div>
-&lt;table class="tableblock frame-all grid-all stretch">
-&lt;caption class="title">Table 1. Perbandingan lf dan ranger&lt;/caption>
-&lt;colgroup>
-&lt;col style="width: 50%;"/>
-&lt;col style="width: 50%;"/>
-&lt;/colgroup>
+&lt;h1 id="perbandingan-lf-dan-ranger">Perbandingan lf dan ranger&lt;/h1>
+&lt;table>
 &lt;thead>
 &lt;tr>
-&lt;th class="tableblock halign-left valign-top">Lf&lt;/th>
-&lt;th class="tableblock halign-left valign-top">Ranger&lt;/th>
+&lt;th>LF&lt;/th>
+&lt;th>Ranger&lt;/th>
 &lt;/tr>
 &lt;/thead>
 &lt;tbody>
 &lt;tr>
-&lt;td class="tableblock halign-left valign-top" colspan="2">&lt;p class="tableblock">&lt;strong>fitur&lt;/strong>&lt;/p>&lt;/td>
+&lt;td>&lt;strong>fitur&lt;/strong>&lt;/td>
+&lt;td>&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td class="tableblock halign-left valign-top">&lt;p class="tableblock">Fitur ? builtin fiturnya sedikit banget, tapi karna file konfignya bisa ditulis dengan shell script pengguna memungkinkan menambahkan fitur yang sesuai dengan keinginan pengguna.&lt;/p>&lt;/td>
-&lt;td class="tableblock halign-left valign-top">&lt;p class="tableblock">Jelas secara fitur ranger lebih lengkap daripada lf no debat, akan tetapi dibalik kelengkapan dari fitur ranger aku masih belum bisa memanfaatkan semua fiturnya. belum lagi si ranger ini juga bisa ditambahkan fitur baru oleh penggunanya yang ditulis dengan bahasa pemrograman python.&lt;/p>&lt;/td>
+&lt;td>Fitur ? builtin fiturnya sedikit banget, tapi karna file konfignya bisa ditulis dengan shell script pengguna memungkinkan menambahkan fitur yang sesuai dengan keinginan pengguna.&lt;/td>
+&lt;td>Jelas secara fitur ranger lebih lengkap daripada lf no debat, akan tetapi dibalik kelengkapan dari fitur ranger aku masih belum bisa memanfaatkan semua fiturnya. belum lagi si ranger ini juga bisa ditambahkan fitur baru oleh penggunanya yang ditulis dengan bahasa pemrograman python.&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td class="tableblock halign-left valign-top" colspan="2">&lt;p class="tableblock">&lt;strong>konfig&lt;/strong>&lt;/p>&lt;/td>
+&lt;td>&lt;strong>konfig&lt;/strong>&lt;/td>
+&lt;td>&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td class="tableblock halign-left valign-top">&lt;p class="tableblock">default konfignya minimalist dan mudah dipahami, akan tetapi dibaliknya tedapat sesuatu yang tidak bisa diungkapkan dengan kata kata (haha)&lt;/p>&lt;/td>
-&lt;td class="tableblock halign-left valign-top">&lt;p class="tableblock">default konfignya mayan banyak dan agak membingungkan pemula jika ingin diutak atik lebih lanjut&lt;/p>&lt;/td>
+&lt;td>default konfignya minimalist dan mudah dipahami, akan tetapi dibaliknya tedapat sesuatu yang tidak bisa diungkapkan dengan kata kata (haha)&lt;/td>
+&lt;td>default konfignya mayan banyak dan agak membingungkan pemula jika ingin diutak atik lebih lanjut&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td class="tableblock halign-left valign-top" colspan="2">&lt;p class="tableblock">&lt;strong>Performa&lt;/strong>&lt;/p>&lt;/td>
+&lt;td>&lt;strong>Performa&lt;/strong>&lt;/td>
+&lt;td>&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td class="tableblock halign-left valign-top">&lt;p class="tableblock">Secara performa lf lebih cepat dibandingkan ranger tapi aku ga berani bilang sangat cepat walaupun terasa ga sampe sedetik udah kebuka ini file manager 🤣. Tapi karna masi baru beberapa hari pakek aku belum bisa berkomentar banyak soal ini file manager (nanti akan diupdate jika sudah mulai muncul hal hal ghaib di lf)&lt;/p>&lt;/td>
-&lt;td class="tableblock halign-left valign-top">&lt;p class="tableblock">Performa dari ranger sendiri cukup cepat menurutku akan tetapi terkadang bisa sangat lambat apalagi klok ketemu removabledisk seperti flashdrive terkadang list file yang ditampilkan tidak sesua, walaupun sudah direstart sekalipun list filenya tidak terupdate (solusi buka tutup ranger)&lt;/p>&lt;/td>
+&lt;td>Secara performa lf lebih cepat dibandingkan ranger tapi aku ga berani bilang sangat cepat walaupun terasa ga sampe sedetik udah kebuka ini file manager 🤣. Tapi karna masi baru beberapa hari pakek aku belum bisa berkomentar banyak soal ini file manager (nanti akan diupdate jika sudah mulai muncul hal hal ghaib di lf)&lt;/td>
+&lt;td>Performa dari ranger sendiri cukup cepat menurutku akan tetapi terkadang bisa sangat lambat apalagi klok ketemu removabledisk seperti flashdrive terkadang list file yang ditampilkan tidak sesua, walaupun sudah direstart sekalipun list filenya tidak terupdate (solusi buka tutup ranger)&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td class="tableblock halign-left valign-top" colspan="2">&lt;p class="tableblock">&lt;strong>Kenyamana&lt;/strong>&lt;/p>&lt;/td>
+&lt;td>&lt;strong>Kenyamana&lt;/strong>&lt;/td>
+&lt;td>&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td class="tableblock halign-left valign-top">&lt;p class="tableblock">Dari segi kenyamanan jelas lf diawal tidak nyaman sama sekali terutama untuk handle multiple file yang dibuka dalam satu instance, aku sendiri udah beberapa hari mencari pendekatan yang tepat untuk mengatasi masalah ini.&lt;/p>&lt;/td>
-&lt;td class="tableblock halign-left valign-top">&lt;p class="tableblock">Kenyaman di ranger udah ga perlu diragukan lagi buatku karna aku terjebak zona nyaman sama dia hampir 2 tahun lebih kayaknya aku pakek ini file manager.&lt;/p>&lt;/td>
+&lt;td>Dari segi kenyamanan jelas lf diawal tidak nyaman sama sekali terutama untuk handle multiple file yang dibuka dalam satu instance, aku sendiri udah beberapa hari mencari pendekatan yang tepat untuk mengatasi masalah ini.&lt;/td>
+&lt;td>Kenyaman di ranger udah ga perlu diragukan lagi buatku karna aku terjebak zona nyaman sama dia hampir 2 tahun lebih kayaknya aku pakek ini file manager.&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td class="tableblock halign-left valign-top" colspan="2">&lt;p class="tableblock">&lt;strong>Tampilan&lt;/strong>&lt;/p>&lt;/td>
+&lt;td>&lt;strong>Tampilan&lt;/strong>&lt;/td>
+&lt;td>&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td class="tableblock halign-left valign-top" colspan="2">&lt;p class="tableblock">Kembar tapi tak sama, keduanya sama sama bagus. Akan tetapi untuk lf kurang informatif untuk proses memindahkan dan menyalin filenya (cuman muncul persentase dipojokan bukan bar mirip ranger)&lt;/p>&lt;/td>
+&lt;td>Kembar tapi tak sama, keduanya sama sama bagus. Akan tetapi untuk lf kurang informatif untuk proses memindahkan dan menyalin filenya (cuman muncul persentase dipojokan bukan bar mirip ranger)&lt;/td>
+&lt;td>&lt;/td>
 &lt;/tr>
 &lt;/tbody>
 &lt;/table>
-&lt;/div>
-&lt;/div>
-&lt;div class="sect1">
-&lt;h2 id="_konfigurasi">Konfigurasi&lt;/h2>
-&lt;div class="sectionbody">
-&lt;div class="paragraph">
-&lt;p>Seperti yang sudah kusinggung di intro, lf ini menggunakan shell scripting untuk file konfigurasinya. Penggunaan shell scripting ini menurutku suatu kelebihan tersendiri dikarenakan dengan shell scripting pengguna bisa bebas menambahkan command kedalam file manager ini. Untuk mendapatkan default file konfigurasi lf kalian bisa ambil &lt;a href="https://github.com/gokcehan/lf/blob/master/etc/lfrc.example">disini&lt;/a>.&lt;/p>
-&lt;/div>
-&lt;div class="paragraph">
+&lt;h1 id="konfigurasi">Konfigurasi&lt;/h1>
+&lt;p>Seperti yang sudah kusinggung di intro, lf ini menggunakan shell scripting untuk file konfigurasinya. Penggunaan shell scripting ini menurutku suatu kelebihan tersendiri dikarenakan dengan shell scripting pengguna bisa bebas menambahkan command kedalam file manager ini. Untuk mendapatkan default file konfigurasi lf kalian bisa ambil &lt;a class="link" href="https://github.com/gokcehan/lf/blob/master/etc/lfrc.example" target="_blank" rel="noopener"
+>disini&lt;/a>.&lt;/p>
 &lt;p>Dibawah ini adalah beberapa potongan konfigurasi yang aku gunakan, dikarenakan aku menganut paham konfig panjang wajib dimodularin maka aku pisah menjadi beberapa bagian meliputi options, keymap, command kemudian di source kedalam lfrc.&lt;/p>
-&lt;/div>
-&lt;div class="paragraph">
-&lt;p>&lt;strong>keymap&lt;/strong>&lt;/p>
-&lt;/div>
-&lt;div class="listingblock">
-&lt;div class="content">
-&lt;pre class="highlight">&lt;code class="language-sh" data-lang="sh">#!/bin/sh
+&lt;h2 id="keymap">keymap&lt;/h2>
+&lt;pre tabindex="0">&lt;code>#!/bin/sh
 map f fzf_select
 map D delete
 map x %dragon -a -x &amp;#34;$fx&amp;#34; 2&amp;amp;&amp;gt; /dev/null &amp;amp;
@@ -277,15 +147,9 @@ map &amp;lt;a-L&amp;gt; %tmux split -h lf
 map &amp;lt;a-h&amp;gt; %tmux select-pane -L
 map &amp;lt;a-j&amp;gt; %tmux select-pane -D
 map &amp;lt;a-k&amp;gt; %tmux select-pane -U
-map &amp;lt;a-l&amp;gt; %tmux select-pane -R&lt;/code>&lt;/pre>
-&lt;/div>
-&lt;/div>
-&lt;div class="paragraph">
-&lt;p>&lt;strong>command&lt;/strong>&lt;/p>
-&lt;/div>
-&lt;div class="listingblock">
-&lt;div class="content">
-&lt;pre class="highlight">&lt;code class="language-sh" data-lang="sh">#!/bin/sh
+map &amp;lt;a-l&amp;gt; %tmux select-pane -R
+&lt;/code>&lt;/pre>&lt;h2 id="command">command&lt;/h2>
+&lt;pre tabindex="0">&lt;code>#!/bin/sh
 # file opener
 cmd open ${{
 case $(file --mime-type &amp;#34;$f&amp;#34; -bL) in
@@ -399,15 +263,9 @@ m|mount) rmount &amp;#34;$2&amp;#34;;;
 u|umount) fusermount -u /tmp/lfrclone &amp;amp;&amp;amp; rmdir /tmp/lfrclone &amp;amp;&amp;amp; notify-send &amp;#34;LF - Rclone&amp;#34; &amp;#34;Success Umount&amp;#34; ;;
 *) lf -remote &amp;#34;send $id echo example: rclone m remote:/path and rclone u&amp;#34;
 esac
-}}&lt;/code>&lt;/pre>
-&lt;/div>
-&lt;/div>
-&lt;div class="paragraph">
-&lt;p>&lt;strong>options&lt;/strong>&lt;/p>
-&lt;/div>
-&lt;div class="listingblock">
-&lt;div class="content">
-&lt;pre class="highlight">&lt;code class="language-sh" data-lang="sh">#!/bin/sh
+}}
+&lt;/code>&lt;/pre>&lt;h2 id="options">options&lt;/h2>
+&lt;pre tabindex="0">&lt;code>#!/bin/sh
 set shell sh
 set shellopts &amp;#34;-eu&amp;#34;
 set ifs &amp;#34;\n&amp;#34;
@@ -415,483 +273,354 @@ set ignorecase true
 set scrolloff 10
 set icons
 set ratios 1:2:3
-set promptfmt &amp;#34;\033[32;1m%u\033[0m ❱ \033[34;1m%d\033[0m\033[1m%f\033[0m&amp;#34;&lt;/code>&lt;/pre>
-&lt;/div>
-&lt;/div>
-&lt;div class="paragraph">
-&lt;p>&lt;strong>lfrc&lt;/strong>&lt;/p>
-&lt;/div>
-&lt;div class="listingblock">
-&lt;div class="content">
-&lt;pre class="highlight">&lt;code class="language-sh" data-lang="sh">#!/bin/sh
+set promptfmt &amp;#34;\033[32;1m%u\033[0m ❱ \033[34;1m%d\033[0m\033[1m%f\033[0m&amp;#34;
+&lt;/code>&lt;/pre>&lt;h2 id="lfrc">lfrc&lt;/h2>
+&lt;pre tabindex="0">&lt;code>#!/bin/sh
 # source another config
 source ~/.config/lf/config.d/options
 source ~/.config/lf/config.d/keymap
-source ~/.config/lf/config.d/command&lt;/code>&lt;/pre>
-&lt;/div>
-&lt;/div>
-&lt;div class="paragraph">
-&lt;p>&lt;strong>Catatan:&lt;/strong> potongan konfigurasi diatas didapatkan dari eksplorasiku di lf -doc dan wiki akan tetapi ada beberapa snippet dari wiki lf yang menurutku itu bukanlah sebuah tips tapi malah nambah masalah jadi mau ga mau harus eksporasi sendiri. contohnya ? cmd open bagian all file, klok kita pilih beberapa file dan ingin dibuka dalam single instance maka jatuhnya malah tiap file jadi satu instance jadi klok kita select 10 video maka nanti akan muncul 10 window video player bukan menjadi sebuah playlist&lt;/p>
-&lt;/div>
-&lt;/div>
-&lt;/div>
-&lt;div class="sect1">
-&lt;h2 id="_apakah_ranger_akan_ditinggalkan">Apakah ranger akan ditinggalkan ?&lt;/h2>
-&lt;div class="sectionbody">
-&lt;div class="paragraph">
+source ~/.config/lf/config.d/command
+&lt;/code>&lt;/pre>&lt;p>&lt;strong>Catatan:&lt;/strong> potongan konfigurasi diatas didapatkan dari eksplorasiku di lf -doc dan wiki akan tetapi ada beberapa snippet dari wiki lf yang menurutku itu bukanlah sebuah tips tapi malah nambah masalah jadi mau ga mau harus eksporasi sendiri. contohnya ? cmd open bagian all file, klok kita pilih beberapa file dan ingin dibuka dalam single instance maka jatuhnya malah tiap file jadi satu instance jadi klok kita select 10 video maka nanti akan muncul 10 window video player bukan menjadi sebuah playlist&lt;/p>
+&lt;h1 id="apakah-ranger-akan-ditinggalkan-">Apakah ranger akan ditinggalkan ?&lt;/h1>
 &lt;p>Ya enggak dong walaupun udah mantan, tapi kita harus tetep menjaga silaturahmi. Saat ini si ranger kumanfaatkan sebagai file manager keduaku siapa tahu nanti bakalan CLBK lagi (hiahiahia). Selain dimanfaatkan sebagai file manager kedua, ranger juga kumanfaatkan sebagai file chooser untuk qutebrowserku dan file picker untuk neomuttku karna di lf sendiri fitur ini masih belum ada.&lt;/p>
-&lt;/div>
-&lt;/div>
-&lt;/div>
-&lt;div class="sect1">
-&lt;h2 id="_preview_lf">Preview lf&lt;/h2>
-&lt;div class="sectionbody">
-&lt;div class="videoblock">
-&lt;div class="content">
-&lt;video src="./video/video-220111-2106-00.mp4" width="700" controls="">
-Your browser does not support the video tag.
-&lt;/video>
-&lt;/div>
-&lt;/div>
-&lt;div class="paragraph">
-&lt;p>Dikarenakan lf tidak mengusung fitur tabnya si ranger jadi kita memerlukan tmux untuk bermanuver seperti diatas.&lt;/p>
-&lt;/div>
-&lt;/div>
-&lt;/div>
-&lt;div class="sect1">
-&lt;h2 id="_kesimpulan">Kesimpulan&lt;/h2>
-&lt;div class="sectionbody">
-&lt;div class="paragraph">
+&lt;h1 id="preview-lf">Preview lf&lt;/h1>
+&lt;p>video::./video/video-220111-2106-00.mp4[width=700]
+Dikarenakan lf tidak mengusung fitur tabnya si ranger jadi kita memerlukan tmux untuk bermanuver seperti diatas.&lt;/p>
+&lt;h1 id="kesimpulan">Kesimpulan&lt;/h1>
 &lt;p>Lf si file manager yang penuh dengan kejutan, banyak fitur yang belum tersedia jadi pengguna dipaksa membuat fitur sendiri sesuai dengan keinginannya.
 Lf ini cocok buat mereka yang suka tantangan dan memiliki pemikiran yang kreatif seperti penulis 🤣.&lt;/p>
-&lt;/div>
-&lt;/div>
-&lt;/div>
-&lt;div class="sect1">
-&lt;h2 id="_referensi">Referensi&lt;/h2>
-&lt;div class="sectionbody">
-&lt;div class="ulist">
+&lt;h1 id="referensi">Referensi&lt;/h1>
 &lt;ul>
-&lt;li>
-&lt;p>&lt;a href="https://github.com/gokcehan/lf/wiki">LF wiki&lt;/a> Diakses pada 2022-01-11&lt;/p>
-&lt;/li>
-&lt;/ul>
-&lt;/div>
-&lt;/div>
-&lt;/div></description></item><item><title>Implementasi Gnu Stow Untuk Management Dotfiles Di Archlinux</title><link>https://mnabila.github.io/p/implementasi-gnu-stow-untuk-management-dotfiles-di-archlinux/</link><pubDate>Wed, 05 Jan 2022 13:16:00 +0700</pubDate><guid>https://mnabila.github.io/p/implementasi-gnu-stow-untuk-management-dotfiles-di-archlinux/</guid><description>
-&lt;div class="sect1">
-&lt;h2 id="_curhat_sebentar">curhat sebentar&lt;/h2>
-&lt;div class="sectionbody">
-&lt;div class="paragraph">
+&lt;li>&lt;a class="link" href="https://github.com/gokcehan/lf/wiki" target="_blank" rel="noopener"
+>LF wiki&lt;/a> Diakses pada 2022-01-11&lt;/li>
+&lt;/ul></description></item><item><title>Aria2c Sebagai Download Engine Di Qutebrowser</title><link>https://mnabila.github.io/p/aria2c-sebagai-download-engine-di-qutebrowser/</link><pubDate>Thu, 06 Jan 2022 10:51:23 +0700</pubDate><guid>https://mnabila.github.io/p/aria2c-sebagai-download-engine-di-qutebrowser/</guid><description>&lt;h2 id="intro">Intro&lt;/h2>
+&lt;p>Aria2c sebuah program Command Line Interface atau yang biasa dikenal CLI, aria2c banyak kelebihannya dibandingkan dengan download engine lainnya dikarenakan banyak protocol yang aria2c support seperti HTTP(S), FTP, SFTP, BitTorrent, and Metalink. Dikarenakan banyak protocol yang dia support maka aku tak perlu lagi install torrent downloader selain itu si aria2c ini biisa dijadikan service download yang mana bisa diakses melalui berbagai program GUI seperti &lt;a class="link" href="https://ugetdm.com/" target="_blank" rel="noopener"
+>UGET&lt;/a>, &lt;a class="link" href="https://persepolisdm.github.io/" target="_blank" rel="noopener"
+>Persepolish&lt;/a> atau yang webapps seperti &lt;a class="link" href="https://github.com/mayswind/AriaNg" target="_blank" rel="noopener"
+>AriaNg&lt;/a>, &lt;a class="link" href="https://github.com/ziahamza/webui-aria2" target="_blank" rel="noopener"
+>webui-aria2&lt;/a> atau bahkan yang berbasis TUI juga ada seperti &lt;a class="link" href="https://github.com/pawamoy/aria2p/" target="_blank" rel="noopener"
+>aria2p&lt;/a>.&lt;/p>
+&lt;p>Qutebrowser sebuah browser yang memungkinan penggunanya untuk merasakan kenyamanan dikala kesakitan menghafalkan keymapnya, kenapa kok begitu ? karna jelas jelas ada browser yang lebih mudah dioperasikan dibandingkan qutebrowser, jadi ada kemungkinan penggunanya memiliki kelainan didalam diri mereka 🤣. Qutebrowser adalah browser yang berfokus pada keyboard untuk navigasinya dengan tampilan yang minimalist tidak seperti browser pada umumnya. Qutebrowser dibangun dengan bahasa pemrograman python menggunakan module pyqt5 dan backendnnya menggunakan qt5-webengine dan qt5-webkit akan tetapi secara default qutebrowser menggunakanqt5-webengine sebagai default backendnya.&lt;/p>
+&lt;h2 id="implementasi">Implementasi&lt;/h2>
+&lt;p>Untuk pengimplementasian aku menggunakan dua pendekatan yang pertama yakni menggunakan userscript dan yang kedua menggunakan monkeyscript.&lt;/p>
+&lt;h3 id="userscript">UserScript&lt;/h3>
+&lt;p>Userscript hampir mirip dengan monkeyscript akan tetapi userscript ini bisa ditulis dengan berbagai bahasa pemrograman selama bahasa pemrograman tersebut bisa membaca environment variable yang telah disediakan oleh qutebrowser. Untuk daftar environment variable teman teman bisa akses di &lt;a class="link" href="https://qutebrowser.org/doc/userscripts.html" target="_blank" rel="noopener"
+>qutebrowser/userscript&lt;/a>. Dalam pengimplementasiannya di qutebrowser aku menggunakan userscript yang bernama &lt;code>qb2aria&lt;/code>, userscript aku tulis sendiri sesuai dengan kebutuhanku saat ini, dibawah ini ada isi dari userscriptnya.&lt;/p>
+&lt;pre tabindex="0">&lt;code>#!/bin/bash
+ARIA2URI=&amp;#34;http://localhost:6800/jsonrpc&amp;#34;
+function datagen() {
+jq -n --arg id &amp;#34;$(date +%N)&amp;#34; --arg url &amp;#34;$1&amp;#34; \
+&amp;#39;{ &amp;#34;jsonrpc&amp;#34;: &amp;#34;2.0&amp;#34;, &amp;#34;id&amp;#34;: $id, &amp;#34;method&amp;#34;:&amp;#34;aria2.addUri&amp;#34;, &amp;#34;params&amp;#34;:[[$url]], }&amp;#39;
+}
+if [[ ! -z $QUTE_URL ]]; then
+notify-send &amp;#34;Aria2 | Downloading&amp;#34; &amp;#34;$QUTE_URL&amp;#34; -u normal
+data=$(datagen &amp;#34;$QUTE_URL&amp;#34;)
+curl -s --request POST --url $ARIA2URI --header &amp;#39;Content-Type: application/json&amp;#39; --data &amp;#34;$data&amp;#34;
+fi
+&lt;/code>&lt;/pre>&lt;p>Penjelasan:&lt;/p>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th style="text-align:center">Nama Fungsi&lt;/th>
+&lt;th style="text-align:left">Penjelasan&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td style="text-align:center">datagen&lt;/td>
+&lt;td style="text-align:left">fungsi ini diperuntukkan untuk mengenerate data yang dibutuhkan sewaktu proses pengiriman data yang dilakukan oleh curl nantinya&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">$QUTE_URL&lt;/td>
+&lt;td style="text-align:left">ini adalah environment variable yang telah disediakan oleh qutebrowser, environment ini tidak dapat digunakan diluar userscript&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;p>Simpan file &lt;code>qb2aria&lt;/code> ini didalam folder &lt;code>/home/$USER/.config/qutebrowser/userscripts&lt;/code>, kemudian tambahkan hak akses eksekusi pada file tersebut dengan perintah&lt;/p>
+&lt;pre tabindex="0">&lt;code>$ chmod +x qb2aria
+&lt;/code>&lt;/pre>&lt;p>Langkah terakhir tambahkan keymap ini pada config.py qutebrowser.&lt;/p>
+&lt;pre tabindex="0">&lt;code>config.bind(&amp;#34;,d&amp;#34;, &amp;#34;hint links userscript qb2aria&amp;#34;, &amp;#34;normal&amp;#34;)
+&lt;/code>&lt;/pre>&lt;p>Untuk menggunakan qb2aria ini tinggal tekan &lt;code>coma&lt;/code> lalu &lt;code>d&lt;/code> kemudian tekan hintnya.&lt;/p>
+&lt;h3 id="monkeyscript">Monkeyscript&lt;/h3>
+&lt;p>Monkeyscript atau lebih dikenal dengan sebutan Greasemonkey adalah sebuah extensions yang ada di mozzila firefox, kini greasemonkey tersedia diberbagai web browser salah satunya adalah di qutebrowser. Berbeda dengan userscriptnya qutebrowser, sepengetahuanku monkeyscript ini hanya bisa ditulis dengan bahasa pemrograman javascript. Dibawah ini monkeyscript yang aku gunakan.&lt;/p>
+&lt;pre tabindex="0">&lt;code>// ==UserScript==
+// @name Monkey D Aria2
+// @version 1.0.0
+// @description Automatically download file from file hosting with aria2-RCP.
+// @author mnabila
+// @namespace https://github.com/mnabila
+// @license MIT License
+// @icon https://github.com/mnabila/monkeydscript/raw/main/asset/slime.svg
+// @match https://*.zippyshare.com/*
+// @match https://anonfiles.com/*
+// @match http://www.solidfiles.com/*
+// @match https://www.mediafire.com/*
+// @grant none
+// ==/UserScript==
+(function () {
+&amp;#39;use strict&amp;#39;;
+function sendNotification(body) {
+if (Notification.permission != &amp;#39;granted&amp;#39;) {
+Notification.requestPermission();
+}
+let notif = new Notification(&amp;#39;Aria2 | Download&amp;#39;, { body: body });
+}
+function download(url) {
+// TODO: fix cors, i think use mode no-cors is not fix this problem
+const uri = &amp;#39;http://localhost:6800/jsonrpc&amp;#39;;
+fetch(uri, {
+method: &amp;#39;POST&amp;#39;,
+mode: &amp;#39;no-cors&amp;#39;,
+headers: {
+&amp;#39;Content-Type&amp;#39;: &amp;#39;application/json&amp;#39;,
+},
+body: JSON.stringify({
+jsonrpc: &amp;#39;2.0&amp;#39;,
+id: Math.floor(Math.random() * 5),
+method: &amp;#39;aria2.addUri&amp;#39;,
+params: [[url]],
+}),
+});
+sendNotification(document.title);
+}
+function zippyshare() {
+const url = document.querySelector(&amp;#39;a#dlbutton&amp;#39;);
+download(url.href);
+}
+function solidfile() {
+const script = document
+.evaluate(
+&amp;#34;//script[contains(., &amp;#39;downloadUrl&amp;#39;)]&amp;#34;,
+document,
+null,
+XPathResult.ANY_TYPE,
+null,
+)
+.iterateNext();
+const data = script.innerHTML;
+const result = JSON.parse(data.match(&amp;#39;({.*})&amp;#39;)[0]);
+download(result.downloadUrl);
+}
+function anonfiles() {
+const url = document.querySelector(&amp;#39;a#download-url&amp;#39;);
+download(url.href);
+}
+function mediafire() {
+const url = document.querySelector(&amp;#39;a#downloadButton&amp;#39;);
+download(url.href);
+}
+let hostname = window.location.hostname;
+if (hostname.includes(&amp;#39;zippyshare&amp;#39;)) {
+zippyshare();
+} else if (hostname.includes(&amp;#39;anonfiles&amp;#39;)) {
+anonfiles();
+} else if (hostname.includes(&amp;#39;solidfile&amp;#39;)) {
+solidfile();
+} else if (hostname.includes(&amp;#39;mediafire&amp;#39;)) {
+mediafire();
+}
+})();
+&lt;/code>&lt;/pre>&lt;h2 id="referensi">Referensi&lt;/h2>
+&lt;ul>
+&lt;li>manpage aria2c Diakses pada 2022-01-07&lt;/li>
+&lt;li>&lt;a class="link" href="https://qutebrowser.org/index.html" target="_blank" rel="noopener"
+>Qutebrowser&lt;/a> Diakses pada 2022-01-07&lt;/li>
+&lt;/ul></description></item><item><title>Implementasi Gnu Stow Untuk Management Dotfiles Di Archlinux</title><link>https://mnabila.github.io/p/implementasi-gnu-stow-untuk-management-dotfiles-di-archlinux/</link><pubDate>Wed, 05 Jan 2022 13:16:00 +0700</pubDate><guid>https://mnabila.github.io/p/implementasi-gnu-stow-untuk-management-dotfiles-di-archlinux/</guid><description>&lt;h2 id="curhat-sebentar">curhat sebentar&lt;/h2>
 &lt;p>Sebenernya sudah lama ingin membahas ini topik, tapi karna aku sendirinya males nulis baru sekarang bisa tereksekusi, ya bisa dibilang ini topik mangkrak hampir 2 tahun 🤣 eh genap 2 tahun kayaknya karna dari tahun 2020 sampe 2022. curhatnya segini aja ga usah panjang panjang langsung ke point utamanya aja lah males nulis akunya.&lt;/p>
-&lt;/div>
-&lt;/div>
-&lt;/div>
-&lt;div class="sect1">
-&lt;h2 id="_apa_sih_gnustow_itu">Apa sih GNU/Stow itu ?&lt;/h2>
-&lt;div class="sectionbody">
-&lt;div class="paragraph">
+&lt;h2 id="apa-sih-gnustow-itu-">Apa sih GNU/Stow itu ?&lt;/h2>
 &lt;p>GNU/Stow atau mungkin yang dikenal sebagai stow oleh kawan-kawan perias desktop, merupakan sebuah symlink farm manager atau lebih mudah dipahami dengan symlink manager sehingga pengguna tidak direpotkan lagi mengetikkan semua pathnya apabila ingin melakukan symlink dari folder asal ke folder tujuan.&lt;/p>
-&lt;/div>
-&lt;div class="paragraph">
 &lt;p>Pada dasarnya stow diperuntukkan memanagement berkas dalam paket aplikasi namun tidak menutup kemungkinan stow ini digunakan untuk tujuan lain seperti memfasilitasi pengelolaan file konfigurasi yang ada di directori home pengguna, terutama jika digabungkan dengan &lt;code>version control system(vcs)&lt;/code> seperti git atau yang lainnya.&lt;/p>
-&lt;/div>
-&lt;div class="paragraph">
-&lt;p>Berdasarkan pengalamanku pakek stow yang dikombinasikan dengan git subtree untuk memanagement &lt;a href="https://github.com/mnabila/dotfiles">dotfiles&lt;/a> bener bener nyaman jika dibandingkan tanpa stow, karna aku tidak perlu lagi memindahkan konfig dari folder &lt;code>~/.config&lt;/code> ke folder dotfiles lagi.&lt;/p>
-&lt;/div>
-&lt;/div>
-&lt;/div>
-&lt;div class="sect1">
-&lt;h2 id="_bagaimaa_sih_cara_kerja_gnustow_itu">Bagaimaa sih cara kerja GNU/stow itu ?&lt;/h2>
-&lt;div class="sectionbody">
-&lt;div class="paragraph">
+&lt;p>Berdasarkan pengalamanku pakek stow yang dikombinasikan dengan git subtree untuk memanagement &lt;a class="link" href="https://github.com/mnabila/dotfiles" target="_blank" rel="noopener"
+>dotfiles&lt;/a> bener bener nyaman jika dibandingkan tanpa stow, karna aku tidak perlu lagi memindahkan konfig dari folder &lt;code>~/.config&lt;/code> ke folder dotfiles lagi.&lt;/p>
+&lt;h2 id="bagaimaa-sih-cara-kerja-gnustow-itu-">Bagaimaa sih cara kerja GNU/stow itu ?&lt;/h2>
 &lt;p>Cara kerja dari stow sendiri sebenernya cukup sederhana yakni stow akan membuatkan symlink file/folder secara dinamis jadi pengguna tidak perlu lagi mengetikkan sumber dan tujuan dari file yang akan dibuatkan symlinknya. Kunci untuk memahami cara kerja dari stow yakni terletak pada &lt;strong>struktur directory&lt;/strong> yang ada dalam sumber tersebut.&lt;/p>
-&lt;/div>
-&lt;/div>
-&lt;/div>
-&lt;div class="sect1">
-&lt;h2 id="_implementasi">Implementasi&lt;/h2>
-&lt;div class="sectionbody">
-&lt;div class="paragraph">
+&lt;h2 id="implementasi">Implementasi&lt;/h2>
 &lt;p>Sebelum mencoba mengimplementasikan si stow ini, perlu tahu terlebih dahulu mengenai &lt;strong>package&lt;/strong>, &lt;strong>target directory&lt;/strong> dan &lt;strong>stow directory&lt;/strong>.&lt;/p>
-&lt;/div>
-&lt;table class="tableblock frame-all grid-all stretch">
-&lt;colgroup>
-&lt;col style="width: 20%;"/>
-&lt;col style="width: 80%;"/>
-&lt;/colgroup>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th style="text-align:center">Kata kunci&lt;/th>
+&lt;th style="text-align:left">Penjelasan&lt;/th>
+&lt;/tr>
+&lt;/thead>
 &lt;tbody>
 &lt;tr>
-&lt;td class="tableblock halign-left valign-top">&lt;p class="tableblock">Item&lt;/p>&lt;/td>
-&lt;td class="tableblock halign-left valign-top">&lt;p class="tableblock">Value&lt;/p>&lt;/td>
+&lt;td style="text-align:center">&lt;strong>package&lt;/strong>&lt;/td>
+&lt;td style="text-align:left">merupakan sekumpulan folder atau file yang akan dikelola atau diiinstal ketika stow dijalankan.&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td class="tableblock halign-left valign-top">&lt;p class="tableblock">&lt;strong>package&lt;/strong>&lt;/p>&lt;/td>
-&lt;td class="tableblock halign-left valign-top">&lt;p class="tableblock">merupakan sekumpulan folder atau file yang akan dikelola atau diiinstal ketika stow dijalankan.&lt;/p>&lt;/td>
+&lt;td style="text-align:center">&lt;strong>target directory&lt;/strong>&lt;/td>
+&lt;td style="text-align:left">merupakan folder tujuan dimana si &lt;code>package&lt;/code> akan diinstall, biasanya letak &lt;code>target directory&lt;/code> ini adalah parent dirnya &lt;code>stow directory&lt;/code>.&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td class="tableblock halign-left valign-top">&lt;p class="tableblock">&lt;strong>target directory&lt;/strong>&lt;/p>&lt;/td>
-&lt;td class="tableblock halign-left valign-top">&lt;p class="tableblock">merupakan folder tujuan dimana si &lt;code>package&lt;/code> akan diinstall, biasanya letak &lt;code>target directory&lt;/code> ini adalah parent dirnya &lt;code>stow directory&lt;/code>.&lt;/p>&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td class="tableblock halign-left valign-top">&lt;p class="tableblock">&lt;strong>stow directory&lt;/strong>&lt;/p>&lt;/td>
-&lt;td class="tableblock halign-left valign-top">&lt;p class="tableblock">merupakan root direktori yang berisikan paket-paket yang nanti akan diinstall menggunakan stow.&lt;/p>&lt;/td>
+&lt;td style="text-align:center">&lt;strong>stow directory&lt;/strong>&lt;/td>
+&lt;td style="text-align:left">merupakan root direktori yang berisikan paket-paket yang nanti akan diinstall menggunakan stow.&lt;/td>
 &lt;/tr>
 &lt;/tbody>
 &lt;/table>
-&lt;div class="sect2">
-&lt;h3 id="_contoh_implementasi">Contoh Implementasi&lt;/h3>
-&lt;div class="paragraph">
+&lt;h3 id="contoh-implementasi">Contoh Implementasi&lt;/h3>
 &lt;p>Folder dotfiles berada di &lt;code>/home/$USER/Dotfiles&lt;/code> sedangkan folder confignya berada di &lt;code>/home/$USER/.config/zathura&lt;/code>, jadi bisa kita definisikan seperti dibawah ini.&lt;/p>
-&lt;/div>
-&lt;table class="tableblock frame-all grid-all stretch">
-&lt;colgroup>
-&lt;col style="width: 20%;"/>
-&lt;col style="width: 80%;"/>
-&lt;/colgroup>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th style="text-align:center">Kata kunci&lt;/th>
+&lt;th style="text-align:left">Penjelasan&lt;/th>
+&lt;/tr>
+&lt;/thead>
 &lt;tbody>
 &lt;tr>
-&lt;td class="tableblock halign-left valign-top">&lt;p class="tableblock">&lt;strong>package&lt;/strong>&lt;/p>&lt;/td>
-&lt;td class="tableblock halign-left valign-top">&lt;p class="tableblock">zathura&lt;/p>&lt;/td>
+&lt;td style="text-align:center">package&lt;/td>
+&lt;td style="text-align:left">zathura&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td class="tableblock halign-left valign-top">&lt;p class="tableblock">&lt;strong>struktur package&lt;/strong>&lt;/p>&lt;/td>
-&lt;td class="tableblock halign-left valign-top">&lt;p class="tableblock">zathura/.config/zathura&lt;/p>&lt;/td>
+&lt;td style="text-align:center">struktur package&lt;/td>
+&lt;td style="text-align:left">zathura/.config/zathura&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td class="tableblock halign-left valign-top">&lt;p class="tableblock">&lt;strong>target directory&lt;/strong>&lt;/p>&lt;/td>
-&lt;td class="tableblock halign-left valign-top">&lt;p class="tableblock">/home/$USER&lt;/p>&lt;/td>
+&lt;td style="text-align:center">target directory&lt;/td>
+&lt;td style="text-align:left">/home/$USER&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td class="tableblock halign-left valign-top">&lt;p class="tableblock">&lt;strong>stow directory&lt;/strong>&lt;/p>&lt;/td>
-&lt;td class="tableblock halign-left valign-top">&lt;p class="tableblock">/home/$USER/Dotfiles&lt;/p>&lt;/td>
+&lt;td style="text-align:center">stow directory&lt;/td>
+&lt;td style="text-align:left">/home/$USER/Dotfiles&lt;/td>
 &lt;/tr>
 &lt;/tbody>
 &lt;/table>
-&lt;div class="paragraph">
 &lt;p>jadi struktur folder packagenya adalah sebagai berikut ini.&lt;/p>
-&lt;/div>
-&lt;div class="listingblock">
-&lt;div class="content">
-&lt;pre>$ tree -a /home/$USER/Dotfiles/zathura
+&lt;pre tabindex="0">&lt;code>$ tree -a /home/$USER/Dotfiles/zathura
 /home/nabil/Dotfiles/zathura/
 └── .config
 └── zathura
 └── zathurarc (ini file confignya)
-2 directories, 1 file&lt;/pre>
-&lt;/div>
-&lt;/div>
-&lt;div class="paragraph">
-&lt;p>Seperti yang sudah kusinggung di section sebelumnya yakni kuncinya terletak di struktur folder yang akan distow jadi isi dari folder packagenya mirip path yang akan dituju.&lt;/p>
-&lt;/div>
-&lt;div class="paragraph">
+2 directories, 1 file
+&lt;/code>&lt;/pre>&lt;p>Seperti yang sudah kusinggung di section sebelumnya yakni kuncinya terletak di struktur folder yang akan distow jadi isi dari folder packagenya mirip path yang akan dituju.&lt;/p>
 &lt;p>Setelah folder package dibuat maka dilanjutkan dengan tahap instalasi si package zathura, pastikan posisi pwd berada di folder &lt;code>stow directory&lt;/code>&lt;/p>
-&lt;/div>
-&lt;div class="listingblock">
-&lt;div class="content">
-&lt;pre>$ stow zathura&lt;/pre>
-&lt;/div>
-&lt;/div>
-&lt;div class="paragraph">
-&lt;p>maka hasilnya seperti dibawah ini&lt;/p>
-&lt;/div>
-&lt;div class="listingblock">
-&lt;div class="content">
-&lt;pre>$ ls -l /home/$USER/.config | grep zathura
-lrwxrwxrwx 1 nabil users 35 Jan 23 2020 zathura -&amp;gt; ../Dotfiles/zathura/.config/zathura&lt;/pre>
-&lt;/div>
-&lt;/div>
-&lt;div class="paragraph">
-&lt;p>Tapi bagaimana jika package ingin diinstall target instalasinya berbeda contoh &lt;code>/etc/&lt;/code> sedangkan folder dotfilesnya berada di &lt;code>/home/$USER/Dotfiles&lt;/code> ?&lt;/p>
-&lt;/div>
-&lt;div class="paragraph">
+&lt;pre tabindex="0">&lt;code>$ stow zathura
+&lt;/code>&lt;/pre>&lt;p>maka hasilnya seperti dibawah ini&lt;/p>
+&lt;pre tabindex="0">&lt;code>$ ls -l /home/$USER/.config | grep zathura
+lrwxrwxrwx 1 nabil users 35 Jan 23 2020 zathura -&amp;gt; ../Dotfiles/zathura/.config/zathura
+&lt;/code>&lt;/pre>&lt;p>Tapi bagaimana jika package ingin diinstall target instalasinya berbeda contoh &lt;code>/etc/&lt;/code> sedangkan folder dotfilesnya berada di &lt;code>/home/$USER/Dotfiles&lt;/code> ?&lt;/p>
 &lt;p>jadi bisa kita definisikan seperti dibawah ini.&lt;/p>
-&lt;/div>
-&lt;table class="tableblock frame-all grid-all stretch">
-&lt;colgroup>
-&lt;col style="width: 20%;"/>
-&lt;col style="width: 80%;"/>
-&lt;/colgroup>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th style="text-align:center">Kata kunci&lt;/th>
+&lt;th style="text-align:left">Penjelasan&lt;/th>
+&lt;/tr>
+&lt;/thead>
 &lt;tbody>
 &lt;tr>
-&lt;td class="tableblock halign-left valign-top">&lt;p class="tableblock">&lt;strong>package&lt;/strong>&lt;/p>&lt;/td>
-&lt;td class="tableblock halign-left valign-top">&lt;p class="tableblock">mkinitcpio&lt;/p>&lt;/td>
+&lt;td style="text-align:center">package&lt;/td>
+&lt;td style="text-align:left">mkinitcpio&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td class="tableblock halign-left valign-top">&lt;p class="tableblock">&lt;strong>struktur package&lt;/strong>&lt;/p>&lt;/td>
-&lt;td class="tableblock halign-left valign-top">&lt;p class="tableblock">mkinitcpio/etc&lt;/p>&lt;/td>
+&lt;td style="text-align:center">struktur package&lt;/td>
+&lt;td style="text-align:left">mkinitcpio/etc&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td class="tableblock halign-left valign-top">&lt;p class="tableblock">&lt;strong>target directory&lt;/strong>&lt;/p>&lt;/td>
-&lt;td class="tableblock halign-left valign-top">&lt;p class="tableblock">/(root)&lt;/p>&lt;/td>
+&lt;td style="text-align:center">target directory&lt;/td>
+&lt;td style="text-align:left">/(root)&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td class="tableblock halign-left valign-top">&lt;p class="tableblock">&lt;strong>stow directory&lt;/strong>&lt;/p>&lt;/td>
-&lt;td class="tableblock halign-left valign-top">&lt;p class="tableblock">/home/$USER/Dotfiles&lt;/p>&lt;/td>
+&lt;td style="text-align:center">stow directory&lt;/td>
+&lt;td style="text-align:left">/home/$USER/Dotfiles&lt;/td>
 &lt;/tr>
 &lt;/tbody>
 &lt;/table>
-&lt;div class="paragraph">
 &lt;p>Kenapa target directorynya berada di &lt;code>/(root)&lt;/code> bukan mengarah ke &lt;code>/etc&lt;/code> ?
 Sebenernya bisa saja mengarah ke /etc akan tetapi terkadang kita lupa ini paket mengarah kemana maka dari itu minimal dikasi 1 subfolder dalam paket tersebut agar pengguna nanti tahu arah installasinya kemana.&lt;/p>
-&lt;/div>
-&lt;div class="paragraph">
 &lt;p>dibawah ini contoh struktur dari paket mkinitcpio&lt;/p>
-&lt;/div>
-&lt;div class="listingblock">
-&lt;div class="content">
-&lt;pre>❯ tree -a /home/$USER/Dotfiles/mkinitcpio/
+&lt;pre tabindex="0">&lt;code>❯ tree -a /home/$USER/Dotfiles/mkinitcpio/
 /home/nabil/Dotfiles/mkinitcpio/
 └── etc
 └── mkinitcpio.conf
-1 directory, 1 file&lt;/pre>
-&lt;/div>
-&lt;/div>
-&lt;div class="paragraph">
-&lt;p>Jika target instalasinya berbeda dengan target directory kita cukup memainkan parameter &lt;code>-t&lt;/code> yakni untuk mengubah target directorynya.&lt;/p>
-&lt;/div>
-&lt;div class="listingblock">
-&lt;div class="content">
-&lt;pre>$ sudo stow -t / mkinitcpio&lt;/pre>
-&lt;/div>
-&lt;/div>
-&lt;div class="paragraph">
-&lt;p>maka hasilnya seperti dibawah ini&lt;/p>
-&lt;/div>
-&lt;div class="listingblock">
-&lt;div class="content">
-&lt;pre>❯ ls -l /etc/ | grep mkinitcpio
+1 directories, 1 file
+&lt;/code>&lt;/pre>&lt;p>Jika target instalasinya berbeda dengan target directory kita cukup memainkan parameter &lt;code>-t&lt;/code> yakni untuk mengubah target directorynya.&lt;/p>
+&lt;pre tabindex="0">&lt;code>$ sudo stow -t / mkinitcpio
+&lt;/code>&lt;/pre>&lt;p>maka hasilnya seperti dibawah ini&lt;/p>
+&lt;pre tabindex="0">&lt;code>❯ ls -l /etc/ | grep mkinitcpio
 lrwxrwxrwx 1 root root 53 Jan 28 2020 mkinitcpio.conf -&amp;gt; ../home/nabil/Dotfiles/mkinitcpio/etc/mkinitcpio.conf
 -rw-r--r-- 1 root root 2510 Des 3 17:11 mkinitcpio.conf.pacnew
-drwxr-xr-x 2 root root 4096 Des 28 12:26 mkinitcpio.d&lt;/pre>
-&lt;/div>
-&lt;/div>
-&lt;/div>
-&lt;/div>
-&lt;/div>
-&lt;div class="sect1">
-&lt;h2 id="_kesimpulan">Kesimpulan&lt;/h2>
-&lt;div class="sectionbody">
-&lt;div class="paragraph">
+drwxr-xr-x 2 root root 4096 Des 28 12:26 mkinitcpio.d
+&lt;/code>&lt;/pre>&lt;h2 id="kesimpulan">Kesimpulan&lt;/h2>
 &lt;p>Dengan adanya GNU/Stow ini pengguna sedikit terbantu karna tidak perlu lagi copy manual config dari folder dotfiles ke folder configurasi yang ada.&lt;/p>
-&lt;/div>
-&lt;/div>
-&lt;/div>
-&lt;div class="sect1">
-&lt;h2 id="_referensi">Referensi&lt;/h2>
-&lt;div class="sectionbody">
-&lt;div class="ulist">
+&lt;h2 id="referensi">Referensi&lt;/h2>
 &lt;ul>
-&lt;li>
-&lt;p>manpage stow(man stow) Diakses pada: 2021-01-06&lt;/p>
-&lt;/li>
-&lt;/ul>
-&lt;/div>
-&lt;/div>
-&lt;/div></description></item><item><title>Konfigurasi Nextdns Client Di Archlinux</title><link>https://mnabila.github.io/p/konfigurasi-nextdns-client-di-archlinux/</link><pubDate>Sun, 08 Nov 2020 11:26:13 +0700</pubDate><guid>https://mnabila.github.io/p/konfigurasi-nextdns-client-di-archlinux/</guid><description>
-&lt;div class="paragraph">
+&lt;li>manpage stow(man stow) Diakses pada: 2021-01-06&lt;/li>
+&lt;/ul></description></item><item><title>Konfigurasi Nextdns Client Di Archlinux</title><link>https://mnabila.github.io/p/konfigurasi-nextdns-client-di-archlinux/</link><pubDate>Sun, 08 Nov 2020 11:26:13 +0700</pubDate><guid>https://mnabila.github.io/p/konfigurasi-nextdns-client-di-archlinux/</guid><description>&lt;p>:toc:&lt;/p>
 &lt;p>Pada kesempatakn kali ini aku sedang mencoba mengimplementasikan nextdns sebagai alternative si dnscrypt yang kupakek sekarang. Nextdns merupakan sebuah penyedia layanan firewall yang bertujuan untuk meningkatkan keamanan pengguna ketika berselancari di internet. Tidak hanya itu nextdns juga memberikan beberapa perlindugngan dari berbagai masalah keamanan seperti memblokir iklan yang mengganggu, memblokir pelacakan dari situs yang sedang dikunjunginya dan masih banyak lagi.&lt;/p>
-&lt;/div>
-&lt;div class="sect1">
-&lt;h2 id="_instalasi">instalasi&lt;/h2>
-&lt;div class="sectionbody">
-&lt;div class="paragraph">
-&lt;p>disini aku mencoba mengimplementasikan nextdns ini kedalam beberapa service, seperti:&lt;/p>
-&lt;/div>
-&lt;div class="ulist">
+&lt;p>== instalasi
+disini aku mencoba mengimplementasikan nextdns ini kedalam beberapa service, seperti:&lt;/p>
 &lt;ul>
-&lt;li>
-&lt;p>nextdns-client&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>systemd-resolved&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>dnscrypt-proxy&lt;/p>
-&lt;/li>
+&lt;li>nextdns-client&lt;/li>
+&lt;li>systemd-resolved&lt;/li>
+&lt;li>dnscrypt-proxy&lt;/li>
 &lt;/ul>
-&lt;/div>
-&lt;div class="sect2">
-&lt;h3 id="_nextdns_client">nextdns-client&lt;/h3>
-&lt;div class="paragraph">
-&lt;p>untuk instalasi nextdns-client cukup ketikkan perintah dibawah ini jika anda menggunakan distro archlinux, dikarenakan nextdns-client ini berada di repository AUR(Arch User Repository)&lt;/p>
-&lt;/div>
-&lt;div class="listingblock">
-&lt;div class="content">
-&lt;pre>$ yay -S nextdns&lt;/pre>
-&lt;/div>
-&lt;/div>
-&lt;div class="paragraph">
-&lt;p>&lt;span class="image">&lt;img src="./img/instalasi.png" alt="instalasi"/>&lt;/span>&lt;/p>
-&lt;/div>
-&lt;div class="paragraph">
+&lt;p>=== nextdns-client
+untuk instalasi nextdns-client cukup ketikkan perintah dibawah ini jika anda menggunakan distro archlinux, dikarenakan nextdns-client ini berada di repository AUR(Arch User Repository)&lt;/p>
+&lt;hr>
+&lt;h2 id="-yay--s-nextdns">$ yay -S nextdns&lt;/h2>
+&lt;p>image:./img/instalasi.png[]&lt;/p>
 &lt;p>setelah installasi dilanjutkan dengan mengaktifkan service nextdnsnya&lt;/p>
-&lt;/div>
-&lt;div class="listingblock">
-&lt;div class="content">
-&lt;pre>$ sudo systemctl start mextdns&lt;/pre>
-&lt;/div>
-&lt;/div>
-&lt;div class="paragraph">
+&lt;hr>
+&lt;h2 id="-sudo-systemctl-start-mextdns">$ sudo systemctl start mextdns&lt;/h2>
 &lt;p>dan jangan lupa pastikan nextdns sudah beneran berjalan atau belum.&lt;/p>
-&lt;/div>
-&lt;div class="listingblock">
-&lt;div class="content">
-&lt;pre>$ sudo systemctl status mextdns&lt;/pre>
-&lt;/div>
-&lt;/div>
-&lt;div class="paragraph">
-&lt;p>&lt;span class="image">&lt;img src="./img/nextdns-status.png" alt="sudo systemctl status mextdns"/>&lt;/span>&lt;/p>
-&lt;/div>
-&lt;div class="paragraph">
+&lt;hr>
+&lt;h2 id="-sudo-systemctl-status-mextdns">$ sudo systemctl status mextdns&lt;/h2>
+&lt;p>image:./img/nextdns-status.png[sudo systemctl status mextdns]&lt;/p>
 &lt;p>setelah service nextdnsnya aktif maka dilanjutkan dengan memasukkan id. langkah-langkahnya sebagai berikut ini:&lt;/p>
-&lt;/div>
-&lt;div class="ulist">
 &lt;ul>
 &lt;li>
-&lt;p>buka &lt;a href="https://my.nextdns.io">my.nextdns.io&lt;/a> lalu salin nextdns idnya (lihat gambar biar lebih jelas)
-&lt;span class="image">&lt;img src="./img/mynextdns.png" alt="my.nextdns.io dashboard"/>&lt;/span>&lt;/p>
+&lt;p>buka &lt;a class="link" href="https://my.nextdns.io" target="_blank" rel="noopener"
+>https://my.nextdns.io&lt;/a>[my.nextdns.io] lalu salin nextdns idnya (lihat gambar biar lebih jelas)
+image:./img/mynextdns.png[my.nextdns.io dashboard]&lt;/p>
 &lt;/li>
 &lt;li>
 &lt;p>Setelah nextdns id didapatkan ketikkan perintah dibawah ini&lt;/p>
-&lt;div class="literalblock">
-&lt;div class="content">
-&lt;pre>$ sudo nextdns install -config &amp;lt;nextdns-id&amp;gt; -setup-router&lt;/pre>
-&lt;/div>
-&lt;/div>
+&lt;p>$ sudo nextdns install -config &lt;!-- raw HTML omitted --> -setup-router&lt;/p>
 &lt;/li>
 &lt;/ul>
-&lt;/div>
-&lt;/div>
-&lt;/div>
-&lt;/div>
-&lt;div class="sect1">
-&lt;h2 id="_uji_coba">Uji Coba&lt;/h2>
-&lt;div class="sectionbody">
-&lt;div class="paragraph">
-&lt;p>Buka network manager yang kalian gunakan sebagai contoh saya disini menggunakan &lt;strong>NetworkManager&lt;/strong>. kemudian masukkan &lt;code>127.0.0.1&lt;/code> dibagian dns server dan search domainnya.&lt;/p>
-&lt;/div>
-&lt;div class="paragraph">
-&lt;p>&lt;span class="image">&lt;img src="./img/networkmanager.png" alt="network manager"/>&lt;/span>&lt;/p>
-&lt;/div>
-&lt;div class="paragraph">
+&lt;p>== Uji Coba
+Buka network manager yang kalian gunakan sebagai contoh saya disini menggunakan &lt;strong>NetworkManager&lt;/strong>. kemudian masukkan &lt;code>127.0.0.1&lt;/code> dibagian dns server dan search domainnya.&lt;/p>
+&lt;p>image:./img/networkmanager.png[network manager]&lt;/p>
 &lt;p>alternative lainnya kalian bisa langsung mengubah file yang ada di &lt;code>/etc/resolv.conf&lt;/code> dan ubah alamat ip dnsnya menjadi &lt;code>127.0.0.1&lt;/code>
 langkah terakhir test ping ke salah satu domain&lt;/p>
-&lt;/div>
-&lt;div class="paragraph">
-&lt;p>&lt;span class="image">&lt;img src="./img/test.png" alt="test konfigurasi"/>&lt;/span>&lt;/p>
-&lt;/div>
-&lt;/div>
-&lt;/div>
-&lt;div class="sect1">
-&lt;h2 id="_kesimpulan">Kesimpulan&lt;/h2>
-&lt;div class="sectionbody">
-&lt;div class="ulist">
+&lt;p>image:./img/test.png[test konfigurasi]&lt;/p>
+&lt;p>== Kesimpulan&lt;/p>
 &lt;ul>
-&lt;li>
-&lt;p>&lt;strong>kelebihan&lt;/strong>&lt;/p>
-&lt;div class="ulist">
+&lt;li>&lt;strong>kelebihan&lt;/strong>
+** instalasinya cukup mudah tidak perlu susah payah ubah file konfigurasinya secara manual
+** nextdns client ini tidak memerlukan resouce yang banyak&lt;/li>
+&lt;li>&lt;strong>kekurangan&lt;/strong>
+** ada limitasi query perbulannya yakni 300k query jadi klok lebih dari itu perlu upgrade sayan&lt;/li>
+&lt;/ul>
+&lt;p>== Referensi&lt;/p>
 &lt;ul>
-&lt;li>
-&lt;p>instalasinya cukup mudah tidak perlu susah payah ubah file konfigurasinya secara manual&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>nextdns client ini tidak memerlukan resouce yang banyak&lt;/p>
-&lt;/li>
-&lt;/ul>
-&lt;/div>
-&lt;/li>
-&lt;li>
-&lt;p>&lt;strong>kekurangan&lt;/strong>&lt;/p>
-&lt;div class="ulist">
-&lt;ul>
-&lt;li>
-&lt;p>ada limitasi query perbulannya yakni 300k query jadi klok lebih dari itu perlu upgrade sayan&lt;/p>
-&lt;/li>
-&lt;/ul>
-&lt;/div>
-&lt;/li>
-&lt;/ul>
-&lt;/div>
-&lt;/div>
-&lt;/div>
-&lt;div class="sect1">
-&lt;h2 id="_referensi">Referensi&lt;/h2>
-&lt;div class="sectionbody">
-&lt;div class="ulist">
-&lt;ul>
-&lt;li>
-&lt;p>&lt;a href="https://github.com/nextdns/nextdns/wiki" class="bare">https://github.com/nextdns/nextdns/wiki&lt;/a> Diakses pada: 2020-11-08&lt;/p>
-&lt;/li>
-&lt;/ul>
-&lt;/div>
-&lt;/div>
-&lt;/div></description></item><item><title>Berkenalan Dengan tmux</title><link>https://mnabila.github.io/p/berkenalan-dengan-tmux/</link><pubDate>Mon, 27 May 2019 16:25:05 +0700</pubDate><guid>https://mnabila.github.io/p/berkenalan-dengan-tmux/</guid><description>
-&lt;div class="paragraph">
+&lt;li>&lt;a class="link" href="https://github.com/nextdns/nextdns/wiki" target="_blank" rel="noopener"
+>https://github.com/nextdns/nextdns/wiki&lt;/a> Diakses pada: 2020-11-08&lt;/li>
+&lt;/ul></description></item><item><title>Berkenalan Dengan tmux</title><link>https://mnabila.github.io/p/berkenalan-dengan-tmux/</link><pubDate>Mon, 27 May 2019 16:25:05 +0700</pubDate><guid>https://mnabila.github.io/p/berkenalan-dengan-tmux/</guid><description>&lt;h2 id="intro">intro&lt;/h2>
 &lt;p>Tmux atau Terminal Multiplexer adalah sebuah terminal yang memungkinkan kita membuka banyak sesi terminal dalam satu window, sehingga dalam satu window ini pengguna memungkinkan untuk menjalankan banyak aplikasi sekaligus. Bagiku tmux ini sangat membantu apabila sedang berurusan dengan banyak aplikasi dalam sebuah tty alias &lt;code>the real true terminal&lt;/code> yang dimiliki oleh sistem operasi GNU/Linux 😆.&lt;/p>
-&lt;/div>
-&lt;div class="sect1">
-&lt;h2 id="_permasalahan">Permasalahan&lt;/h2>
-&lt;div class="sectionbody">
-&lt;div class="paragraph">
+&lt;h2 id="permasalahan">Permasalahan&lt;/h2>
 &lt;p>Untuk pengguna baru tmux rata-rata kesulitan untuk mengakses key bindingnya dikarenakan belum terlalu hafal bahkan belum tahu tentang key binding yang ada di tmux. Sehingga tmux memiliki kesan cukup merepotkan atau susah untuk pengguna baru padahal tmux adalah salah satu inverstasi tools yang dapat memudahkan aku untuk menjalankan banyak program dalam satu sesi terminal.&lt;/p>
-&lt;/div>
-&lt;/div>
-&lt;/div>
-&lt;div class="sect1">
-&lt;h2 id="_instalasi">Instalasi&lt;/h2>
-&lt;div class="sectionbody">
-&lt;div class="paragraph">
+&lt;h2 id="instalasi">Instalasi&lt;/h2>
 &lt;p>untuk instalasi tmux cukup ketikkan perintah dibawah ini (jika kamu menggunakan distro archlinux dan turunannya)&lt;/p>
-&lt;/div>
-&lt;div class="listingblock">
-&lt;div class="content">
-&lt;pre class="highlight">&lt;code class="language-sh" data-lang="sh">$ sudo pacman -S tmux&lt;/code>&lt;/pre>
-&lt;/div>
-&lt;/div>
-&lt;/div>
-&lt;/div>
-&lt;div class="sect1">
-&lt;h2 id="_konfigurasi">Konfigurasi&lt;/h2>
-&lt;div class="sectionbody">
-&lt;div class="paragraph">
+&lt;pre tabindex="0">&lt;code>$ sudo pacman -S tmux
+&lt;/code>&lt;/pre>&lt;h2 id="konfigurasi">Konfigurasi&lt;/h2>
 &lt;p>Setelah berhasi memasang paket aplikasi tmux, tahap selanjutnya yakni melakukan konfigurasi, tujuannya untuk memudahkan kita saat menggunakannya nanti serta enak dilihat dan tidak terkesan biasa.
 adapun yang akan dikonfigurasi yakni :&lt;/p>
-&lt;/div>
-&lt;div class="ulist">
 &lt;ul>
-&lt;li>
-&lt;p>Ubah default prefix key&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>Ubah tampilan status bar&lt;/p>
-&lt;/li>
+&lt;li>Ubah default prefix key&lt;/li>
+&lt;li>Ubah tampilan status bar&lt;/li>
 &lt;/ul>
-&lt;/div>
-&lt;div class="paragraph">
 &lt;p>Pada umumnya file konfigurasi tmux berada di &lt;code>~/.tmux.conf&lt;/code> untuk setiap user, sedangkan untuk configurasi global berada di &lt;code>/etc/tmux.conf&lt;/code>.&lt;/p>
-&lt;/div>
-&lt;div class="sect2">
-&lt;h3 id="_konfigurasi_default_prefix_key">Konfigurasi default prefix key&lt;/h3>
-&lt;div class="paragraph">
+&lt;h3 id="konfigurasi-default-prefix-key">Konfigurasi default prefix key&lt;/h3>
 &lt;p>Secara default prefix key-nya menggunakan Ctrl-b, sebagai contoh saat kita ingin memuat tampilan tmux menjadi dual sesi dengan mode split kita harus menekan prefix kemudian diikuti dengan &lt;code>%&lt;/code> atau &lt;code>Ctrl-b %&lt;/code>. Akan tetapi apabila belum terbiasa akan cukup sulit mengingat posisinya cukup berjauhan sehingga membutuhkan waktu lebih apabila ingin menggunakan keybinding.sehingga aku mengggantinya menjadi Ctrl-a agar memudahkan aku ketika mengakses prefix tersebut. Untuk mengubah key binding menjadi Ctrl-a cukup tambahkan kode dibawah ini pada file .tmux.conf-nya&lt;/p>
-&lt;/div>
-&lt;div class="listingblock">
-&lt;div class="content">
-&lt;pre>unbind C-b
+&lt;pre tabindex="0">&lt;code>unbind C-b
 set -g prefix C-a
-bind C-a send-prefix&lt;/pre>
-&lt;/div>
-&lt;/div>
-&lt;/div>
-&lt;div class="sect2">
-&lt;h3 id="_konfigurasi_status_bar">Konfigurasi status bar&lt;/h3>
-&lt;div class="paragraph">
+bind C-a send-prefix
+&lt;/code>&lt;/pre>&lt;h3 id="konfigurasi-status-bar">Konfigurasi status bar&lt;/h3>
 &lt;p>Tampilan awal status bar dari Tmux cukup sederhana dan terkesan biasa, maka dari itu saya melakukan perubahan sedikit sehingga enak dilihat dan tidak terkesan monoton. sehingga saya menambhkan potongan kode berikut ini kedalam file .tmux.conf-nya&lt;/p>
-&lt;/div>
-&lt;div class="listingblock">
-&lt;div class="content">
-&lt;pre class="highlight">&lt;code class="language-conf" data-lang="conf"># STATUS
+&lt;pre tabindex="0">&lt;code># STATUS
 set -g status-position bottom
 set -g status on
 set -g status-interval 60
@@ -906,50 +635,43 @@ set -g window-status-separator &amp;#34; &amp;#34;
 set -g status-justify centre
 ## Right
 set -g status-right-length 40
-set -g status-right &amp;#34;#{prefix_highlight} #[fg=black,bg=yellow, bold]  #[fg=black,bg=white, bold] #(lsb_release -d | cut -f 2) &amp;#34;&lt;/code>&lt;/pre>
-&lt;/div>
-&lt;/div>
-&lt;div class="paragraph">
-&lt;p>bonus untuk judul pada terminal yang dibuka&lt;/p>
-&lt;/div>
-&lt;div class="listingblock">
-&lt;div class="content">
-&lt;pre class="highlight">&lt;code class="language-conf" data-lang="conf"># WINDOW
+set -g status-right &amp;#34;#{prefix_highlight} #[fg=black,bg=yellow, bold]  #[fg=black,bg=white, bold] #(lsb_release -d | cut -f 2) &amp;#34;
+&lt;/code>&lt;/pre>&lt;p>bonus untuk judul pada terminal yang dibuka&lt;/p>
+&lt;pre tabindex="0">&lt;code># WINDOW
 set -g base-index 1
 set -g renumber-windows on
 setw -g automatic-rename on
 setw -g window-style &amp;#34;fg=white bg=black&amp;#34;
-setw -g window-active-style &amp;#34;fg=brightwhite bg=black&amp;#34;&lt;/code>&lt;/pre>
-&lt;/div>
-&lt;/div>
-&lt;/div>
-&lt;/div>
-&lt;/div>
-&lt;div class="sect1">
-&lt;h2 id="_hasil">Hasil&lt;/h2>
-&lt;div class="sectionbody">
-&lt;div class="paragraph">
+setw -g window-active-style &amp;#34;fg=brightwhite bg=black&amp;#34;
+&lt;/code>&lt;/pre>&lt;h2 id="hasil">Hasil&lt;/h2>
 &lt;p>setelah potongan kode di atas ditambahkan kedalam &lt;code>.tmux.conf&lt;/code> maka hasilnya akan seperti berikut ini.
-&lt;span class="image">&lt;img src="./img/hasil.png" alt="tmux preview"/>&lt;/span>
+&lt;figure
+class="gallery-image"
+style="
+flex-grow: 177;
+flex-basis: 426px"
+>
+&lt;a href="https://mnabila.github.io/p/berkenalan-dengan-tmux/img/hasil.png" data-size="1366x768">
+&lt;img src="https://mnabila.github.io/p/berkenalan-dengan-tmux/img/hasil.png"
+width="1366"
+height="768"
+srcset="https://mnabila.github.io/p/berkenalan-dengan-tmux/img/hasil_hu1dfcbf2fcb51c46db4b1af4b32d61cf3_13317_480x0_resize_box_3.png 480w, https://mnabila.github.io/p/berkenalan-dengan-tmux/img/hasil_hu1dfcbf2fcb51c46db4b1af4b32d61cf3_13317_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="hasil">
+&lt;/a>
+&lt;figcaption>hasil&lt;/figcaption>
+&lt;/figure>
 ps: hasil ini diambil dari &lt;code>terminal emulator&lt;/code> bukan dari tty langsung, kenapa ? aku ga tahu cara screenshot di tty gimana 🤣&lt;/p>
-&lt;/div>
-&lt;/div>
-&lt;/div>
-&lt;div class="sect1">
-&lt;h2 id="_referensi">Referensi&lt;/h2>
-&lt;div class="sectionbody">
-&lt;div class="ulist">
+&lt;h2 id="referensi">Referensi&lt;/h2>
 &lt;ul>
 &lt;li>
 &lt;p>Tmux manpages(man tmux) Diakses pada: 2019-05-25&lt;/p>
 &lt;/li>
 &lt;li>
-&lt;p>&lt;a href="https://agung-setiawan.com/panduan-minimal-belajar-tmux/">panduan-minimal-belajar-tmux&lt;/a> Diakses pada: 2019-05-25&lt;/p>
+&lt;p>&lt;a class="link" href="https://agung-setiawan.com/panduan-minimal-belajar-tmux/" target="_blank" rel="noopener"
+>panduan-minimal-belajar-tmux&lt;/a> Diakses pada: 2019-05-25&lt;/p>
 &lt;/li>
 &lt;li>
-&lt;p>&lt;a href="https://wiki.archlinux.org/index.php/tmux">Archwiki Tmux&lt;/a> Diakses pada: 2019-05-25&lt;/p>
+&lt;p>&lt;a class="link" href="link:https://wiki.archlinux.org/index.php/tmux" >Archwiki Tmux&lt;/a> Diakses pada: 2019-05-25&lt;/p>
 &lt;/li>
-&lt;/ul>
-&lt;/div>
-&lt;/div>
-&lt;/div></description></item></channel></rss>
+&lt;/ul></description></item></channel></rss>
