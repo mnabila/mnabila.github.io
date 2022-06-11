@@ -177,22 +177,22 @@ markup:
   highlight:
     noClasses: false
 
-security:
-  enableInlineShortcodes: false
-  exec:
-    allow:
-      - ^dart-sass-embedded$
-      - ^go$
-      - ^npx$
-      - ^postcss$
-      - ^asciidoctor$
-    osEnv:
-      - (?i)^(PATH|PATHEXT|APPDATA|TMP|TEMP|TERM)$
-  funcs:
-    getenv:
-      - ^HUGO_
-  http:
-    methods:
-      - (?i)GET|POST
-    urls:
-      - .*
+# security:
+#   enableInlineShortcodes: false
+#   exec:
+#     allow:
+#       - ^dart-sass-embedded$
+#       - ^go$
+#       - ^npx$
+#       - ^postcss$
+#       - ^asciidoctor$
+#     osEnv:
+#       - (?i)^(PATH|PATHEXT|APPDATA|TMP|TEMP|TERM)$
+#   funcs:
+#     getenv:
+#       - ^HUGO_
+#   http:
+#     methods:
+#       - (?i)GET|POST
+#     urls:
+#       - .*
