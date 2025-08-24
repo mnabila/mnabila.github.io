@@ -26,6 +26,9 @@ ignoreFiles = ["themes/.*/content/*"]
     source = '(postcss|tailwind)\.config\.js'
     target = 'css'
 
+[caches]
+  [caches.images]
+    dir = ':cacheDir/images'
 
 [params]
   [params.author]
