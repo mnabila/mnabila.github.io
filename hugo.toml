@@ -1,8 +1,8 @@
-baseURL = "https://mnabila.com"
-languageCode = "en-us"
-title = "MNABILA"
-theme = "resume"
-ignoreFiles = ["themes/.*/content/*"]
+baseURL = 'https://mnabila.com'
+languageCode = 'en-us'
+title = 'MNABILA'
+theme = 'resume'
+ignoreFiles = ['themes/.*/content/*']
 
 [module]
   [module.hugoVersion]
@@ -36,8 +36,10 @@ ignoreFiles = ["themes/.*/content/*"]
     description = 'I’m a Backend Engineer passionate about GNU/Linux, exploring open-source technologies, and designing backend systems that deliver consistent performance.'
     image = 'https://github.com/mnabila.png'
   [params.social]
-    github = "https://github.com/mnabila"
-    gitlab = "https://gitlab.com/mnabila"
-    telegram = "https://t.me/mnabila"
-    linkedin = "https://linkedin.com/in/mnabila"
-    email = "mailto:saya@mnabila.com"
+    github = 'https://github.com/mnabila'
+    gitlab = 'https://gitlab.com/mnabila'
+    telegram = 'https://t.me/mnabila'
+    linkedin = 'https://linkedin.com/in/mnabila'
+    email = 'mailto:saya@mnabila.com'
+  [params.analytics]
+    google = 'G-7NVMRSNZL7'
