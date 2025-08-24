@@ -1,0 +1,34 @@
+baseURL = "https://mnabila.com"
+languageCode = "en-us"
+title = "MNABILA"
+theme = "resume"
+ignoreFiles = ["themes/.*/content/*"]
+
+[module]
+  [module.hugoVersion]
+    extended = false
+    min = '0.146.0'
+  [[module.mounts]]
+    source = 'assets'
+    target = 'assets'
+  [[module.mounts]]
+    disableWatch = true
+    source = 'hugo_stats.json'
+    target = 'assets/notwatching/hugo_stats.json'
+
+[build]
+  [build.buildStats]
+    enable = true
+  [[build.cachebusters]]
+    source = 'assets/notwatching/hugo_stats\.json'
+    target = 'css'
+  [[build.cachebusters]]
+    source = '(postcss|tailwind)\.config\.js'
+    target = 'css'
+
+
+[params]
+  [params.author]
+    name = 'Muhammad Nabil Adani'
+    description = 'I’m a Backend Engineer passionate about GNU/Linux, exploring open-source technologies, and designing backend systems that deliver consistent performance.'
+    image = 'https://github.com/mnabila.png'

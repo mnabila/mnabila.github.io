@@ -1,0 +1,8 @@
+# Hugo output
+/public/
+/resources/_gen/
+hugo_stats.json
+.hugo_build.lock
+
+# Node.js dependencies (if using Tailwind/PostCSS)
+node_modules/

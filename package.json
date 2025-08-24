@@ -1,0 +1,16 @@
+{
+  "name": "portofolio",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "dev": "hugo server -D"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "@tailwindcss/cli": "^4.1.12",
+    "tailwindcss": "^4.1.12"
+  }
+}
