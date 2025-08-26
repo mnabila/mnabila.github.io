@@ -1,5 +1,5 @@
 +++
-draft = false
+draft = true
 date = '2025-08-24T11:54:19+07:00'
 title = 'DevOps Engineer'
 type = 'skill'
