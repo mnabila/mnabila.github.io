@@ -20,6 +20,8 @@ technologies= [
   'redis',
   'sql',
   'typescript',
+  'appium',
+  'playwright',
 ]
 tasks = [
   'Developed and managed a GrabPay payment gateway aggregator, streamlining transactions by integrating multiple third-party providers and optimizing data processing workflows to ensure faster and more reliable transactions.',

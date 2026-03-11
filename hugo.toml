@@ -43,3 +43,16 @@ ignoreFiles = ['themes/.*/content/*']
     email = 'mailto:saya@mnabila.com'
   [params.analytics]
     google = 'G-7NVMRSNZL7'
+
+[taxonomies]
+  tag = 'tags'
+
+[markup]
+  [markup.highlight]
+    noClasses = false
+    lineNos = false
+    guessSyntax = true
+  [markup.tableOfContents]
+    startLevel = 2
+    endLevel = 4
+    ordered = false
