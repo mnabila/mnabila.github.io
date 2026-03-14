@@ -46,6 +46,8 @@ ignoreFiles = ['themes/.*/content/*']
 
 [taxonomies]
   tag = 'tags'
+  language = 'languages'
+  tool = 'tools'
 
 [markup]
   [markup.highlight]
