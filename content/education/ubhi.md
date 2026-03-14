@@ -8,4 +8,5 @@ degree = 'Bachelors Degree, Information Technology'
 period = 'July 2017 - September 2021'
 period_begin = '2017-07-01'
 period_finish = '2021-09-31'
+score = '3.86/4.00'
 +++

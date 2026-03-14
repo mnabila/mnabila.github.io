@@ -33,7 +33,7 @@ ignoreFiles = ['themes/.*/content/*']
 [params]
   [params.author]
     name = 'Muhammad Nabil Adani'
-    description = 'I’m a Backend Engineer passionate about GNU/Linux, exploring open-source technologies, and designing backend systems that deliver consistent performance.'
+    description = 'I’m a Software Engineer passionate about GNU/Linux, exploring open-source technologies, and designing backend systems that deliver consistent performance.'
     image = 'https://github.com/mnabila.png'
   [params.social]
     github = 'https://github.com/mnabila'
