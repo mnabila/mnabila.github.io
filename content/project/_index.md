@@ -1,5 +1,5 @@
 +++
 title = 'Project'
 type = 'project'
-description = 'Personal projects and open source tools I have built or contributed to.'
+description = 'Technical deep dives into projects I have built — covering architecture decisions, engineering trade-offs, and lessons learned along the way.'
 +++
