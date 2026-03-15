@@ -1,6 +1,7 @@
 +++
 draft = false
 date = '2022-01-06'
+lastmod = '2026-03-15'
 title = 'Aria2c Sebagai Download Engine Di Qutebrowser'
 type = 'blog'
 description = 'Menggunakan aria2c sebagai download engine di qutebrowser melalui userscript dan monkeyscript.'
@@ -8,25 +9,31 @@ image = ''
 tags = ['browser', 'download', 'cli', 'userscript', 'monkeyscript']
 +++
 
-## Intro
+## Latar Belakang
 
-Pernah merasa download bawaan browser itu kurang greget? Nah, kenalan dulu sama **aria2c** -- sebuah download manager berbasis CLI yang bisa dibilang serba bisa. Dia mendukung berbagai protokol mulai dari HTTP(S), FTP, SFTP, BitTorrent, hingga Metalink. Artinya, cukup satu tool ini saja dan kita tidak perlu lagi repot install torrent client terpisah.
+Sebagai pengguna **Qutebrowser** -- browser yang mengandalkan keyboard untuk navigasi -- saya sudah cukup lama merasa kurang puas dengan kemampuan download bawaannya. Qutebrowser memang bukan browser mainstream; dibangun menggunakan Python dengan module PyQt5, backend-nya qt5-webengine, dan tampilannya sangat minimalis. Bisa dibilang, pengguna qutebrowser punya selera tersendiri yang rela menghafal keymap demi kenyamanan navigasi tanpa mouse.
 
-Yang bikin aria2c makin menarik, dia bisa dijadikan download service yang dapat diakses dari berbagai frontend, baik yang berbasis GUI seperti [UGET](https://ugetdm.com/) dan [Persepolis](https://persepolisdm.github.io/), yang berbasis web seperti [AriaNg](https://github.com/mayswind/AriaNg) dan [webui-aria2](https://github.com/ziahamza/webui-aria2), bahkan yang berbasis TUI seperti [aria2p](https://github.com/pawamoy/aria2p/).
+Di sisi lain, saya sudah menggunakan **aria2c** sebagai download manager utama di terminal. Aria2c adalah download manager berbasis CLI yang mendukung berbagai protokol -- HTTP(S), FTP, SFTP, BitTorrent, hingga Metalink. Cukup satu tool ini saja dan tidak perlu lagi install torrent client terpisah. Yang lebih menarik, aria2c bisa dijadikan download service yang diakses dari berbagai frontend, baik GUI seperti [UGET](https://ugetdm.com/) dan [Persepolis](https://persepolisdm.github.io/), web seperti [AriaNg](https://github.com/mayswind/AriaNg) dan [webui-aria2](https://github.com/ziahamza/webui-aria2), hingga TUI seperti [aria2p](https://github.com/pawamoy/aria2p/).
 
-Lalu ada **Qutebrowser** -- browser yang mengajak penggunanya merasakan nikmatnya kesakitan menghafal keymap. Kenapa begitu? Jelas-jelas ada browser lain yang jauh lebih mudah dioperasikan, jadi bisa dibilang pengguna qutebrowser punya selera tersendiri. Qutebrowser adalah browser yang mengandalkan keyboard untuk navigasi dengan tampilan yang minimalis. Dibangun menggunakan Python dengan module PyQt5, backend-nya menggunakan qt5-webengine (default) dan qt5-webkit.
+Muncul pertanyaan sederhana: bagaimana kalau dua tool ini digabungkan?
 
-Nah, bagaimana kalau dua tool keren ini digabungkan? Mari kita bahas.
+## Permasalahan
 
-## Implementasi
+Download bawaan qutebrowser cukup terbatas -- tidak mendukung resume, tidak bisa multi-connection, dan tidak ada integrasi dengan download manager eksternal secara default. Sementara aria2c sudah berjalan sebagai service di background via JSON-RPC, tinggal mencari cara mengirimkan URL dari qutebrowser ke aria2c.
 
-Ada dua pendekatan yang saya gunakan untuk mengintegrasikan aria2c ke dalam qutebrowser: **userscript** dan **monkeyscript**.
+## Pendekatan Solusi
 
-### UserScript
+Saya menemukan dua pendekatan untuk mengintegrasikan keduanya: **userscript** dan **monkeyscript** (Greasemonkey).
 
-Userscript mirip dengan monkeyscript, tapi punya satu keunggulan penting -- bisa ditulis dengan bahasa pemrograman apapun, selama bahasa tersebut mampu membaca environment variable yang disediakan oleh qutebrowser. Daftar lengkap environment variable-nya bisa dilihat di [qutebrowser/userscript](https://qutebrowser.org/doc/userscripts.html).
+Userscript dipilih untuk kebutuhan manual -- ketika saya ingin memilih link tertentu di halaman web lalu mengirimnya ke aria2c. Keunggulan userscript di qutebrowser adalah bisa ditulis dalam bahasa pemrograman apapun selama mampu membaca environment variable yang disediakan qutebrowser. Daftar lengkap environment variable-nya tersedia di [qutebrowser/userscript](https://qutebrowser.org/doc/userscripts.html).
 
-Untuk implementasinya, saya menulis userscript bernama `qb2aria` yang disesuaikan dengan kebutuhan saya. Berikut isinya:
+Monkeyscript dipilih untuk kebutuhan otomatis -- khususnya di situs file hosting tertentu yang ingin langsung dikirim ke aria2c tanpa interaksi manual.
+
+## Implementasi Teknis
+
+### UserScript: qb2aria
+
+Saya menulis userscript sederhana bernama `qb2aria` yang mengirimkan URL aktif ke aria2c melalui JSON-RPC:
 
 ```bash
 #!/bin/bash
@@ -46,32 +53,28 @@ if [[ ! -z $QUTE_URL ]]; then
 fi
 ```
 
-Penjelasan singkat:
-
 | Komponen    | Fungsi                                                                                                  |
 | :---------: | :------------------------------------------------------------------------------------------------------ |
 | `datagen`   | Menggenerate payload JSON yang dibutuhkan untuk mengirim request download ke aria2c melalui curl         |
 | `$QUTE_URL` | Environment variable bawaan qutebrowser yang berisi URL halaman aktif, hanya tersedia di dalam userscript |
 
-Simpan file `qb2aria` di folder `/home/$USER/.config/qutebrowser/userscripts`, lalu beri hak akses eksekusi:
+File disimpan di `/home/$USER/.config/qutebrowser/userscripts` dan diberi hak akses eksekusi:
 
 ```
 $ chmod +x qb2aria
 ```
 
-Langkah terakhir, tambahkan keymap berikut pada `config.py` qutebrowser:
+Kemudian ditambahkan keymap di `config.py` qutebrowser:
 
 ```python
 config.bind(",d", "hint links userscript qb2aria", "normal")
 ```
 
-Cara pakainya gampang: tekan `,` lalu `d`, kemudian pilih hint link yang ingin di-download. Selesai!
+Workflow-nya: tekan `,` lalu `d`, pilih hint link yang ingin di-download. Selesai.
 
-### Monkeyscript
+### Monkeyscript: Monkey D Aria2
 
-Monkeyscript atau yang lebih dikenal sebagai **Greasemonkey** awalnya adalah extension di Mozilla Firefox. Sekarang, greasemonkey sudah tersedia di berbagai browser termasuk qutebrowser. Berbeda dengan userscript di atas, monkeyscript hanya bisa ditulis dengan JavaScript.
-
-Berikut monkeyscript yang saya gunakan untuk otomatis mengirim link download dari beberapa file hosting ke aria2c:
+Untuk otomasi di situs file hosting, saya menulis monkeyscript yang mendeteksi hostname dan langsung mengirimkan direct link ke aria2c:
 
 ```javascript
 // ==UserScript==
@@ -161,6 +164,24 @@ Berikut monkeyscript yang saya gunakan untuk otomatis mengirim link download dar
     }
 })();
 ```
+
+Setiap fungsi (`zippyshare`, `solidfile`, `anonfiles`, `mediafire`) mengekstrak direct download link dari masing-masing situs menggunakan DOM query selector, lalu mengirimnya ke aria2c via fetch API.
+
+## Tantangan yang Dihadapi
+
+Tantangan utama ada pada monkeyscript -- khususnya masalah **CORS**. Karena aria2c berjalan di `localhost:6800` sementara monkeyscript dieksekusi di domain situs file hosting, browser memblokir request cross-origin. Menggunakan `mode: 'no-cors'` pada fetch memang menghilangkan error di console, tapi bukan solusi yang ideal karena response dari server tidak bisa dibaca. Untuk kebutuhan saya saat itu -- cukup fire-and-forget tanpa perlu membaca response -- pendekatan ini masih bisa diterima.
+
+Selain itu, setiap situs file hosting memiliki struktur DOM yang berbeda untuk menyembunyikan direct link. Solidfiles misalnya, menyimpan URL download di dalam tag `<script>` sebagai JSON, sehingga perlu XPath dan regex untuk mengekstraknya.
+
+## Insight dan Pembelajaran
+
+Pendekatan userscript ternyata jauh lebih fleksibel dibandingkan monkeyscript. Dengan userscript, kita bisa memanfaatkan seluruh ekosistem CLI tools (`jq`, `curl`, `notify-send`) yang sudah tersedia di sistem. Sementara monkeyscript terbatas pada JavaScript dan sandbox browser.
+
+Dari sisi maintainability, monkeyscript lebih rapuh karena sangat bergantung pada struktur DOM situs pihak ketiga. Begitu situs mengubah layout-nya, script langsung rusak. Userscript yang bekerja di level URL jauh lebih stabil.
+
+## Penutup
+
+Integrasi aria2c dengan qutebrowser melalui dua pendekatan ini sudah berjalan sesuai harapan. Userscript `qb2aria` menjadi pilihan utama untuk download manual, sementara monkeyscript melengkapi untuk otomasi di situs file hosting tertentu. Ke depannya, pendekatan monkeyscript bisa digantikan dengan browser extension yang lebih proper untuk mengatasi masalah CORS.
 
 ## Referensi
 

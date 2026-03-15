@@ -1,6 +1,7 @@
 +++
 draft = false
 date = '2022-01-11'
+lastmod = '2026-03-15'
 title = 'Review Lf File Manager'
 type = 'blog'
 description = 'Perbandingan lf dan ranger serta konfigurasi lf file manager sebagai pengganti ranger.'
@@ -8,33 +9,60 @@ image = ''
 tags = ['tui', 'file manager', 'lf', 'ranger']
 +++
 
-## Alasan Migrasi
+## Latar Belakang
 
-Ranger sudah lama jadi andalan saya sebagai file manager utama. Tapi seiring waktu, mulai muncul masalah-masalah "ghaib" -- file manager tiba-tiba freeze saat copy file, CPU usage mendadak 100% gara-gara file previewer, dan terkadang responsnya terasa lambat, seolah mengajak santai di saat saya butuh kecepatan.
+Selama lebih dari 2 tahun, **ranger** menjadi file manager utama saya di terminal. Ranger termasuk dalam kategori TUI (Terminal User Interface) file manager yang cukup populer di kalangan pengguna GNU/Linux. Workflow-nya sudah menyatu dengan kebiasaan sehari-hari -- navigasi cepat, preview file, dan integrasi dengan berbagai program eksternal.
 
-Karena hal-hal ghaib itulah, rasa penasaran untuk mencoba alternatif lain mulai muncul. Saya pun menjelajahi GitHub dan menemukan dua kandidat menarik: **nnn** dan **lf**.
+## Permasalahan
 
-Sebelum memutuskan, saya membuat tiga kriteria perbandingan: user interface (UI), file konfigurasi, dan workflow. Dari ketiganya, **lf** adalah yang paling cocok -- UI dan workflow-nya mirip ranger, sementara file konfigurasinya justru lebih menarik dibandingkan ranger maupun nnn.
+Seiring waktu, masalah-masalah "ghaib" mulai muncul di ranger. File manager tiba-tiba freeze saat copy file besar, CPU usage mendadak 100% gara-gara file previewer, dan terkadang responsnya terasa lambat -- seolah mengajak santai di saat saya butuh yang sat set. Yang paling menjengkelkan, list file kadang tidak terupdate meskipun sudah di-restart, terutama saat mengakses removable disk.
 
-## Kelebihan yang Juga Kekurangan
+Karena hal-hal ghaib itulah, rasa penasaran untuk mencoba alternatif lain mulai muncul.
 
-Terdengar kontradiktif? Tapi ini serius. Lf bisa dibilang file manager minimalis -- secara default hanya menyediakan fitur seadanya. Tidak ada yang istimewa yang langsung bikin terkesan. Namun justru di situlah letak menariknya: karena minim fitur bawaan, pengguna dibebaskan untuk membuat fitur sendiri melalui file konfigurasi. Semacam kanvas kosong yang siap dilukis sesuai keinginan.
+## Pendekatan Solusi
 
-## Perbandingan Lf vs Ranger
+Saya menjelajahi GitHub dan menemukan dua kandidat pengganti: **nnn** dan **lf**. Sebelum memutuskan, saya menetapkan tiga kriteria perbandingan: user interface (UI), file konfigurasi, dan workflow.
+
+Dari ketiganya, **lf** yang paling cocok -- UI dan workflow-nya mirip ranger sehingga transisi tidak perlu mengubah workflow yang sudah ada, sementara it file konfigurasinya berbasis shell script yang justru lebih mudah jika dibanding Python-nya ranger.
+
+### Perbandingan Lf vs Ranger
 
 | Aspek | Lf | Ranger |
 |:------|:---|:-------|
 | **Fitur** | Builtin fitur sangat minim, tapi karena konfigurasinya berbasis shell script, pengguna bebas menambahkan fitur sesuai kebutuhan. | Fitur jauh lebih lengkap, tanpa debat. Bisa juga ditambah fitur baru yang ditulis dengan Python. Sayangnya, belum semua fiturnya sempat saya manfaatkan. |
 | **Konfigurasi** | Default config minimalis dan mudah dipahami. Tapi di balik kesederhanaannya, tersimpan tantangan tersendiri. | Default config cukup banyak dan bisa membingungkan pemula yang ingin melakukan kustomisasi. |
-| **Performa** | Lebih cepat dari ranger -- terasa hampir instan saat dibuka. Tapi karena masih baru beberapa hari pakai, belum bisa berkomentar terlalu banyak. | Cukup cepat, tapi sesekali bisa sangat lambat -- terutama saat mengakses removable disk. Terkadang list file tidak terupdate meskipun sudah di-restart. |
+| **Performa** | Lebih cepat dari ranger -- terasa hampir instan saat dibuka. | Cukup cepat, tapi sesekali bisa sangat lambat -- terutama saat mengakses removable disk. |
 | **Kenyamanan** | Di awal terasa tidak nyaman, terutama untuk handle multiple file dalam satu instance. Butuh beberapa hari eksplorasi untuk menemukan solusinya. | Kenyamanan sudah tidak diragukan. Zona nyaman yang membuat saya betah hampir 2 tahun lebih. |
 | **Tampilan** | Mirip ranger tapi tidak identik. Sayangnya kurang informatif saat proses copy/move -- hanya menampilkan persentase kecil di pojok, bukan progress bar seperti ranger. | Tampilan informasi proses file lebih lengkap dengan progress bar yang jelas. |
 
-## Konfigurasi
+## Implementasi Teknis
 
-Seperti yang sudah disinggung, lf menggunakan **shell scripting** untuk file konfigurasinya. Ini menurut saya jadi kelebihan tersendiri karena pengguna bisa bebas menambahkan command apapun ke dalam file manager. Default konfigurasi bisa diambil dari [sini](https://github.com/gokcehan/lf/blob/master/etc/lfrc.example).
+Lf menggunakan **shell scripting** untuk file konfigurasinya. Karena saya menganut paham "konfig panjang wajib dimodulasi", konfigurasinya saya pisah menjadi beberapa bagian dan di-source ke dalam `lfrc`.
 
-Karena saya menganut paham "konfig panjang wajib dimodulasi", maka konfigurasinya saya pisah menjadi beberapa bagian: **options**, **keymap**, dan **command**, kemudian di-source ke dalam `lfrc`.
+### lfrc (Main Config)
+
+```sh
+#!/bin/sh
+# source another config
+source ~/.config/lf/config.d/options
+source ~/.config/lf/config.d/keymap
+source ~/.config/lf/config.d/command
+```
+
+### Options
+
+```sh
+#!/bin/sh
+
+set shell sh
+set shellopts "-eu"
+set ifs "\n"
+set ignorecase true
+set scrolloff 10
+set icons
+set ratios 1:2:3
+set promptfmt "\033[32;1m%u\033[0m ❱ \033[34;1m%d\033[0m\033[1m%f\033[0m"
+```
 
 ### Keymap
 
@@ -73,6 +101,8 @@ map <a-j> %tmux select-pane -D
 map <a-k> %tmux select-pane -U
 map <a-l> %tmux select-pane -R
 ```
+
+Integrasi tmux di keymap sangat membantu karena lf tidak memiliki fitur tab seperti ranger. Dengan tmux, saya bisa bermanuver antar panel menggunakan `Alt+H/J/K/L` untuk split dan `Alt+h/j/k/l` untuk navigasi antar pane.
 
 ### Command
 
@@ -145,7 +175,6 @@ cmd yank2clipboard ${{
     xclip -selection clipboard -i "$f" -t $(file --mime-type "$f" | cut -d ":" -f 2 | xargs)
 }}
 
-
 # print mimetype
 cmd mimetype &{{
     mim=$(file --mime-type -bL "$f")
@@ -192,7 +221,6 @@ cmd 7z ${{
     rm -rf "$1"
 }}
 
-
 cmd rclone ${{
     function rmount () {
         if [ ! -d "/tmp/rclone" ]; then
@@ -209,44 +237,29 @@ cmd rclone ${{
 }}
 ```
 
-### Options
+Beberapa command yang cukup berguna dalam workflow harian: `fzf_select` untuk navigasi cepat menggunakan fuzzy finder, `extract` untuk ekstraksi berbagai format arsip, dan `rclone` untuk mount cloud storage langsung dari file manager.
 
-```sh
-#!/bin/sh
+**Catatan penting:** Beberapa snippet dari wiki lf justru bisa menambah masalah. Contohnya pada `cmd open` -- secara default jika kita memilih beberapa file lalu membukanya, setiap file akan dibuka di instance terpisah. Pilih 10 video? Maka akan muncul 10 window video player, bukan satu playlist. Masalah ini saya bahas lebih detail di tulisan terpisah.
 
-set shell sh
-set shellopts "-eu"
-set ifs "\n"
-set ignorecase true
-set scrolloff 10
-set icons
-set ratios 1:2:3
-set promptfmt "\033[32;1m%u\033[0m ❱ \033[34;1m%d\033[0m\033[1m%f\033[0m"
-```
+## Tantangan yang Dihadapi
 
-### lfrc
+Tantangan terbesar adalah melepaskan zona nyaman ranger. Setelah 2 tahun terbiasa, banyak muscle memory yang harus di-rewire. Beberapa fitur yang di ranger tinggal pakai, di lf harus dibuat sendiri dari nol -- mulai dari file opener, bulk rename, hingga integrasi dengan removable disk via udisks.
 
-```sh
-#!/bin/sh
-# source another config
-source ~/.config/lf/config.d/options
-source ~/.config/lf/config.d/keymap
-source ~/.config/lf/config.d/command
-```
+Selain itu, kurangnya progress bar yang informatif saat copy/move file besar cukup mengganggu. Lf hanya menampilkan persentase kecil di pojok layar, berbeda dengan ranger yang menampilkan progress bar lengkap.
 
-**Catatan:** Konfigurasi di atas saya dapatkan dari eksplorasi di `lf -doc` dan wiki resmi. Perlu diingat bahwa beberapa snippet dari wiki lf justru bisa menambah masalah. Contohnya pada `cmd open` -- jika kita memilih beberapa file lalu membukanya, setiap file akan dibuka di instance terpisah. Pilih 10 video? Maka akan muncul 10 window video player, bukan satu playlist.
+## Insight dan Pembelajaran
 
-## Apakah Ranger Pensiun?
+Migrasi dari ranger ke lf mengajarkan beberapa hal penting:
 
-Tentu tidak. Ranger tidak benar-benar dipensiunkan, lebih tepatnya dipindahkan ke bangku cadangan. Siapa tahu suatu saat nanti dibutuhkan lagi sebagai starter. Selain itu, ranger juga masih berperan sebagai file chooser untuk qutebrowser dan file picker untuk neomutt, karena fitur ini belum tersedia di lf.
+Pertama, tool yang minimalis belum tentu inferior. Justru karena minim fitur bawaan, lf memberikan kebebasan total untuk membangun workflow sesuai kebutuhan tanpa harus berurusan dengan fitur-fitur yang tidak terpakai.
 
-## Preview
+Kedua, konfigurasi berbasis shell script adalah pendekatan yang sangat powerful. Berbeda dengan konfigurasi Python di ranger yang butuh pemahaman API internal, di lf cukup menulis shell command biasa. Setiap orang yang familiar dengan terminal bisa langsung produktif.
 
-Karena lf tidak memiliki fitur tab seperti ranger, kita memerlukan tmux untuk bermanuver antar panel.
+Ketiga, ranger tidak benar-benar dipensiunkan -- lebih tepatnya dipindahkan ke bangku cadangan. Ranger masih berperan sebagai file chooser untuk qutebrowser dan file picker untuk neomutt, karena fitur ini belum tersedia di lf.
 
-## Kesimpulan
+## Penutup
 
-Lf adalah file manager yang penuh kejutan. Banyak fitur yang belum tersedia secara bawaan, sehingga pengguna "dipaksa" untuk berkreasi membuat fitur sendiri. Cocok untuk mereka yang suka tantangan dan senang mengutak-atik konfigurasi.
+Lf berhasil menggantikan ranger sebagai file manager utama di workflow harian saya. Performanya lebih ringan, konfigurasinya lebih fleksibel, dan masalah-masalah "ghaib" yang sering muncul di ranger tidak lagi ditemui. Meskipun butuh effort lebih di awal untuk setup, hasilnya sepadan. Bagi mereka yang suka tantangan dan senang mengutak-atik konfigurasi, lf adalah pilihan yang sangat layak dicoba.
 
 ## Referensi
 
