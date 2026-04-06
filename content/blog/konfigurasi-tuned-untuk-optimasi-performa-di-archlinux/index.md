@@ -1,6 +1,7 @@
 +++
 draft = false
 date = '2026-04-05'
+lastmod = '2026-04-06'
 title = 'Konfigurasi Tuned Untuk Optimasi Performa Di Archlinux'
 type = 'blog'
 description = 'Cara menggunakan tuned untuk optimasi performa sistem secara otomatis di Archlinux berdasarkan profil workload yang sedang berjalan.'
@@ -152,10 +153,16 @@ summary=Balanced profile with turbo boost disabled
 include=balanced
 
 [cpu]
-no_turbo=1
+boost=0
 ```
 
-Profil di atas menggunakan `balanced` sebagai base, lalu menonaktifkan turbo boost lewat parameter `no_turbo=1`. Kenapa mau mematikan turbo? Beberapa alasannya:
+Penjelasan parameter:
+
+| Parameter | Nilai | Deskripsi |
+|-----------|-------|-----------|
+| `boost` | `0` | Disable boost secara generic (berlaku untuk Intel dan AMD) |
+
+Profil di atas menggunakan `balanced` sebagai base, lalu menonaktifkan turbo boost dan mengatur CPU agar lebih hemat daya. Kenapa mau mematikan turbo? Beberapa alasannya:
 
 - **Temperatur lebih terkontrol** -- turbo boost mendorong clock speed di atas base frequency, yang berarti panas lebih tinggi. Tanpa turbo, suhu CPU lebih stabil dan fan tidak berisik.
 - **Konsumsi daya lebih rendah** -- cocok untuk laptop yang ingin battery life lebih panjang tanpa harus masuk full `powersave`.
@@ -169,7 +176,12 @@ Aktifkan profil custom:
 $ sudo tuned-adm profile balanced-no-turbo
 ```
 
-Verifikasi turbo boost sudah nonaktif:
+Verifikasi profil sudah aktif dan turbo boost nonaktif:
+
+```
+$ tuned-adm active
+Current active profile: balanced-no-turbo
+```
 
 ```
 $ cat /sys/devices/system/cpu/intel_pstate/no_turbo
