@@ -26,6 +26,19 @@ ignoreFiles = ['themes/.*/content/*']
     source = '(postcss|tailwind)\.config\.js'
     target = 'css'
 
+[minify]
+  minifyOutput = true
+  [minify.tdewolff]
+    [minify.tdewolff.html]
+      keepWhitespace = false
+      keepDefaultAttrVals = true
+      keepEndTags = true
+      keepDocumentTags = true
+    [minify.tdewolff.css]
+      keepCSS2 = true
+    [minify.tdewolff.js]
+      keepVarNames = false
+
 [caches]
   [caches.images]
     dir = ':cacheDir/images'
@@ -43,6 +56,9 @@ ignoreFiles = ['themes/.*/content/*']
     email = 'mailto:saya@mnabila.com'
   [params.analytics]
     google = 'G-7NVMRSNZL7'
+
+[outputs]
+  section = ['html', 'rss', 'json']
 
 [taxonomies]
   tag = 'tags'
