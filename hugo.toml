@@ -26,19 +26,6 @@ ignoreFiles = ['themes/.*/content/*']
     source = '(postcss|tailwind)\.config\.js'
     target = 'css'
 
-[minify]
-  minifyOutput = true
-  [minify.tdewolff]
-    [minify.tdewolff.html]
-      keepWhitespace = true
-      keepDefaultAttrVals = true
-      keepEndTags = true
-      keepDocumentTags = true
-    [minify.tdewolff.css]
-      keepCSS2 = true
-    [minify.tdewolff.js]
-      keepVarNames = false
-
 [caches]
   [caches.images]
     dir = ':cacheDir/images'
