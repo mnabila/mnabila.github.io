@@ -31,10 +31,11 @@ ignoreFiles = ['themes/.*/content/*']
     dir = ':cacheDir/images'
 
 [params]
+  favicon = 'logo/favicon.ico'
   [params.author]
     name = 'Muhammad Nabil Adani'
     description = 'I’m a Software Engineer passionate about GNU/Linux and exploring open-source technologies'
-    image = 'https://github.com/mnabila.png'
+    image = '/logo/mnabila.webp'
   [params.social]
     github = 'https://github.com/mnabila'
     gitlab = 'https://gitlab.com/mnabila'
