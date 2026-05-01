@@ -1,5 +1,5 @@
 baseURL = 'https://mnabila.com'
-languageCode = 'en-us'
+languageCode = 'id'
 title = 'MNABILA'
 theme = 'resume'
 ignoreFiles = ['themes/.*/content/*']
