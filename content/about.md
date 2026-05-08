@@ -1,5 +1,5 @@
 ---
 title: "About"
 type: "about"
-description: "I’m a Software Engineer and Linux System Administrator with over two years of experience building scalable backend systems and managing reliable server environments. I have worked on multiple projects, solving complex software architecture challenges while leveraging a variety of technologies and frameworks. My experience as a system administrator has given me a strong understanding of server management, automation, and Linux-based environments, which complements my backend development skills. I enjoy optimizing systems, writing clean and efficient code, and exploring new tools that improve both development and operations workflows."
+description: "I'm a Software Engineer and Linux SysAdmin. I mostly work on building backend services in TypeScript and Go, and also maintaining the Linux servers that they run on. I have built payment gateways, chatbot testing infrastructure, e-learning platforms and internal tools that are reliable and easy to use. And because I like to understand the systems I work on I have my own development environment and tooling, from Docker stacks to Neovim configs."
 ---

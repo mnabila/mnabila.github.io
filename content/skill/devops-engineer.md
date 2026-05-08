@@ -3,7 +3,7 @@ draft = false
 date = '2025-08-24T11:54:19+07:00'
 title = 'DevOps Engineer'
 type = 'skill'
-description = 'Designing and implementing CI/CD pipelines to automate software builds, tests, and deployments for efficient and reliable delivery.'
+description = 'CI/CD pipelines, Docker, and Linux server management — making sure code gets from a developer machine to production without drama.'
 languages = ['bash', 'golang', 'python', 'rust']
 tools= [
   'linux system administrator',
@@ -15,22 +15,22 @@ tools= [
 ]
 +++
 
-I treat infrastructure the same way I treat application code: it should be version-controlled, reproducible, and easy to reason about. My DevOps work focuses on CI/CD pipelines, containerization, and Linux server management — making sure code gets from a developer's machine to production reliably and without manual intervention.
+I set up CI/CD pipelines, containerize services, and manage Linux servers. The goal is always the same: get code to production without someone having to SSH in and do things by hand.
 
 ## What I Do
 
-**CI/CD pipeline design.** I build automated pipelines using GitLab CI/CD and GitHub Actions that handle the full lifecycle: build, test, lint, containerize, and deploy. I design pipelines that fail fast with clear error messages, cache aggressively to keep build times short, and only deploy when every check passes.
+**CI/CD pipelines.** I use GitLab CI/CD and GitHub Actions. A typical pipeline builds, tests, lints, containerizes, and deploys, in that order, stopping at the first failure. I spend time on caching so builds stay fast, and on error messages so failures are obvious.
 
-**Containerization and orchestration.** I use Docker and Podman to containerize applications with multi-stage builds that keep production images lean. I design Docker Compose configurations for local development environments — standardized infrastructure stacks that any team member can spin up with a single command. I have built custom container images when the official ones do not include the plugins or configurations a project requires.
+**Docker and containers.** Multi-stage builds to keep images small, Docker Compose for local dev environments so the whole team runs the same stack. I use Podman too. When the official image doesn't have what I need (like the RabbitMQ delayed message exchange plugin), I build a custom one.
 
-**Linux system administration.** I manage Linux-based server environments with a focus on automation. I write Bash and Python scripts for routine administration tasks, configure services, manage users and permissions, and monitor system health. I have a strong preference for understanding what is happening at the OS level rather than treating the server as a black box.
+**Linux servers.** I manage Linux servers directly, configuring services, writing Bash and Python scripts for routine tasks, setting up users and permissions. I run Arch Linux daily and have administered Ubuntu and Debian servers. I prefer knowing what the OS is actually doing over hiding behind abstractions.
 
-**Infrastructure tooling.** I build CLI tools and automation scripts that reduce operational friction — from development environment provisioning to deployment helpers. I prefer tools that do one thing well and compose with existing workflows rather than monolithic platforms that try to do everything.
+**CLI tools and scripts.** When something is tedious or error-prone, I write a tool for it. Dev environment provisioning, deployment helpers, log collection. Small scripts that fit into existing workflows.
 
 ## How I Work
 
-I keep infrastructure declarative wherever possible. Docker Compose files, CI/CD configurations, and deployment scripts are checked into version control alongside the application code. If a setup cannot be reproduced from the repository alone, it is not done.
+Everything goes in version control. Docker Compose files, CI/CD configs, deployment scripts, all of it lives in the repo next to the application code. If I can't reproduce a setup from the repository alone, it's not finished.
 
-I value simplicity in infrastructure. A well-written shell script is often better than a complex orchestration platform for the problems I solve. I reach for heavier tools only when the problem genuinely requires them — not because they are popular.
+I keep things simple. A shell script that works is better than a platform I have to fight with. I'll reach for heavier tools when the problem actually calls for it, but most of the time it doesn't.
 
-I automate the things that are boring, error-prone, or both. Manual deployment processes, environment setup, and repetitive server tasks are all candidates for automation. The goal is a workflow where developers focus on code and the pipeline handles everything else.
+If a developer has to do something manually more than a few times, it should be automated. Deployments, environment setup, server maintenance that's what pipelines and scripts are for.
