@@ -3,14 +3,14 @@ draft = false
 date = '2026-03-14T09:21:13+07:00'
 title = 'Neovim Configuration'
 type = 'project'
-description = 'My Neovim setup, rewritten from scratch in Lua — modular, lazy-loaded, and structured like a real codebase instead of a giant init.vim.'
+description = 'My Neovim setup, rewritten from scratch in Lua -- modular, lazy-loaded, and structured like a real codebase instead of a giant init.vim.'
 image = ''
 repository = 'https://github.com/mnabila/nvimrc'
 languages = ['lua']
 tools = ['neovim']
 +++
 
-Most developers have a text editor. Some developers have a development environment they have deliberately engineered over time. This project falls into the second category — a Neovim configuration built from scratch in Lua, designed with the same principles I apply to production software: modularity, performance, and maintainability.
+Most developers have a text editor. Some developers have a development environment they have deliberately engineered over time. This project falls into the second category -- a Neovim configuration built from scratch in Lua, designed with the same principles I apply to production software: modularity, performance, and maintainability.
 
 It is the tool I use every single day, across every project I work on.
 
@@ -24,7 +24,7 @@ I needed to start fresh with a proper architecture.
 
 ## Solution Overview
 
-The solution was a complete rewrite in Lua — Neovim's first-class configuration language. Rather than simply porting the old Vimscript line by line, I redesigned the entire structure around separation of concerns: every configuration aspect lives in its own module, plugins are lazy-loaded for performance, and the whole setup is organized the way you would organize a real codebase.
+The solution was a complete rewrite in Lua -- Neovim's first-class configuration language. Rather than simply porting the old Vimscript line by line, I redesigned the entire structure around separation of concerns: every configuration aspect lives in its own module, plugins are lazy-loaded for performance, and the whole setup is organized the way you would organize a real codebase.
 
 **Tech stack:** Lua, Neovim, lazy.nvim
 
@@ -47,7 +47,7 @@ snippets/             -- Reusable code snippets
 after/ftplugin/       -- Filetype-specific overrides
 ```
 
-The key design decision was treating `init.lua` purely as an entry point that delegates to specialized modules. This means any configuration change — whether it is a new keybinding, a plugin addition, or a language server setup — has exactly one place where it should go. There is no ambiguity about where things live.
+The key design decision was treating `init.lua` purely as an entry point that delegates to specialized modules. This means any configuration change -- whether it is a new keybinding, a plugin addition, or a language server setup -- has exactly one place where it should go. There is no ambiguity about where things live.
 
 Plugin management is handled by [lazy.nvim](https://github.com/folke/lazy.nvim), which loads plugins on demand based on events, commands, or filetypes. This keeps startup time consistently fast regardless of how many plugins are installed.
 
@@ -65,13 +65,13 @@ Plugin management is handled by [lazy.nvim](https://github.com/folke/lazy.nvim),
 
 **Migrating from Vimscript to Lua.** The biggest challenge was not the rewrite itself but resisting the temptation to replicate the old structure. Vimscript encourages a flat, imperative style. Lua enables a modular, table-driven approach. The key was embracing Lua idioms rather than translating Vimscript line by line.
 
-**Balancing plugin count with startup performance.** More plugins means more capability, but also slower startup — unless you are intentional about it. By configuring lazy-load triggers for every plugin (event-based, command-based, or filetype-based), the config maintains sub-100ms startup times despite having a substantial plugin set.
+**Balancing plugin count with startup performance.** More plugins means more capability, but also slower startup -- unless you are intentional about it. By configuring lazy-load triggers for every plugin (event-based, command-based, or filetype-based), the config maintains sub-100ms startup times despite having a substantial plugin set.
 
-**LSP configuration per language.** Each language server has its own quirks — different initialization options, different capabilities, different formatting behaviors. Moving LSP configurations into individual files under `lsp/` made it possible to tune each one independently without creating a giant conditional block.
+**LSP configuration per language.** Each language server has its own quirks -- different initialization options, different capabilities, different formatting behaviors. Moving LSP configurations into individual files under `lsp/` made it possible to tune each one independently without creating a giant conditional block.
 
 ## Lessons Learned
 
-**Treat your tools like production code.** The same principles that make software maintainable — single responsibility, clear module boundaries, explicit dependencies — apply to configuration. A well-structured config is one you are not afraid to change.
+**Treat your tools like production code.** The same principles that make software maintainable -- single responsibility, clear module boundaries, explicit dependencies -- apply to configuration. A well-structured config is one you are not afraid to change.
 
 **Lazy loading is a design decision, not an optimization.** Choosing when and why each plugin loads forces you to understand your own workflow. It revealed plugins I had installed but never actually used.
 
@@ -96,4 +96,4 @@ On first launch, lazy.nvim bootstraps itself and installs all dependencies autom
 | Language servers       | `lsp/` directory               |
 | Per-filetype behavior  | `after/ftplugin/`              |
 
-Building your own editor configuration is more than a convenience — it is an exercise in software design. The same discipline that produces clean production code produces a development environment that genuinely makes you more productive.
+Building your own editor configuration is more than a convenience -- it is an exercise in software design. The same discipline that produces clean production code produces a development environment that genuinely makes you more productive.
