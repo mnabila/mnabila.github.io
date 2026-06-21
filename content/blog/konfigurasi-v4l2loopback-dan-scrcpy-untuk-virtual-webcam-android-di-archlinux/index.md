@@ -1,5 +1,5 @@
 +++
-draft = true
+draft = false
 date = '2026-05-30'
 title = 'Konfigurasi v4l2loopback dan scrcpy untuk Virtual Webcam Android di Archlinux'
 type = 'blog'
@@ -12,7 +12,7 @@ tags = ['v4l2loopback', 'scrcpy', 'android', 'webcam', 'archlinux']
 
 Saya sedang mengerjakan project computer vision yang butuh feed video dari kamera Android. Masalahnya, aplikasi seperti **OpenCV**, **OBS**, atau bahkan browser yang butuh akses webcam hanya bisa membaca device `/dev/video*` -- mereka tidak bisa langsung mengambil stream dari layar Android yang terhubung via USB.
 
-Opsi paling straightforward adalah beli capture card. Tapi untuk eksperimen dan prototyping, rasanya overkill mengeluarkan uang untuk hardware tambahan kalau bisa diselesaikan dengan software. Di Linux, ternyata ada cara untuk membuat virtual webcam device menggunakan **v4l2loopback** -- sebuah kernel module yang membuat device `/dev/video*` virtual. Kombinasikan dengan **scrcpy** yang bisa mirror layar Android via ADB, dan hasilnya adalah pipeline: layar Android masuk sebagai virtual webcam yang bisa dibaca oleh aplikasi apapun.
+Opsi paling simple adalah beli capture card. Tapi untuk eksperimen dan prototyping, rasanya overkill mengeluarkan uang untuk hardware tambahan kalau bisa diselesaikan dengan software. Di Linux, ternyata ada cara untuk membuat virtual webcam device menggunakan **v4l2loopback** -- sebuah kernel module yang membuat device `/dev/video*` virtual. Kombinasikan dengan **scrcpy** yang bisa mirror layar Android via ADB, dan hasilnya adalah layar Android masuk sebagai virtual webcam yang bisa dibaca oleh aplikasi apapun.
 
 ## Permasalahan
 
@@ -82,41 +82,52 @@ Penjelasan masing-masing paket:
 
 ### Load Kernel Module
 
-Load module `v4l2loopback` dengan parameter yang sesuai:
+Load module `v4l2loopback` terlebih dahulu:
 
 ```
-$ sudo modprobe v4l2loopback video_nr=10 card_label="Android" exclusive_caps=1
+$ sudo modprobe v4l2loopback exclusive_caps=1
 ```
 
-Penjelasan parameter:
+Parameter `exclusive_caps=1` membuat device terlihat sebagai capture-only device -- diperlukan agar browser dan aplikasi WebRTC bisa mengenali device ini sebagai webcam.
 
-| Parameter | Fungsi |
-| --- | --- |
-| `video_nr=10` | Menentukan nomor device, sehingga device muncul sebagai `/dev/video10` |
-| `card_label="Android"` | Label yang muncul di aplikasi seperti OBS atau browser saat memilih webcam |
-| `exclusive_caps=1` | Membuat device terlihat sebagai capture-only device, diperlukan agar browser dan aplikasi WebRTC bisa mengenali device ini sebagai webcam |
+> **Tip:** Parameter `exclusive_caps=1` wajib diaktifkan jika ingin menggunakan virtual webcam di browser (Chrome, Firefox) untuk Google Meet, Zoom web, atau aplikasi WebRTC lainnya. Tanpa parameter ini, browser tidak akan menampilkan device di daftar webcam.
 
-Verifikasi device sudah muncul:
+### Buat Virtual Device dengan v4l2loopback-ctl
 
-```
-$ ls /dev/video*
+Daripada menentukan nomor device secara hardcode via parameter `video_nr`, gunakan `v4l2loopback-ctl` untuk membuat device secara dinamis:
+
+```bash
+$ DEVICE=$(sudo v4l2loopback-ctl add -n "Android")
+$ echo $DEVICE
 ```
 
 Output yang diharapkan:
 
 ```
-/dev/video10
+/dev/video0
 ```
+
+Nomor device yang muncul tergantung device video yang sudah ada di sistem -- bisa `/dev/video0`, `/dev/video1`, atau nomor lainnya. Dengan menyimpannya ke variabel `$DEVICE`, semua command selanjutnya tidak perlu di-hardcode ke nomor tertentu.
+
+Penjelasan flag `v4l2loopback-ctl add`:
+
+| Flag | Fungsi |
+| --- | --- |
+| `-n "Android"` | Label yang muncul di aplikasi seperti OBS atau browser saat memilih webcam |
 
 Cek detail device menggunakan `v4l2-ctl`:
 
-```
-$ v4l2-ctl --device=/dev/video10 --info
+```bash
+$ v4l2-ctl --device=$DEVICE --info
 ```
 
 Output akan menampilkan informasi device termasuk label "Android" yang sudah di-set.
 
-> **Tip:** Parameter `exclusive_caps=1` wajib diaktifkan jika ingin menggunakan virtual webcam di browser (Chrome, Firefox) untuk Google Meet, Zoom web, atau aplikasi WebRTC lainnya. Tanpa parameter ini, browser tidak akan menampilkan device di daftar webcam.
+Untuk menghapus device saat sudah tidak dibutuhkan:
+
+```bash
+$ sudo v4l2loopback-ctl delete $DEVICE
+```
 
 ### Aktifkan USB Debugging di Android
 
@@ -146,25 +157,25 @@ Jika status menunjukkan `unauthorized`, cek kembali dialog permission di Android
 
 Jalankan scrcpy dengan output ke virtual webcam device:
 
-```
-$ scrcpy --v4l2-sink=/dev/video10 --no-video-playback
+```bash
+$ scrcpy --v4l2-sink=$DEVICE --no-video-playback
 ```
 
 Penjelasan flag:
 
-- `--v4l2-sink=/dev/video10` -- mengirim video stream ke device v4l2loopback yang sudah dibuat
+- `--v4l2-sink=$DEVICE` -- mengirim video stream ke device v4l2loopback yang sudah dibuat
 - `--no-video-playback` -- menonaktifkan window preview scrcpy, karena output hanya dibutuhkan di virtual webcam
 
 Jika ingin tetap melihat preview di layar sekaligus mengirim ke virtual webcam, hilangkan flag `--no-video-playback`:
 
-```
-$ scrcpy --v4l2-sink=/dev/video10
+```bash
+$ scrcpy --v4l2-sink=$DEVICE
 ```
 
 Untuk mengatur resolusi dan bitrate agar lebih ringan:
 
-```
-$ scrcpy --v4l2-sink=/dev/video10 --no-video-playback --max-size=1280 --video-bit-rate=4M
+```bash
+$ scrcpy --v4l2-sink=$DEVICE --no-video-playback --max-size=1280 --video-bit-rate=4M
 ```
 
 Parameter `--max-size=1280` membatasi dimensi terpanjang ke 1280 pixel, dan `--video-bit-rate=4M` mengatur bitrate ke 4 Mbps -- cukup untuk kebanyakan kebutuhan computer vision tanpa membebani USB bandwidth.
@@ -173,18 +184,18 @@ Parameter `--max-size=1280` membatasi dimensi terpanjang ke 1280 pixel, dan `--v
 
 Setelah scrcpy berjalan, verifikasi stream menggunakan `ffplay`:
 
-```
-$ ffplay /dev/video10
+```bash
+$ ffplay $DEVICE
 ```
 
 Jika ffplay menampilkan layar Android, berarti pipeline sudah berjalan dengan benar. Selain ffplay, bisa juga diverifikasi menggunakan **OBS** -- tambahkan source **Video Capture Device** dan pilih device "Android" dari dropdown.
 
-Untuk verifikasi via OpenCV dengan Python:
+Untuk verifikasi via OpenCV dengan Python, gunakan path device yang didapat dari `v4l2loopback-ctl`:
 
 ```python
 import cv2
 
-cap = cv2.VideoCapture("/dev/video10")
+cap = cv2.VideoCapture("/dev/video0")  # sesuaikan dengan output v4l2loopback-ctl
 
 while True:
     ret, frame = cap.read()
@@ -198,13 +209,13 @@ cap.release()
 cv2.destroyAllWindows()
 ```
 
-Script ini membuka device `/dev/video10` dan menampilkan frame secara realtime -- kalau layar Android muncul di window OpenCV, berarti device siap digunakan untuk pipeline computer vision.
+Script ini membuka device virtual webcam dan menampilkan frame secara realtime -- kalau layar Android muncul di window OpenCV, berarti device siap digunakan untuk pipeline computer vision.
 
 ### Auto-load Module Saat Boot
 
 Agar module `v4l2loopback` otomatis ter-load setiap kali boot, buat file konfigurasi:
 
-```
+```bash
 $ sudo tee /etc/modules-load.d/v4l2loopback.conf <<< "v4l2loopback"
 ```
 
@@ -212,11 +223,11 @@ File ini memberitahu systemd untuk me-load module `v4l2loopback` saat boot.
 
 Kemudian buat file konfigurasi untuk parameter module:
 
-```
-$ sudo tee /etc/modprobe.d/v4l2loopback.conf <<< "options v4l2loopback video_nr=10 card_label=Android exclusive_caps=1"
+```bash
+$ sudo tee /etc/modprobe.d/v4l2loopback.conf <<< "options v4l2loopback exclusive_caps=1"
 ```
 
-File ini memastikan parameter `video_nr`, `card_label`, dan `exclusive_caps` selalu digunakan saat module di-load. Setelah reboot, device `/dev/video10` akan langsung tersedia tanpa perlu menjalankan `modprobe` secara manual.
+File ini memastikan parameter `exclusive_caps` selalu digunakan saat module di-load. Setelah reboot, module akan langsung tersedia dan device bisa dibuat secara dinamis menggunakan `v4l2loopback-ctl add -n "Android"` tanpa perlu menjalankan `modprobe` secara manual.
 
 ## Tantangan yang Dihadapi
 
@@ -238,7 +249,7 @@ Output seharusnya menampilkan `v4l2loopback` dengan status `installed` untuk ker
 - **`exclusive_caps=1` bukan opsional** -- parameter ini kritis untuk kompatibilitas dengan browser dan aplikasi WebRTC. Tanpanya, device hanya bisa dibaca oleh aplikasi yang langsung mengakses V4L2 API seperti ffplay atau OpenCV, tapi tidak oleh browser
 - **Resolusi dan bitrate sangat mempengaruhi latency** -- untuk use case yang sensitif terhadap latency seperti object detection, menurunkan resolusi dan bitrate memberikan dampak signifikan. Perbedaan antara 1080p dan 720p bisa menghemat 30-50ms di total pipeline
 - **scrcpy `--v4l2-sink` lebih efisien dari pipeline manual** -- dibanding setup manual menggunakan ffmpeg untuk pipe stream ke v4l2loopback, built-in support scrcpy mengurangi satu layer proses dan menghasilkan latency yang lebih rendah
-- **Virtual webcam bisa di-stack** -- satu module v4l2loopback bisa membuat multiple device sekaligus dengan parameter `devices=2 video_nr=10,11`. Berguna kalau butuh feed dari beberapa Android device secara bersamaan
+- **`v4l2loopback-ctl` lebih fleksibel dari parameter modprobe** -- daripada hardcode `video_nr` saat load module, `v4l2loopback-ctl add` dan `delete` memungkinkan membuat dan menghapus device secara dinamis tanpa reload module. Ini juga memudahkan kalau butuh multiple device -- cukup jalankan `v4l2loopback-ctl add` beberapa kali untuk feed dari beberapa Android device secara bersamaan
 
 ## Penutup
 
