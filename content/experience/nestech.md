@@ -13,7 +13,6 @@ worktype = 'freelance'
 technologies= [
    'docker',
    'golang',
-   'nginx' ,
    'postgresql',
 ]
 tasks = [

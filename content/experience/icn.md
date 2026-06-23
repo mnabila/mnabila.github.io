@@ -14,8 +14,7 @@ technologies= [
    'docker',
    'golang',
    'javascript',
-   'nginx' ,
-   'sql',
+   'postgresql',
 ]
 tasks = [
   'Built PPOB backend with multi-provider payment integration',
