@@ -10,7 +10,7 @@ tags = ['postgresql', 'replication', 'docker', 'docker-compose', 'ubuntu', 'serv
 
 ## Latar Belakang
 
-Aplikasi yang saya kelola menggunakan **PostgreSQL** sebagai database utama. Seiring pertumbuhan user, query ke database makin banyak dan mayoritas adalah operasi read -- laporan, dashboard, listing data, pencarian. Semua query ini masuk ke satu instance PostgreSQL yang sama, bersaing resource dengan write operation seperti insert dan update transaksi.
+Aplikasi yang saya kelola menggunakan **PostgreSQL** sebagai database utama. Seiring pertumbuhan user, query ke database makin banyak dan mayoritas adalah operasi read: laporan, dashboard, listing data, pencarian. Semua query ini masuk ke satu instance PostgreSQL yang sama, bersaing resource dengan write operation seperti insert dan update transaksi.
 
 Selama trafik masih rendah, satu instance cukup. Tapi begitu trafik naik, response time mulai merangkak dan beberapa query berat mulai mengantri. Saya perlu cara untuk mendistribusikan beban read tanpa harus overhaul arsitektur aplikasi secara menyeluruh.
 
@@ -18,11 +18,11 @@ Selama trafik masih rendah, satu instance cukup. Tapi begitu trafik naik, respon
 
 Mengandalkan satu instance PostgreSQL untuk semua operasi mulai terasa limitasinya:
 
-- **Semua query numpuk di satu node** -- read dan write rebutan resource di instance yang sama, I/O disk dan CPU bersaing terutama saat ada query reporting yang berat
-- **Tidak ada redundansi** -- kalau server database down, seluruh aplikasi ikut mati dan tidak ada node cadangan yang bisa langsung ambil alih
-- **Read scalability mentok** -- nambah resource di satu server ada batasnya, padahal mayoritas operasi adalah read yang seharusnya bisa didistribusikan
-- **Backup ganggu production** -- menjalankan `pg_dump` di server yang sama berarti ada tambahan beban I/O yang terasa di aplikasi
-- **Tidak bisa pisah workload** -- query reporting yang berat berjalan bersamaan dengan query transaksional, bikin keduanya saling menghambat
+- **Semua query numpuk di satu node**: read dan write rebutan resource di instance yang sama, I/O disk dan CPU bersaing terutama saat ada query reporting yang berat
+- **Tidak ada redundansi**: kalau server database down, seluruh aplikasi ikut mati dan tidak ada node cadangan yang bisa langsung ambil alih
+- **Read scalability mentok**: nambah resource di satu server ada batasnya, padahal mayoritas operasi adalah read yang seharusnya bisa didistribusikan
+- **Backup ganggu production**: menjalankan `pg_dump` di server yang sama berarti ada tambahan beban I/O yang terasa di aplikasi
+- **Tidak bisa pisah workload**: query reporting yang berat berjalan bersamaan dengan query transaksional, bikin keduanya saling menghambat
 
 ## Pendekatan Solusi
 
@@ -38,7 +38,7 @@ Saya pilih **Streaming Replication** karena paling straightforward untuk kebutuh
 
 Setup yang saya bangun menggunakan **Docker Compose** di 2 VM terpisah. Primary node handle semua write, replica node handle read. Masing-masing jalan di VM sendiri supaya kehilangan satu server tidak membuat database sepenuhnya mati. Selain performa lebih baik karena beban terdistribusi, replica juga berfungsi sebagai standby kalau primary bermasalah.
 
-Arsitektur yang dibangun -- 1 instance per VM, masing-masing VM terpisah sehingga beban read dan write terdistribusi secara fisik:
+Arsitektur yang dibangun, 1 instance per VM, masing-masing VM terpisah sehingga beban read dan write terdistribusi secara fisik:
 
 | Komponen    | IP Address     | Port   | Peran                                |
 | ----------- | -------------- | ------ | ------------------------------------ |
@@ -90,7 +90,7 @@ host    all             all             0.0.0.0/0               md5
 host    replication     replicator      10.10.10.12/32         md5
 ```
 
-Baris terakhir adalah yang paling penting -- mengizinkan user `replicator` untuk melakukan koneksi replication khusus dari IP replica (`10.10.10.12`). Method `md5` memastikan koneksi tetap memerlukan password.
+Baris terakhir adalah yang paling penting yakni mengizinkan user `replicator` untuk melakukan koneksi replication khusus dari IP replica (`10.10.10.12`). Method `md5` memastikan koneksi tetap memerlukan password.
 
 > **Tip:** Kalau berencana menambah replica di kemudian hari, bisa ganti `10.10.10.12/32` menjadi `10.10.10.0/24` supaya semua IP di subnet tersebut bisa melakukan replication. Tapi untuk setup awal, lebih aman membatasi ke IP spesifik.
 
@@ -279,8 +279,8 @@ Penjelasan flag `pg_basebackup`:
 | `-h`  | Host primary yang akan di-backup, diisi IP VM 1                                               |
 | `-U`  | User replication yang sudah dibuat di primary                                                 |
 | `-D`  | Direktori tujuan backup, diisi `$PGDATA` supaya langsung jadi data directory PostgreSQL       |
-| `-Fp` | Format plain -- backup langsung jadi file PostgreSQL, bukan archive                           |
-| `-Xs` | WAL method stream -- WAL ikut di-stream selama backup supaya hasilnya konsisten               |
+| `-Fp` | Format plain: backup langsung jadi file PostgreSQL, bukan archive                           |
+| `-Xs` | WAL method stream: WAL ikut di-stream selama backup supaya hasilnya konsisten               |
 | `-P`  | Tampilkan progress backup                                                                     |
 | `-R`  | Otomatis buat file `standby.signal` dan `postgresql.auto.conf` dengan konfigurasi replication |
 
@@ -361,10 +361,10 @@ $ docker compose exec postgres psql -U devuser -d appdb -c "SELECT pid, usename,
 
 Yang perlu diperhatikan:
 
-- **usename: replicator** -- replica connect menggunakan user replication yang sudah dibuat
-- **client_addr: 10.10.10.12** -- koneksi berasal dari IP replica di VM 2
-- **state: streaming** -- WAL sedang di-stream secara aktif ke replica
-- **sync_state: async** -- replication berjalan secara asynchronous
+- **usename: replicator**: replica connect menggunakan user replication yang sudah dibuat
+- **client_addr: 10.10.10.12**: koneksi berasal dari IP replica di VM 2
+- **state: streaming**: WAL sedang di-stream secara aktif ke replica
+- **sync_state: async**: replication berjalan secara asynchronous
 
 Cek juga dari sisi replica di **VM 2**:
 
@@ -423,7 +423,7 @@ INSERT INTO test_replication (message) VALUES ('should fail');
 ERROR:  cannot execute INSERT in a read-only transaction
 ```
 
-Error ini mengonfirmasi replica berjalan dalam mode hot standby -- hanya bisa menerima read, write ditolak.
+Error ini mengonfirmasi replica berjalan dalam mode hot standby sehingga hanya bisa menerima action read  dan untuk action write  akan ditolak.
 
 ### Pengujian Failover Sederhana
 
@@ -447,7 +447,7 @@ $ docker compose exec postgres psql -U devuser -d appdb -c "SELECT pid, status, 
 (0 rows)
 ```
 
-Replica mendeteksi primary sudah tidak tersedia -- `pg_stat_wal_receiver` kosong. Tapi data yang sudah ter-replicate masih bisa dibaca:
+Replica mendeteksi primary sudah tidak tersedia sehingga `pg_stat_wal_receiver` kosong. Tapi data yang sudah ter-replicate masih bisa dibaca:
 
 ```
 $ docker compose exec postgres psql -U devuser -d appdb -c "SELECT * FROM test_replication;"
@@ -530,7 +530,7 @@ Host: $(hostname) (10.10.10.11)"
 fi
 ```
 
-Script ini mengecek jumlah replica yang terhubung dan replication lag dalam byte. Threshold alert diset 100MB -- kalau lag melebihi ini, kemungkinan ada masalah network atau replica sedang overloaded. Simpan di `/usr/local/bin/check_pg_replication.sh`, beri permission execute, dan jadwalkan di cron tiap 5 menit:
+Script ini mengecek jumlah replica yang terhubung dan replication lag dalam byte. Threshold alert diset 100MB, kalau lag melebihi ini kemungkinan ada masalah network atau replica sedang overloaded. Simpan di `/usr/local/bin/check_pg_replication.sh`, beri permission execute, dan jadwalkan di cron tiap 5 menit:
 
 ```
 $ sudo chmod +x /usr/local/bin/check_pg_replication.sh
@@ -545,20 +545,20 @@ Tambahkan baris:
 
 ## Tantangan yang Dihadapi
 
-Tantangan pertama yang cukup membuat pusing adalah **konektivitas antar VM**. Berbeda dengan setup single host di mana container bisa berkomunikasi lewat Docker network internal, setup 2 VM membutuhkan koneksi melalui jaringan fisik. Container PostgreSQL di dalam Docker menggunakan port mapping ke host, jadi replica di VM 2 connect ke IP VM 1 (`10.10.10.11`) lewat port `5432` yang di-expose. Kalau firewall belum buka port ini, `pg_basebackup` gagal tanpa error message yang jelas -- hanya timeout. Pastikan `ufw allow 5432/tcp` sudah dijalankan di kedua VM sebelum memulai.
+Tantangan pertama yang cukup membuat pusing adalah **konektivitas antar VM**. Berbeda dengan setup single host di mana container bisa berkomunikasi lewat Docker network internal, setup 2 VM membutuhkan koneksi melalui jaringan fisik. Container PostgreSQL di dalam Docker menggunakan port mapping ke host, jadi replica di VM 2 connect ke IP VM 1 (`10.10.10.11`) lewat port `5432` yang di-expose. Kalau firewall belum buka port ini, `pg_basebackup` gagal tanpa error message yang jelas, hanya timeout. Pastikan `ufw allow 5432/tcp` sudah dijalankan di kedua VM sebelum memulai.
 
-**Replication bersifat asynchronous** secara default. Artinya setelah write berhasil di primary, tidak ada jaminan data langsung tersedia di replica. Ada jeda waktu -- biasanya dalam hitungan milidetik, tapi saat trafik tinggi atau ada query berat di primary, jeda ini bisa membesar. Ditambah lagi latency network antar VM yang bisa menambah delay. Ini jadi masalah kalau aplikasi langsung baca dari replica setelah write ke primary. Misalnya user update profil, lalu redirect ke halaman profil yang baca dari replica -- data lama yang muncul. Untuk operasi yang butuh konsistensi ketat, arahkan read ke primary juga.
+**Replication bersifat asynchronous** secara default. Artinya setelah write berhasil di primary, tidak ada jaminan data langsung tersedia di replica. Ada jeda dalam hitungan milidetik, tapi saat trafik tinggi atau ada query berat di primary jeda ini bisa membesar. Ditambah lagi latency network antar VM yang bisa menambah delay. Ini jadi masalah kalau aplikasi langsung baca dari replica setelah write ke primary. Misalnya user update profil, lalu redirect ke halaman profil yang baca dari replica, data lama yang muncul. Untuk operasi yang butuh konsistensi ketat, arahkan read ke primary juga.
 
-Satu hal lagi yang tidak langsung obvious -- **volume Docker menyimpan state**. Kalau sudah pernah menjalankan setup ini dan ingin mengulang dari awal, data di volume lama bisa menyebabkan konflik. Init script di primary tidak jalan lagi karena volume sudah terisi, sementara replica mencoba connect dengan konfigurasi yang mungkin sudah berubah. Solusinya adalah `docker compose down -v` di kedua VM untuk menghapus volume sebelum memulai ulang. Urutan start juga penting -- selalu nyalakan primary dulu sampai healthy, baru nyalakan replica. Kalau replica start duluan, `pg_basebackup` akan terus retry sampai primary tersedia.
+Satu hal lagi yang tidak langsung obvious: **volume Docker menyimpan state**. Kalau sudah pernah menjalankan setup ini dan ingin mengulang dari awal, data di volume lama bisa menyebabkan konflik. Init script di primary tidak jalan lagi karena volume sudah terisi, sementara replica mencoba connect dengan konfigurasi yang mungkin sudah berubah. Solusinya adalah `docker compose down -v` di kedua VM untuk menghapus volume sebelum memulai ulang. Urutan start juga penting: selalu nyalakan primary dulu sampai healthy, baru nyalakan replica. Kalau replica start duluan, `pg_basebackup` akan terus retry sampai primary tersedia.
 
 ## Insight dan Pembelajaran
 
-- **WAL adalah jantungnya replication PostgreSQL** -- semua perubahan data dicatat ke WAL sebelum di-commit. Replica me-replay WAL ini untuk menjaga sinkronisasi, kalau WAL tertinggal atau terhapus sebelum replica sempat baca, replication putus
-- **`pg_basebackup` dengan flag `-R` menghemat banyak konfigurasi manual** -- tanpa `-R`, harus buat `standby.signal` dan isi `primary_conninfo` di `postgresql.auto.conf` secara manual. Flag ini mengotomasi semua itu
-- **`wal_keep_size` perlu disesuaikan dengan workload** -- kalau terlalu kecil, WAL bisa di-recycle sebelum replica sempat baca dan replica perlu full sync ulang. Kalau terlalu besar, makan disk space di primary
-- **Monitoring replication bukan opsional** -- replication bisa putus tanpa warning. Tanpa monitoring aktif, replica bisa serving data stale berjam-jam tanpa ada yang sadar
-- **Pisahkan Docker Compose per VM** -- setiap VM menjalankan Docker Compose sendiri-sendiri, tidak ada orchestration lintas host. Urutan start harus diatur manual -- primary dulu, baru replica
-- **Pisahkan connection pool di aplikasi** -- pakai pool terpisah untuk read (ke replica `10.10.10.12:5432`) dan write (ke primary `10.10.10.11:5432`), supaya bisa switch node tanpa deploy ulang
+- **WAL adalah jantungnya replication PostgreSQL**: semua perubahan data dicatat ke WAL sebelum di-commit. Replica me-replay WAL ini untuk menjaga sinkronisasi, kalau WAL tertinggal atau terhapus sebelum replica sempat baca, replication putus
+- **`pg_basebackup` dengan flag `-R` menghemat banyak konfigurasi manual**: tanpa `-R`, harus buat `standby.signal` dan isi `primary_conninfo` di `postgresql.auto.conf` secara manual. Flag ini mengotomasi semua itu
+- **`wal_keep_size` perlu disesuaikan dengan workload**: kalau terlalu kecil, WAL bisa di-recycle sebelum replica sempat baca dan replica perlu full sync ulang. Kalau terlalu besar, makan disk space di primary
+- **Monitoring replication bukan opsional**: replication bisa putus tanpa warning. Tanpa monitoring aktif, replica bisa serving data stale berjam-jam tanpa ada yang sadar
+- **Pisahkan Docker Compose per VM**: setiap VM menjalankan Docker Compose sendiri-sendiri, tidak ada orchestration lintas host. Urutan start harus diatur manual yakni primary dulu, baru replica
+- **Pisahkan connection pool di aplikasi**: pakai pool terpisah untuk read (ke replica `10.10.10.12:5432`) dan write (ke primary `10.10.10.11:5432`), supaya bisa switch node tanpa deploy ulang
 
 ## Penutup
 
@@ -566,7 +566,7 @@ PostgreSQL streaming replication dengan Docker Compose di 2 VM terpisah cukup ef
 
 ## Referensi
 
-- [PostgreSQL Streaming Replication](https://www.postgresql.org/docs/16/warm-standby.html#STREAMING-REPLICATION) -- Diakses pada 2026-06-22
-- [PostgreSQL WAL Configuration](https://www.postgresql.org/docs/16/runtime-config-wal.html) -- Diakses pada 2026-06-22
-- [pg_basebackup Documentation](https://www.postgresql.org/docs/16/app-pgbasebackup.html) -- Diakses pada 2026-06-22
-- [PostgreSQL Docker Official Image](https://hub.docker.com/_/postgres) -- Diakses pada 2026-06-22
+- [PostgreSQL Streaming Replication](https://www.postgresql.org/docs/16/warm-standby.html#STREAMING-REPLICATION), diakses pada2026-06-22
+- [PostgreSQL WAL Configuration](https://www.postgresql.org/docs/16/runtime-config-wal.html), diakses pada2026-06-22
+- [pg_basebackup Documentation](https://www.postgresql.org/docs/16/app-pgbasebackup.html), diakses pada2026-06-22
+- [PostgreSQL Docker Official Image](https://hub.docker.com/_/postgres), diakses pada2026-06-22

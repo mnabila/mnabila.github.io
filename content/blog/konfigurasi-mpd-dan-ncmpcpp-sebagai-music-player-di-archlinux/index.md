@@ -10,11 +10,11 @@ tags = ['mpd', 'ncmpcpp', 'terminal', 'archlinux']
 
 ## Latar Belakang
 
-Saya punya koleksi musik dalam format **FLAC** (Free Lossless Audio Codec) -- format lossless yang menyimpan audio tanpa kompresi lossy, sehingga kualitas suaranya identik dengan source aslinya. Untuk memutar koleksi ini, saya butuh player yang ringan, bisa jalan di background, dan mendukung FLAC dengan baik.
+Saya punya koleksi musik dalam format **FLAC** (Free Lossless Audio Codec) format lossless yang menyimpan audio tanpa kompresi lossy, sehingga kualitas suaranya identik dengan source aslinya. Untuk memutar koleksi ini, saya butuh player yang ringan, bisa jalan di background, dan mendukung FLAC dengan baik.
 
-Kebanyakan music player di Linux -- Spotify, Rhythmbox, Audacious -- menggunakan arsitektur monolitik: satu aplikasi yang menangani semuanya dari library management, playback, sampai UI. Pendekatan ini memang simpel, tapi kurang fleksibel. Kalau mau ganti UI, harus ganti seluruh aplikasi. Kalau mau music tetap jalan di background tanpa GUI, tidak bisa.
+Kebanyakan music player di Linux seperti Spotify, Rhythmbox, dan Audacious menggunakan arsitektur monolitik satu aplikasi yang menangani semuanya dari library management, playback, sampai UI. Pendekatan ini memang simpel, tapi kurang fleksibel. Kalau mau ganti UI, harus ganti seluruh aplikasi. Kalau mau music tetap jalan di background tanpa GUI, tidak bisa.
 
-**MPD (Music Player Daemon)** mengambil pendekatan berbeda -- memisahkan antara **server** (daemon yang menangani playback) dan **client** (UI untuk mengontrol playback). MPD jalan di background sebagai daemon, sementara kita bebas memilih client apapun untuk mengontrolnya. MPD mendukung FLAC secara native tanpa plugin tambahan -- tinggal arahkan ke direktori musik dan langsung bisa diputar. Salah satu client terbaik untuk terminal adalah **ncmpcpp** -- client berbasis ncurses yang ringan, cepat, dan highly customizable.
+**MPD (Music Player Daemon)** mengambil pendekatan berbeda, memisahkan antara **server** (daemon yang menangani playback) dan **client** (UI untuk mengontrol playback). MPD jalan di background sebagai daemon, sementara kita bebas memilih client apapun untuk mengontrolnya. MPD mendukung FLAC secara native tanpa plugin tambahan tinggal arahkan ke direktori musik dan langsung bisa diputar. Salah satu client terbaik untuk terminal adalah **ncmpcpp** yang merupakan client berbasis ncurses yang ringan, cepat, dan highly customizable.
 
 Kombinasi MPD + ncmpcpp memberikan music player yang:
 - Mendukung FLAC dan format lossless lainnya secara native
@@ -25,14 +25,14 @@ Kombinasi MPD + ncmpcpp memberikan music player yang:
 
 ## Permasalahan
 
-Music player berbasis GUI seringkali overkill untuk kebutuhan yang sederhana -- putar koleksi musik FLAC lokal. Beberapa masalah yang biasa ditemui:
+Music player berbasis GUI seringkali overkill untuk kebutuhan yang sederhana, yaitu putar koleksi musik FLAC lokal. Beberapa masalah yang biasa ditemui:
 
-- **Resource hungry** -- player GUI makan RAM dan CPU yang sebenarnya tidak perlu
-- **Tidak bisa jalan tanpa desktop session** -- kalau window ditutup, musik berhenti
-- **Kurang integrasi dengan workflow terminal** -- harus switch ke window lain untuk skip track atau adjust volume
-- **Konfigurasi terbatas** -- UI menentukan apa yang bisa dan tidak bisa di-customize
+- **Resource hungry**: player GUI makan RAM dan CPU yang sebenarnya tidak perlu
+- **Tidak bisa jalan tanpa desktop session**: kalau window ditutup, musik berhenti
+- **Kurang integrasi dengan workflow terminal**: harus switch ke window lain untuk skip track atau adjust volume
+- **Konfigurasi terbatas**: UI menentukan apa yang bisa dan tidak bisa di-customize
 
-Dengan MPD, musik tetap jalan meskipun tidak ada GUI yang terbuka. Dan dengan ncmpcpp, kita punya kontrol penuh dari terminal -- termasuk custom keybinding yang sesuai dengan workflow kita.
+Dengan MPD, musik tetap jalan meskipun tidak ada GUI yang terbuka. Dan dengan ncmpcpp, kita punya kontrol penuh dari terminal termasuk custom keybinding yang sesuai dengan workflow kita.
 
 ## Pendekatan Solusi
 
@@ -49,9 +49,9 @@ MPD berjalan sebagai daemon yang listen di port `6600`, membaca file musik dari 
 
 Keuntungan arsitektur ini:
 
-- **MPD dan client terpisah** -- musik tetap jalan meskipun ncmpcpp ditutup
-- **Multiple client** -- bisa kontrol MPD dari ncmpcpp, mpc (command line), atau bahkan dari HP lewat client Android
-- **Audio output fleksibel** -- bisa ke PipeWire, ALSA langsung, atau bahkan ke DAC eksternal
+- **MPD dan client terpisah**: musik tetap jalan meskipun ncmpcpp ditutup
+- **Multiple client**: bisa kontrol MPD dari ncmpcpp, mpc (command line), atau bahkan dari HP lewat client Android
+- **Audio output fleksibel**: bisa ke PipeWire, ALSA langsung, atau bahkan ke DAC eksternal
 
 ## Implementasi Teknis
 
@@ -113,11 +113,11 @@ Penjelasan parameter penting:
 
 | Parameter | Fungsi |
 |-----------|--------|
-| `bind_to_address` | MPD hanya listen di localhost -- aman dari akses luar |
+| `bind_to_address` | MPD hanya listen di localhost, aman dari akses luar |
 | `auto_update` | Otomatis scan ulang music directory kalau ada file baru |
 | `music_directory` | Direktori tempat koleksi musik disimpan |
 | `state_file` | Menyimpan state playback (posisi track, volume) agar persist setelah restart |
-| `audio_output` | Output audio ke PipeWire -- audio server modern yang menggantikan PulseAudio |
+| `audio_output` | Output audio ke PipeWire, audio server modern yang menggantikan PulseAudio |
 
 Untuk audio output, kita menggunakan **PipeWire** yang sudah jadi default di kebanyakan distro modern. Jika menggunakan DAC eksternal via ALSA langsung (bypass PipeWire), bisa tambahkan output alternatif:
 
@@ -196,14 +196,14 @@ store_lyrics_in_song_dir                    = no
 
 Beberapa highlight konfigurasi:
 
-- **`autocenter_mode` dan `centered_cursor`** -- cursor selalu di tengah layar, navigasi terasa lebih nyaman di playlist yang panjang
-- **`header_visibility = no` dan `titles_visibility = no`** -- menyembunyikan header dan title bar untuk tampilan yang lebih clean
-- **`playlist_display_mode = columns`** -- menampilkan playlist dalam format kolom (artist | title) yang lebih rapi
-- **`song_columns_list_format`** -- format kolom playlist: 50% untuk artist, 50% untuk title
-- **`progressbar_look = "━━━"`** -- progress bar dengan karakter garis tebal
-- **`mpd_crossfade_time = 2`** -- crossfade 2 detik antar track untuk transisi yang mulus
-- **`display_bitrate = yes`** -- menampilkan bitrate di statusbar, berguna untuk memastikan file FLAC diputar dengan bitrate yang benar (biasanya 800-1400 kbps untuk FLAC 16-bit/44.1kHz)
-- **`external_editor = nvim`** -- menggunakan Neovim untuk edit tag musik
+- **`autocenter_mode` dan `centered_cursor`**: cursor selalu di tengah layar, navigasi terasa lebih nyaman di playlist yang panjang
+- **`header_visibility = no` dan `titles_visibility = no`**: menyembunyikan header dan title bar untuk tampilan yang lebih clean
+- **`playlist_display_mode = columns`**: menampilkan playlist dalam format kolom (artist | title) yang lebih rapi
+- **`song_columns_list_format`**: format kolom playlist: 50% untuk artist, 50% untuk title
+- **`progressbar_look = "━━━"`**: progress bar dengan karakter garis tebal
+- **`mpd_crossfade_time = 2`**: crossfade 2 detik antar track untuk transisi yang mulus
+- **`display_bitrate = yes`**: menampilkan bitrate di statusbar, berguna untuk memastikan file FLAC diputar dengan bitrate yang benar (biasanya 800-1400 kbps untuk FLAC 16-bit/44.1kHz)
+- **`external_editor = nvim`**: menggunakan Neovim untuk edit tag musik
 
 ### Custom Keybinding
 
@@ -285,7 +285,7 @@ Beberapa keybinding bawaan yang sering dipakai:
 
 ## Tantangan yang Dihadapi
 
-Tantangan pertama adalah soal **permission audio output**. MPD harus dijalankan sebagai user service (`systemctl --user`), bukan system service. Kalau dijalankan sebagai system service, MPD berjalan dalam konteks root dan tidak bisa mengakses PipeWire audio session milik user -- hasilnya tidak ada suara meskipun MPD terlihat playing.
+Tantangan pertama adalah soal **permission audio output**. MPD harus dijalankan sebagai user service (`systemctl --user`), bukan system service. Kalau dijalankan sebagai system service, MPD berjalan dalam konteks root dan tidak bisa mengakses PipeWire audio session milik user hasilnya tidak ada suara meskipun MPD terlihat playing.
 
 Tantangan kedua adalah **database tidak otomatis ter-build saat pertama kali**. Setelah konfigurasi selesai dan MPD dijalankan, koleksi musik mungkin belum muncul di ncmpcpp. Tekan `u` di ncmpcpp untuk trigger database update, atau jalankan:
 
@@ -299,11 +299,11 @@ Pastikan juga file FLAC berada di direktori yang ditentukan di `music_directory`
 
 Setelah menggunakan MPD + ncmpcpp, beberapa insight:
 
-- **Arsitektur client-server itu powerful** -- musik tetap jalan meskipun ncmpcpp ditutup. Bisa buka tutup client kapan saja tanpa mengganggu playback. Bahkan bisa kontrol MPD dari script atau keybinding window manager.
-- **Resource usage sangat minimal** -- MPD idle menggunakan memory yang sangat kecil. Dibanding Spotify atau music player GUI, perbedaannya signifikan.
-- **Keybinding Vim-style bikin navigasi cepat** -- dengan custom binding hjkl, navigasi koleksi musik terasa natural buat yang sudah terbiasa dengan Vim.
-- **`auto_update` menghilangkan friction** -- tidak perlu manual update database setiap kali menambah file musik baru. MPD otomatis mendeteksi perubahan di music directory.
-- **PipeWire sebagai audio output simpel dan reliable** -- tidak perlu konfigurasi rumit seperti ALSA langsung. Cukup set type `pipewire` dan selesai.
+- **Arsitektur client-server itu powerful**: musik tetap jalan meskipun ncmpcpp ditutup. Bisa buka tutup client kapan saja tanpa mengganggu playback. Bahkan bisa kontrol MPD dari script atau keybinding window manager.
+- **Resource usage sangat minimal**: MPD idle menggunakan memory yang sangat kecil. Dibanding Spotify atau music player GUI, perbedaannya signifikan.
+- **Keybinding Vim-style bikin navigasi cepat**: dengan custom binding hjkl, navigasi koleksi musik terasa natural buat yang sudah terbiasa dengan Vim.
+- **`auto_update` menghilangkan friction**: tidak perlu manual update database setiap kali menambah file musik baru. MPD otomatis mendeteksi perubahan di music directory.
+- **PipeWire sebagai audio output simpel dan reliable**: tidak perlu konfigurasi rumit seperti ALSA langsung. Cukup set type `pipewire` dan selesai.
 
 ## Penutup
 
@@ -311,7 +311,7 @@ MPD + ncmpcpp adalah kombinasi yang ideal untuk memutar koleksi musik FLAC dari 
 
 ## Referensi
 
-- [Arch Wiki - Music Player Daemon](https://wiki.archlinux.org/title/Music_Player_Daemon) -- Diakses pada 2026-04-05
-- [Arch Wiki - ncmpcpp](https://wiki.archlinux.org/title/Ncmpcpp) -- Diakses pada 2026-04-05
-- [MPD Documentation](https://mpd.readthedocs.io/) -- Diakses pada 2026-04-05
-- [ncmpcpp GitHub](https://github.com/ncmpcpp/ncmpcpp) -- Diakses pada 2026-04-05
+- [Arch Wiki - Music Player Daemon](https://wiki.archlinux.org/title/Music_Player_Daemon), diakses pada 2026-04-05
+- [Arch Wiki - ncmpcpp](https://wiki.archlinux.org/title/Ncmpcpp), diakses pada 2026-04-05
+- [MPD Documentation](https://mpd.readthedocs.io/), diakses pada 2026-04-05
+- [ncmpcpp GitHub](https://github.com/ncmpcpp/ncmpcpp), diakses pada 2026-04-05

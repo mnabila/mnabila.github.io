@@ -3,7 +3,7 @@ draft = false
 date = '2025-08-24T11:54:19+07:00'
 title = 'DevOps Engineer'
 type = 'skill'
-description = 'CI/CD pipelines, Docker, and Linux server management — making sure code gets from a developer machine to production without drama.'
+description = 'CI/CD pipelines, Docker, and Linux server management and make sure code gets from a developer machine to production without drama.'
 languages = ['bash', 'golang', 'python', 'rust']
 tools= [
   'linux system administrator',

@@ -10,15 +10,15 @@ tags = ['cloudflare', 'tunnel', 'networking', 'archlinux']
 
 ## Latar Belakang
 
-Saat develop aplikasi yang terintegrasi dengan service pihak ketiga -- payment gateway, webhook dari GitHub, notifikasi dari messaging platform -- ada satu kebutuhan yang sering muncul: **menerima callback**. Service eksternal perlu mengirim HTTP request ke endpoint kita, tapi masalahnya server development kita cuma jalan di `localhost`. Tidak bisa diakses dari internet.
+Saat develop aplikasi yang terintegrasi dengan service pihak ketiga, seperti membuat webhook payment gateway atau notifikasi dari messaging platform, ada satu kebutuhan yang sering muncul yakni proses **menerima callback**. Pada proses ini service eksternal perlu mengirim HTTP request ke endpoint saya, tapi masalahnya server development saya cuma jalan di `localhost` dan tidak bisa diakses dari internet.
 
-Biasanya solusi yang dipakai adalah **ngrok** -- tool populer untuk mengekspos local server ke internet. Tapi ngrok punya limitasi di free tier-nya: URL berubah setiap restart, rate limit yang cukup ketat, dan koneksi yang kadang tidak stabil. **Cloudflare Tunnel** menawarkan alternatif yang lebih fleksibel -- bisa pakai quick tunnel untuk kebutuhan cepat, atau named tunnel dengan custom domain untuk setup yang lebih permanen.
+Biasanya solusi yang dipakai adalah **ngrok**, tool populer untuk mengekspos local server ke internet. Tapi ngrok punya limitasi di free tier-nya URL  bisa berubah setiap restart, rate limit yang cukup ketat, dan koneksi yang kadang tidak stabil. **Cloudflare Tunnel** menawarkan alternatif yang lebih fleksibel sehingga bisa pakai quick tunnel untuk kebutuhan cepat, atau named tunnel dengan custom domain untuk setup yang lebih permanen.
 
 ## Permasalahan
 
-Contoh kasusnya: saat mengembangkan integrasi payment gateway, server mereka perlu mengirim callback ke URL kita untuk notifikasi status pembayaran. Atau saat develop bot Telegram/Discord yang butuh webhook. Masalahnya:
+Contoh kasusnya, saat mengembangkan integrasi payment gateway, server mereka perlu mengirim callback ke URL saya untuk notifikasi status pembayaran, atau saat develop bot Telegram/Discord yang butuh webhook. Masalahnya:
 
-- Local server jalan di `localhost:8080` -- tidak bisa diakses dari luar
+- Local server jalan di `localhost:8080`, tidak bisa diakses dari luar
 - Jaringan berada di balik NAT tanpa public IP
 - Port forwarding bukan opsi (atau terlalu ribet untuk kebutuhan development)
 - Butuh HTTPS karena kebanyakan service pihak ketiga mensyaratkan URL callback dengan SSL
@@ -34,7 +34,7 @@ Cloudflare Tunnel punya dua mode yang relevan untuk kebutuhan ini:
 | **Quick Tunnel** | Testing cepat, one-off | Tanpa konfigurasi, langsung jalan | URL random, tidak persisten, max 200 concurrent request |
 | **Named Tunnel** | Development jangka panjang | Custom domain, persisten, bisa jadi service | Butuh domain di Cloudflare dan setup awal |
 
-Cara kerjanya sederhana -- `cloudflared` (daemon dari Cloudflare) membuat **koneksi outbound** dari mesin kita ke jaringan Cloudflare. Traffic dari internet masuk lewat Cloudflare, lalu diteruskan ke local server melalui tunnel tersebut. Karena koneksinya outbound, tidak perlu buka port apapun di firewall.
+Cara kerjanya sederhana: `cloudflared` (daemon dari Cloudflare) membuat **koneksi outbound** dari mesin saya ke jaringan Cloudflare. Traffic dari internet masuk lewat Cloudflare, lalu diteruskan ke local server melalui tunnel tersebut. Karena koneksinya outbound, tidak perlu buka port apapun di firewall.
 
 Untuk kebutuhan menerima callback saat development, **quick tunnel** biasanya sudah cukup. Tapi kalau butuh URL yang tetap (misalnya untuk mendaftarkan webhook yang tidak bisa sering diganti), **named tunnel** dengan custom domain lebih cocok.
 
@@ -86,7 +86,7 @@ Quick tunnel cocok untuk:
 
 ### Named Tunnel (Custom Domain)
 
-Untuk kebutuhan yang lebih permanen -- misalnya development yang berjalan berminggu-minggu dan callback URL tidak boleh berubah -- gunakan named tunnel dengan custom domain.
+Untuk kebutuhan yang lebih permanen, misalnya development yang berjalan berminggu-minggu dan callback URL tidak boleh berubah, gunakan named tunnel dengan custom domain.
 
 #### 1. Login ke Cloudflare
 
@@ -94,7 +94,7 @@ Untuk kebutuhan yang lebih permanen -- misalnya development yang berjalan bermin
 $ cloudflared tunnel login
 ```
 
-Browser akan terbuka untuk autentikasi. Pilih domain yang akan digunakan. Setelah berhasil, file `cert.pem` tersimpan di `~/.cloudflared/`.
+Browser akan terbuka untuk autentikasi, kemudian pilih domain yang akan digunakan. Setelah berhasil, file `cert.pem` tersimpan di `~/.cloudflared/`.
 
 #### 2. Buat Tunnel
 
@@ -125,9 +125,9 @@ ingress:
   - service: http_status:404
 ```
 
-Bagian `ingress` mendefinisikan routing -- request ke `dev.mnabila.com` diteruskan ke `localhost:8080`. Rule terakhir (`http_status:404`) adalah catch-all yang wajib ada.
+Bagian `ingress` mendefinisikan routing: request ke `dev.mnabila.com` diteruskan ke `localhost:8080`. Rule terakhir (`http_status:404`) adalah catch-all yang wajib ada.
 
-Kita juga bisa routing ke beberapa service sekaligus:
+saya juga bisa routing ke beberapa service sekaligus:
 
 ```yaml
 ingress:
@@ -152,7 +152,7 @@ Perintah ini membuat CNAME record di Cloudflare DNS yang mengarahkan `dev.mnabil
 $ cloudflared tunnel run dev-callback
 ```
 
-Sekarang `https://dev.mnabila.com` mengarah ke `localhost:8080`. URL ini persisten -- tidak berubah meskipun `cloudflared` di-restart.
+Sekarang `https://dev.mnabila.com` mengarah ke `localhost:8080`. URL ini persisten, tidak berubah meskipun `cloudflared` di-restart.
 
 ### Menjalankan Sebagai Service
 
@@ -175,21 +175,21 @@ $ cloudflared tunnel --url http://localhost:8080 --loglevel debug
 
 ## Tantangan yang Dihadapi
 
-Tantangan utama saat menggunakan quick tunnel adalah **URL yang berubah setiap restart**. Ini berarti setiap kali `cloudflared` dihentikan dan dijalankan ulang, kita harus update callback URL di service pihak ketiga. Untuk development yang intens, ini cukup mengganggu -- solusinya adalah beralih ke named tunnel.
+Tantangan utama saat menggunakan quick tunnel adalah **URL yang berubah setiap restart**. Ini berarti setiap kali `cloudflared` dihentikan dan dijalankan ulang, saya harus update callback URL di service pihak ketiga. Untuk development yang intens, ini cukup mengganggu; solusinya adalah beralih ke named tunnel.
 
-Tantangan lain adalah **rate limit pada quick tunnel** -- maksimal 200 concurrent request. Untuk menerima callback satu-dua request, ini bukan masalah. Tapi kalau testing load atau simulasi banyak callback sekaligus, bisa kena limit dan mendapat response `429 Too Many Requests`.
+Tantangan lain adalah **rate limit pada quick tunnel**, maksimal 200 concurrent request. Untuk menerima callback satu-dua request, ini bukan masalah. Tapi kalau testing load atau simulasi banyak callback sekaligus, bisa kena limit dan mendapat response `429 Too Many Requests`.
 
-Satu hal yang perlu diperhatikan juga -- quick tunnel **tidak mendukung Server-Sent Events (SSE)**. Jika aplikasi menggunakan SSE untuk real-time updates, gunakan named tunnel sebagai gantinya.
+Satu hal yang perlu diperhatikan juga: quick tunnel **tidak mendukung Server-Sent Events (SSE)**. Jika aplikasi menggunakan SSE untuk real-time updates, gunakan named tunnel sebagai gantinya.
 
 ## Insight dan Pembelajaran
 
 Beberapa insight setelah menggunakan Cloudflare Tunnel untuk development:
 
-- **Quick tunnel adalah pengganti ngrok yang solid** -- satu perintah, langsung dapat HTTPS URL. Tidak perlu signup atau API key untuk quick tunnel.
-- **Named tunnel cocok untuk project jangka panjang** -- investasi 5 menit setup di awal menghemat banyak waktu karena URL tidak perlu diganti-ganti.
-- **Ingress rules sangat fleksibel** -- satu tunnel bisa routing ke beberapa service lokal sekaligus. Cocok kalau develop microservices yang butuh beberapa endpoint callback berbeda.
-- **Koneksi outbound-only adalah keunggulan keamanan** -- tidak perlu buka port apapun di firewall. Semua koneksi diinisiasi dari mesin kita ke Cloudflare, bukan sebaliknya.
-- **Named tunnel butuh domain yang di-manage Cloudflare** -- kalau belum punya, ini bisa jadi blocker. Untuk yang punya domain, quick tunnel bisa jadi alternatif karena langsung jalan tanpa konfigurasi apapun.
+- **Quick tunnel adalah pengganti ngrok yang solid**: satu perintah, langsung dapat HTTPS URL. Tidak perlu signup atau API key untuk quick tunnel.
+- **Named tunnel cocok untuk project jangka panjang**: investasi 5 menit setup di awal menghemat banyak waktu karena URL tidak perlu diganti-ganti.
+- **Ingress rules sangat fleksibel**: satu tunnel bisa routing ke beberapa service lokal sekaligus. Cocok kalau develop microservices yang butuh beberapa endpoint callback berbeda.
+- **Koneksi outbound-only adalah keunggulan keamanan**: tidak perlu buka port apapun di firewall. Semua koneksi diinisiasi dari mesin saya ke Cloudflare, bukan sebaliknya.
+- **Named tunnel butuh domain yang di-manage Cloudflare**: kalau belum punya, ini bisa jadi blocker. Untuk yang punya domain, quick tunnel bisa jadi alternatif karena langsung jalan tanpa konfigurasi apapun.
 
 ## Penutup
 
@@ -197,7 +197,7 @@ Cloudflare Tunnel menjawab kebutuhan klasik developer: mengekspos local server k
 
 ## Referensi
 
-- [Cloudflare Tunnel Documentation](https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/) -- Diakses pada 2026-04-05
-- [Cloudflare - Create a Local Tunnel](https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/get-started/create-local-tunnel/) -- Diakses pada 2026-04-05
-- [Cloudflare - TryCloudflare (Quick Tunnels)](https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/do-more-with-tunnels/trycloudflare/) -- Diakses pada 2026-04-05
-- [Arch Wiki - Cloudflared](https://wiki.archlinux.org/title/Cloudflared) -- Diakses pada 2026-04-05
+- [Cloudflare Tunnel Documentation](https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/), diakses pada 2026-04-05
+- [Cloudflare - Create a Local Tunnel](https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/get-started/create-local-tunnel/), diakses pada 2026-04-05
+- [Cloudflare - TryCloudflare (Quick Tunnels)](https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/do-more-with-tunnels/trycloudflare/), diakses pada 2026-04-05
+- [Arch Wiki - Cloudflared](https://wiki.archlinux.org/title/Cloudflared), diakses pada 2026-04-05

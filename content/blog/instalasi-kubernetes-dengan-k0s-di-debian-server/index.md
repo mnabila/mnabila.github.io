@@ -10,18 +10,18 @@ tags = ['kubernetes', 'k0s', 'debian', 'container']
 
 ## Latar Belakang
 
-Kalau pernah setup Kubernetes pakai kubeadm, pasti tahu betapa banyaknya langkah yang harus dilakukan -- disable swap, load kernel modules, set sysctl parameters, install containerd, konfigurasi cgroup driver, baru install kubeadm/kubelet/kubectl. Belum lagi kalau ada satu langkah yang terlewat, debugging-nya bisa memakan waktu berjam-jam.
+Kalau pernah setup Kubernetes pakai kubeadm, pasti tahu betapa banyaknya langkah yang harus dilakukan yakni disable swap, load kernel modules, set sysctl parameters, install containerd, konfigurasi cgroup driver, baru install kubeadm/kubelet/kubectl. Belum lagi kalau ada satu langkah yang terlewat, debugging-nya bisa memakan waktu berjam-jam.
 
-**k0s** hadir sebagai alternatif yang jauh lebih simpel. k0s adalah distribusi Kubernetes yang dikemas dalam **single binary** -- semua komponen yang dibutuhkan (containerd, etcd, CoreDNS, kube-proxy, Metrics Server) sudah dibundel di dalamnya. Tidak perlu install dependency satu per satu, tidak perlu konfigurasi container runtime manual, dan cluster bisa jalan dalam hitungan menit. Yang paling penting, k0s tetap **CNCF certified** -- artinya 100% upstream Kubernetes, bukan versi modifikasi.
+**k0s** hadir sebagai alternatif yang jauh lebih simpel, k0s adalah distribusi Kubernetes yang dikemas dalam **single binary.* Semua komponen yang dibutuhkan (containerd, etcd, CoreDNS, kube-proxy, Metrics Server) sudah dibundel di dalamnya. Tidak perlu install dependency satu per satu, tidak perlu konfigurasi container runtime manual, dan cluster bisa jalan dalam hitungan menit. Yang paling penting, k0s tetap **CNCF certified** artinya 100% upstream Kubernetes, bukan versi modifikasi.
 
 ## Permasalahan
 
 Beberapa masalah yang sering ditemui saat setup Kubernetes secara tradisional di Debian:
 
-- **Banyak dependency yang harus diinstall manual** -- container runtime, kubelet, kubeadm, kubectl, CNI plugin, semuanya harus dikonfigurasi satu per satu dan versinya harus compatible
-- **Persiapan sistem yang rawan terlewat** -- disable swap, load kernel modules `overlay` dan `br_netfilter`, set sysctl parameters. Kalau satu terlewat, cluster tidak akan jalan tapi error-nya sering tidak jelas
-- **Konfigurasi container runtime yang tricky** -- containerd harus di-set `SystemdCgroup = true` supaya match dengan kubelet, dan ini sering jadi sumber masalah
-- **Proses yang panjang untuk setup minimal** -- bahkan untuk cluster 1 controller + 1 worker, butuh belasan langkah sebelum cluster ready
+- **Banyak dependency yang harus diinstall manual**: container runtime, kubelet, kubeadm, kubectl, CNI plugin, semuanya harus dikonfigurasi satu per satu dan versinya harus compatible
+- **Persiapan sistem yang rawan terlewat**: disable swap, load kernel modules `overlay` dan `br_netfilter`, set sysctl parameters. Kalau satu terlewat, cluster tidak akan jalan tapi error-nya sering tidak jelas
+- **Konfigurasi container runtime yang tricky**: containerd harus di-set `SystemdCgroup = true` supaya match dengan kubelet, dan ini sering jadi sumber masalah
+- **Proses yang panjang untuk setup minimal**: bahkan untuk cluster 1 controller + 1 worker, butuh belasan langkah sebelum cluster ready
 
 Yang dibutuhkan adalah cara install Kubernetes yang lebih straightforward tanpa mengorbankan kompatibilitas dengan upstream Kubernetes.
 
@@ -38,10 +38,10 @@ Ada beberapa opsi untuk install Kubernetes dengan cara yang lebih simpel:
 
 Saya memilih **k0s** karena:
 
-1. **Zero friction** -- tidak perlu install dependency apapun selain binary k0s itu sendiri, semua sudah dibundel
-2. **CNCF certified** -- 100% upstream Kubernetes, manifest dan tooling yang sudah ada tetap bisa dipakai tanpa modifikasi
-3. **Etcd built-in** -- berbeda dengan k3s yang default pakai SQLite, k0s sudah include etcd sebagai datastore
-4. **System requirements rendah** -- minimal 1 vCPU dan 1 GB RAM untuk controller, bahkan worker cuma butuh 0.5 GB RAM
+1. **Zero friction**: tidak perlu install dependency apapun selain binary k0s itu sendiri, semua sudah dibundel
+2. **CNCF certified**: 100% upstream Kubernetes, manifest dan tooling yang sudah ada tetap bisa dipakai tanpa modifikasi
+3. **Etcd built-in**: berbeda dengan k3s yang default pakai SQLite, k0s sudah include etcd sebagai datastore
+4. **System requirements rendah**: minimal 1 vCPU dan 1 GB RAM untuk controller, bahkan worker cuma butuh 0.5 GB RAM
 
 ## Implementasi Teknis
 
@@ -65,7 +65,7 @@ Minimum system requirements:
 
 ### Install k0s Binary (Semua Node)
 
-Langkah ini dilakukan di **kedua node** -- controller dan worker.
+Langkah ini dilakukan di **kedua node**: controller dan worker.
 
 Download k0s binary menggunakan script resmi:
 
@@ -125,7 +125,7 @@ spec:
       mode: vxlan
 ```
 
-> **Note:** k0s support partial config -- field yang tidak didefinisikan akan otomatis pakai default value. Jadi tidak perlu tulis semua field kalau cuma mau ubah beberapa.
+> **Note:** k0s support partial config field yang tidak didefinisikan akan otomatis pakai default value. Jadi tidak perlu tulis semua field kalau cuma mau ubah beberapa.
 
 ### Install dan Start Controller (Controller Node Only)
 
@@ -156,7 +156,7 @@ Verifikasi node sudah terdaftar:
 $ sudo k0s kubectl get nodes
 ```
 
-Pada tahap ini belum ada node yang muncul karena controller secara default tidak menjalankan workload -- ini by design untuk isolasi control plane.
+Pada tahap ini belum ada node yang muncul karena controller secara default tidak menjalankan workload ini by design untuk isolasi control plane.
 
 ### Generate Token untuk Worker (Controller Node Only)
 
@@ -263,26 +263,26 @@ Tantangan pertama adalah **memahami perbedaan role controller dan worker di k0s*
 
 Tantangan kedua adalah **transfer token ke worker node**. Token yang di-generate cukup panjang dan harus ditransfer secara utuh ke worker. Copy-paste manual lewat terminal bisa rawan terpotong. Cara paling aman adalah pakai `scp` atau simpan ke file lalu transfer.
 
-Satu hal lagi -- **kubeconfig default pakai `localhost`** sebagai server address. Ini hanya bisa diakses dari controller node itu sendiri. Kalau mau akses dari machine lain, harus manual ganti ke IP controller. Langkah ini sering terlewat dan bikin bingung kenapa `kubectl` timeout dari laptop.
+Satu hal lagi, **kubeconfig default pakai `localhost`** sebagai server address. Ini hanya bisa diakses dari controller node itu sendiri. Kalau mau akses dari machine lain, harus manual ganti ke IP controller. Langkah ini sering terlewat dan bikin bingung kenapa `kubectl` timeout dari laptop.
 
 ## Insight dan Pembelajaran
 
 Beberapa hal yang bisa diambil dari pengalaman setup k0s:
 
-- **Single binary itu game changer** -- tidak perlu install containerd, etcd, atau CNI plugin terpisah. Semua sudah ada di dalam binary k0s, jadi kemungkinan dependency conflict hampir tidak ada.
-- **Jalankan `k0s sysinfo` sebelum install** -- command ini mengecek semua prerequisites secara otomatis. Lebih baik tahu masalahnya di awal daripada debugging setelah install.
-- **Set expiry pada token** -- secara default token tidak expire, yang bisa jadi security risk. Selalu set `--expiry` saat generate token, terutama di environment yang accessible dari luar.
-- **Simpan kubeconfig dengan benar** -- ambil dari `/var/lib/k0s/pki/admin.conf` di controller, ganti `localhost` dengan IP controller, baru simpan di `~/.kube/config` di machine yang mau dipakai.
-- **Default CNI sudah cukup untuk kebanyakan kasus** -- Kube-Router yang jadi default di k0s sudah cukup untuk cluster kecil-menengah. Ganti ke Calico kalau butuh Network Policy yang lebih advanced.
-- **k0s reset bersifat destruktif** -- command ini menghapus semua data termasuk etcd. Pastikan backup sebelum reset, terutama di environment yang sudah ada workload-nya.
+- **Single binary itu game changer**: tidak perlu install containerd, etcd, atau CNI plugin terpisah. Semua sudah ada di dalam binary k0s, jadi kemungkinan dependency conflict hampir tidak ada.
+- **Jalankan `k0s sysinfo` sebelum install**: command ini mengecek semua prerequisites secara otomatis. Lebih baik tahu masalahnya di awal daripada debugging setelah install.
+- **Set expiry pada token**: secara default token tidak expire, yang bisa jadi security risk. Selalu set `--expiry` saat generate token, terutama di environment yang accessible dari luar.
+- **Simpan kubeconfig dengan benar**: ambil dari `/var/lib/k0s/pki/admin.conf` di controller, ganti `localhost` dengan IP controller, baru simpan di `~/.kube/config` di machine yang mau dipakai.
+- **Default CNI sudah cukup untuk kebanyakan kasus**: Kube-Router yang jadi default di k0s sudah cukup untuk cluster kecil-menengah. Ganti ke Calico kalau butuh Network Policy yang lebih advanced.
+- **k0s reset bersifat destruktif**: command ini menghapus semua data termasuk etcd. Pastikan backup sebelum reset, terutama di environment yang sudah ada workload-nya.
 
 ## Penutup
 
-Setup Kubernetes cluster di Debian dengan k0s jauh lebih straightforward dibanding kubeadm. Prosesnya bisa dirangkum dalam empat langkah: install binary, start controller, generate token, join worker. Tidak perlu install dependency tambahan, tidak perlu konfigurasi container runtime manual, dan tidak perlu disable swap atau load kernel modules. Dari setup minimal ini, cluster bisa di-scale dengan menambah worker node menggunakan token yang di-generate dari controller.
+Setup Kubernetes cluster di Debian dengan k0s jauh lebih straightforward dibanding kubeadm. Prosesnya bisa dirangkum dalam empat langkah yakni install binary, start controller, generate token, join worker. Tidak perlu install dependency tambahan, tidak perlu konfigurasi container runtime manual, dan tidak perlu disable swap atau load kernel modules. Dari setup minimal ini, cluster bisa di-scale dengan menambah worker node menggunakan token yang di-generate dari controller.
 
 ## Referensi
 
-- [k0s Documentation - Quick Start Guide](https://docs.k0sproject.io/stable/) -- Diakses pada 2026-04-11
-- [k0s Documentation - Manual Install (Multi-node)](https://docs.k0sproject.io/stable/k0s-multi-node/) -- Diakses pada 2026-04-11
-- [k0s Documentation - Configuration](https://docs.k0sproject.io/stable/configuration/) -- Diakses pada 2026-04-11
-- [k0s Documentation - System Requirements](https://docs.k0sproject.io/stable/system-requirements/) -- Diakses pada 2026-04-11
+- [k0s Documentation - Quick Start Guide](https://docs.k0sproject.io/stable/), diakses pada 2026-04-11
+- [k0s Documentation - Manual Install (Multi-node)](https://docs.k0sproject.io/stable/k0s-multi-node/), diakses pada 2026-04-11
+- [k0s Documentation - Configuration](https://docs.k0sproject.io/stable/configuration/), diakses pada 2026-04-11
+- [k0s Documentation - System Requirements](https://docs.k0sproject.io/stable/system-requirements/), diakses pada 2026-04-11

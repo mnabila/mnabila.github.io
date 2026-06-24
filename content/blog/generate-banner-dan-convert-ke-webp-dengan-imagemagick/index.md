@@ -18,10 +18,10 @@ Biasanya orang buka Photoshop atau GIMP untuk resize dan compress gambar. Tapi k
 
 Beberapa masalah yang sering ditemui saat mengelola gambar untuk web:
 
-- **Ukuran file terlalu besar** -- gambar dari kamera atau stock photo biasanya berukuran beberapa MB, sedangkan untuk web idealnya di bawah 200KB
-- **Resolusi terlalu tinggi** -- banner blog tidak perlu resolusi 4000px, cukup 1200px sudah lebih dari cukup
-- **Format tidak optimal** -- PNG dan JPEG masih banyak dipakai, padahal WebP bisa menghasilkan ukuran 25-35% lebih kecil dengan kualitas visual yang sama
-- **Proses manual yang repetitif** -- kalau punya banyak gambar, resize satu per satu lewat GUI itu membuang waktu
+- **Ukuran file terlalu besar**: gambar dari kamera atau stock photo biasanya berukuran beberapa MB, sedangkan untuk web idealnya di bawah 200KB
+- **Resolusi terlalu tinggi**: banner blog tidak perlu resolusi 4000px, cukup 1200px sudah lebih dari cukup
+- **Format tidak optimal**: PNG dan JPEG masih banyak dipakai, padahal WebP bisa menghasilkan ukuran 25-35% lebih kecil dengan kualitas visual yang sama
+- **Proses manual yang repetitif**: kalau punya banyak gambar, resize satu per satu lewat GUI itu membuang waktu
 
 ## Kenapa WebP?
 
@@ -103,14 +103,14 @@ $ magick banner.png -resize 1200x630! banner-resized.png
 Parameter `-quality` mengontrol level kompresi (0-100, semakin tinggi semakin bagus tapi file semakin besar):
 
 ```bash
-# Kualitas 80% -- sweet spot untuk web
+# Kualitas 80% merupakan sweet spot untuk web
 $ magick banner.png -quality 80 banner-compressed.jpg
 
-# Kualitas 60% -- lebih kecil, sedikit penurunan visual
+# Kualitas 60% sizenya lebih kecil, sedikit penurunan visual
 $ magick banner.png -quality 60 banner-compressed.jpg
 ```
 
-Untuk kebanyakan banner blog, kualitas 75-85% sudah cukup -- perbedaan visualnya hampir tidak terlihat di layar.
+Untuk kebanyakan banner blog, kualitas 75-85% sudah cukup dikarenakan perbedaan visualnya hampir tidak terlihat di layar.
 
 ### Convert ke WebP
 
@@ -130,7 +130,7 @@ $ magick banner.png -quality 80 banner.webp
 
 #### Resize Sekaligus Convert
 
-Ini yang paling sering dipakai -- resize dan convert dalam satu command:
+Ini yang paling sering dipakai untuk resize dan convert dalam satu command:
 
 ```bash
 $ magick banner.png -resize 1200x -quality 80 banner.webp
@@ -228,11 +228,11 @@ $ magick banner.png -resize 1200x -bordercolor white -border 20x20 banner.webp
 
 ## Tips dan Best Practices
 
-- **Gunakan `-strip` untuk production** -- metadata EXIF tidak diperlukan di web dan bisa menambah 50-100KB ke ukuran file
-- **Kualitas 75-85% adalah sweet spot** -- di bawah 75% mulai terlihat artefak kompresi, di atas 85% penambahan ukuran file tidak sebanding dengan peningkatan kualitas
-- **Resize sebelum compress** -- selalu resize dulu baru set kualitas. Compress gambar 4000px lalu resize ke 1200px hasilnya berbeda (dan lebih buruk) dari resize dulu baru compress
-- **Lebar 1200px cukup untuk kebanyakan blog** -- ini sudah cover layar desktop dan retina mobile. Kalau blog layout-nya lebih sempit (800px misalnya), bisa turunkan ke 960px
-- **Selalu cek hasil secara visual** -- angka kualitas itu relatif tergantung konten gambar. Foto dengan banyak detail mungkin butuh kualitas lebih tinggi dari gambar yang simpel
+- **Gunakan `-strip` untuk production** : metadata EXIF tidak diperlukan di web dan bisa menambah 50-100KB ke ukuran file
+- **Kualitas 75-85% adalah sweet spot** : di bawah 75% mulai terlihat artefak kompresi, di atas 85% penambahan ukuran file tidak sebanding dengan peningkatan kualitas
+- **Resize sebelum compress** : selalu resize dulu baru set kualitas. Compress gambar 4000px lalu resize ke 1200px hasilnya berbeda (dan lebih buruk) dari resize dulu baru compress
+- **Lebar 1200px cukup untuk kebanyakan blog** : ini sudah cover layar desktop dan retina mobile. Kalau blog layout-nya lebih sempit (800px misalnya), bisa turunkan ke 960px
+- **Selalu cek hasil secara visual** : angka kualitas itu relatif tergantung konten gambar. Foto dengan banyak detail mungkin butuh kualitas lebih tinggi dari gambar yang simpel
 
 ## Bonus: Bash Script
 
@@ -292,5 +292,5 @@ ImageMagick itu tool yang powerful tapi sering di-underestimate karena tidak pun
 
 ## Referensi
 
-- [ImageMagick - Command-line Processing](https://imagemagick.org/script/command-line-processing.php) -- Diakses pada 2026-04-08
-- [Google Developers - WebP](https://developers.google.com/speed/webp) -- Diakses pada 2026-04-08
+- [ImageMagick - Command-line Processing](https://imagemagick.org/script/command-line-processing.php), diakses pada 2026-04-08
+- [Google Developers - WebP](https://developers.google.com/speed/webp), diakses pada 2026-04-08

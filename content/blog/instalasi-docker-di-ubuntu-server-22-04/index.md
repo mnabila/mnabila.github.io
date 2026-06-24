@@ -21,7 +21,7 @@ ERROR: for backend  Cannot start service backend: failed to create task for cont
 ERROR: Encountered errors while bringing up the project.
 ```
 
-Error ini muncul di tahap **container init** -- artinya image sudah berhasil di-pull, container sudah dibuat, tapi gagal saat proses inisialisasi. Masalahnya ada di `runc` yang tidak bisa membuka file sysctl `net.ipv4.ip_unprivileged_port_start` karena **permission denied**.
+Error ini muncul di tahap **container init** artinya image sudah berhasil di-pull, container sudah dibuat, tapi gagal saat proses inisialisasi. Masalahnya ada di `runc` yang tidak bisa membuka file sysctl `net.ipv4.ip_unprivileged_port_start` karena **permission denied**.
 
 Kalau ditelusuri, ini bukan masalah permission user atau Docker group. Ini adalah bug compatibility antara versi `runc` yang terinstall dengan kernel dan konfigurasi security di Ubuntu 22.04. Versi Docker yang diinstall secara default dari repository Docker terkadang membawa versi `runc` yang punya masalah ini.
 
@@ -29,17 +29,17 @@ Kalau ditelusuri, ini bukan masalah permission user atau Docker group. Ini adala
 
 Ada beberapa pendekatan yang bisa dicoba untuk mengatasi error ini:
 
-| Pendekatan | Kelebihan | Kekurangan |
-|------------|-----------|------------|
-| **Downgrade runc secara manual** | Targeted fix | Risky, bisa break dependency lain |
-| **Disable sysctl di compose file** | Quick workaround | Tidak menyelesaikan root cause, dan tidak selalu applicable |
-| **Install Docker versi spesifik (v28)** | Fix dari upstream, semua komponen compatible | Perlu pin versi manual |
+| Pendekatan                              | Kelebihan                                    | Kekurangan                                                  |
+| --------------------------------------- | -------------------------------------------- | ----------------------------------------------------------- |
+| **Downgrade runc secara manual**        | Targeted fix                                 | Risky, bisa break dependency lain                           |
+| **Disable sysctl di compose file**      | Quick workaround                             | Tidak menyelesaikan root cause, dan tidak selalu applicable |
+| **Install Docker versi spesifik (v28)** | Fix dari upstream, semua komponen compatible | Perlu pin versi manual                                      |
 
 Saya memilih **install Docker versi 28** karena:
 
-1. **Fix ada di upstream** -- Docker 28 membawa versi `runc` yang sudah memperbaiki masalah ini
-2. **Semua komponen sinkron** -- install satu paket yang sudah tested compatible, bukan patch satu komponen saja
-3. **Clean solution** -- tidak perlu workaround yang bisa menimbulkan masalah lain di kemudian hari
+1. **Fix ada di upstream**: Docker 28 membawa versi `runc` yang sudah memperbaiki masalah ini
+2. **Semua komponen sinkron**: install satu paket yang sudah tested compatible, bukan patch satu komponen saja
+3. **Clean solution**: tidak perlu workaround yang bisa menimbulkan masalah lain di kemudian hari
 
 ## Implementasi Teknis
 
@@ -85,13 +85,13 @@ $ sudo apt install \
 
 Penjelasan masing-masing package:
 
-| Package | Fungsi |
-|---------|--------|
-| `docker-ce` | Docker Engine (daemon) |
-| `docker-ce-cli` | CLI client untuk interaksi dengan Docker daemon |
-| `containerd.io` | Container runtime yang digunakan Docker di bawah |
-| `docker-buildx-plugin` | Plugin untuk build image dengan fitur extended (multi-platform, cache, dll) |
-| `docker-compose-plugin` | Plugin Docker Compose v2, menggantikan `docker-compose` standalone |
+| Package                 | Fungsi                                                                      |
+| ----------------------- | --------------------------------------------------------------------------- |
+| `docker-ce`             | Docker Engine (daemon)                                                      |
+| `docker-ce-cli`         | CLI client untuk interaksi dengan Docker daemon                             |
+| `containerd.io`         | Container runtime yang digunakan Docker di bawah                            |
+| `docker-buildx-plugin`  | Plugin untuk build image dengan fitur extended (multi-platform, cache, dll) |
+| `docker-compose-plugin` | Plugin Docker Compose v2, menggantikan `docker-compose` standalone          |
 
 ### Verifikasi Instalasi
 
@@ -124,16 +124,16 @@ Container seharusnya sudah bisa start tanpa error OCI runtime.
 
 Tantangan utama dari masalah ini adalah **error message-nya tidak langsung menunjuk ke solusi**. Pesan `permission denied` pada file sysctl membuat kita berpikir ini masalah permission atau security policy, padahal root cause-nya ada di versi `runc` yang tidak compatible.
 
-Kalau search error ini di internet, banyak saran yang mengarah ke modifikasi AppArmor profile atau menambah `--privileged` flag -- dua-duanya workaround yang **tidak disarankan** karena melemahkan security posture container.
+Kalau search error ini di internet, banyak saran yang mengarah ke modifikasi AppArmor profile atau menambah `--privileged` flag yang mana kedua workaround ini **tidak disarankan** karena melemahkan security posture container.
 
 ## Insight dan Pembelajaran
 
 Beberapa hal yang bisa diambil dari pengalaman ini:
 
-- **Jangan selalu install versi latest tanpa pikir panjang** -- di production atau environment yang butuh stabilitas, pin versi package yang sudah tested. Versi latest belum tentu paling compatible dengan OS kita.
-- **Error permission denied tidak selalu soal permission** -- kadang itu symptom dari bug di runtime atau incompatibility antar komponen. Jangan langsung chmod 777 atau jalankan privileged mode.
-- **Baca error message sampai habis** -- bagian `runc create failed` dan `open sysctl ... file` adalah clue penting bahwa masalahnya ada di level runtime, bukan di aplikasi atau image.
-- **Dokumentasi resmi Docker itu lengkap** -- termasuk cara install versi spesifik. Kalau versi default bermasalah, cek versi lain yang tersedia di repository.
+- **Jangan selalu install versi latest tanpa pikir panjang** : di production atau environment yang butuh stabilitas, pin versi package yang sudah tested. Versi latest belum tentu paling compatible dengan OS kita.
+- **Error permission denied tidak selalu soal permission** : kadang itu symptom dari bug di runtime atau incompatibility antar komponen. Jangan langsung chmod 777 atau jalankan privileged mode.
+- **Baca error message sampai habis** : bagian `runc create failed` dan `open sysctl ... file` adalah clue penting bahwa masalahnya ada di level runtime, bukan di aplikasi atau image.
+- **Dokumentasi resmi Docker itu lengkap** : termasuk cara install versi spesifik. Kalau versi default bermasalah, cek versi lain yang tersedia di repository.
 
 ## Penutup
 
@@ -141,4 +141,4 @@ Error OCI runtime saat menjalankan Docker Compose di Ubuntu 22.04 ini memang mem
 
 ## Referensi
 
-- [Docker - Install Docker Engine on Ubuntu](https://docs.docker.com/engine/install/ubuntu/) -- Diakses pada 2026-04-08
+- [Docker - Install Docker Engine on Ubuntu](https://docs.docker.com/engine/install/ubuntu/), diakses pada 2026-04-08

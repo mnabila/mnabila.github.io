@@ -18,9 +18,9 @@ Pada artikel ini akan membahas cara instalasi Kubernetes cluster di Debian serve
 
 Beberapa tantangan yang sering ditemui saat instalasi kubernetes di Debian:
 
-- **Banyak komponen yang saling bergantung** -- container runtime, kubelet, kubeadm, kubectl, dan CNI plugin harus dikonfigurasi dengan benar dan saling compatible
-- **Dokumentasi tersebar** -- ada yang untuk Ubuntu, ada yang untuk RHEL, dan tidak semua langkah applicable untuk Debian sehingga menyusahkan user
-- **Konfigurasi sistem yang sering terlewat** -- seperti disable swap, load kernel modules, dan set sysctl parameters. Kalau terlewat satu saja, cluster tidak akan jalan 
+- **Banyak komponen yang saling bergantung**: container runtime, kubelet, kubeadm, kubectl, dan CNI plugin harus dikonfigurasi dengan benar dan saling compatible
+- **Dokumentasi tersebar**: ada yang untuk Ubuntu, ada yang untuk RHEL, dan tidak semua langkah applicable untuk Debian sehingga menyusahkan user
+- **Konfigurasi sistem yang sering terlewat**: seperti disable swap, load kernel modules, dan set sysctl parameters. Kalau terlewat satu saja, cluster tidak akan jalan
 
 Yang dibutuhkan adalah panduan yang fokus ke Debian dengan langkah-langkah yang jelas dari awal sampai cluster ready.
 
@@ -49,7 +49,7 @@ Komponen yang akan diinstall:
 
 ### Persiapan Sistem (Semua Node)
 
-Langkah-langkah berikut dilakukan di **kedua node** -- control plane dan worker.
+Langkah-langkah berikut dilakukan di **kedua node**, control plane dan worker.
 
 #### Update Sistem
 
@@ -94,8 +94,8 @@ Penjelasan masing-masing module:
 
 | Module | Fungsi |
 |--------|--------|
-| `overlay` | Filesystem driver untuk container layer -- dibutuhkan containerd untuk manage image layers |
-| `br_netfilter` | Memungkinkan iptables melihat traffic yang melewati Linux bridge -- dibutuhkan untuk network policy dan service routing |
+| `overlay` | Filesystem driver untuk container layer, dibutuhkan containerd untuk manage image layers |
+| `br_netfilter` | Memungkinkan iptables melihat traffic yang melewati Linux bridge, dibutuhkan untuk network policy dan service routing |
 
 #### Set Sysctl Parameters
 
@@ -111,7 +111,7 @@ $ sudo sysctl --system
 
 Parameter ini memastikan traffic antar pod bisa di-route dengan benar melalui iptables. Tanpa ini, pod di node berbeda tidak akan bisa komunikasi.
 
-### Install Container Runtime -- containerd (Semua Node)
+### Install Container Runtime: containerd (Semua Node)
 
 Kubernetes butuh container runtime yang CRI-compatible. Kita pakai **containerd** karena sudah mature, ringan, dan jadi default di banyak distribusi Kubernetes.
 
@@ -206,12 +206,12 @@ $ sudo kubeadm config images pull
 $ sudo kubeadm init --pod-network-cidr=10.10.0.0/16
 ```
 
-Parameter `--pod-network-cidr` menentukan range IP yang akan digunakan untuk pod. Value ini harus match dengan konfigurasi CNI plugin yang akan diinstall nanti. Sesuaikan CIDR dengan CNI yang dipilih -- `10.244.0.0/16` untuk Flannel atau `10.10.0.0/16` untuk Calico.
+Parameter `--pod-network-cidr` menentukan range IP yang akan digunakan untuk pod. Value ini harus match dengan konfigurasi CNI plugin yang akan diinstall nanti. Sesuaikan CIDR dengan CNI yang dipilih, `10.244.0.0/16` untuk Flannel atau `10.10.0.0/16` untuk Calico.
 
 Kalau init berhasil, output akan menampilkan:
 
-1. **Perintah untuk setup kubectl** -- simpan dan jalankan ini
-2. **Perintah `kubeadm join`** -- simpan ini untuk join worker node nanti
+1. **Perintah untuk setup kubectl**: simpan dan jalankan ini
+2. **Perintah `kubeadm join`**: simpan ini untuk join worker node nanti
 
 #### Setup kubectl
 
@@ -227,7 +227,7 @@ Verifikasi cluster sudah jalan:
 $ kubectl get nodes
 ```
 
-Output akan menunjukkan control plane dengan status `NotReady` -- ini normal karena CNI plugin belum diinstall.
+Output akan menunjukkan control plane dengan status `NotReady`, ini normal karena CNI plugin belum diinstall.
 
 ### Install CNI Plugin (Control Plane Only)
 
@@ -348,18 +348,18 @@ Tantangan pertama adalah **urutan instalasi yang harus tepat**. Kernel modules d
 
 Tantangan kedua adalah **CIDR yang harus konsisten**. Value `--pod-network-cidr` saat `kubeadm init` harus match dengan konfigurasi CNI plugin. Kalau berbeda, pod akan bisa dibuat tapi tidak bisa komunikasi antar node dan ini silent failure yang baru ketahuan saat testing.
 
-Satu hal lagi -- **`SystemdCgroup = true` di containerd itu critical**. Default config containerd menggunakan `cgroupfs`, tapi kubelet di Debian menggunakan `systemd`. Kalau tidak match, kubelet akan restart loop atau pod random crash tanpa error message yang jelas.
+Satu hal lagi: **`SystemdCgroup = true` di containerd itu critical**. Default config containerd menggunakan `cgroupfs`, tapi kubelet di Debian menggunakan `systemd`. Kalau tidak match, kubelet akan restart loop atau pod random crash tanpa error message yang jelas.
 
 ## Insight dan Pembelajaran
 
 Beberapa hal yang bisa diambil dari pengalaman setup ini:
 
-- **Jangan skip persiapan sistem** -- disable swap, load kernel modules, dan set sysctl parameters itu bukan opsional. Satu yang terlewat bisa bikin debugging berjam-jam.
-- **Pin versi Kubernetes** -- gunakan `apt-mark hold` dan tentukan versi spesifik di repository. Upgrade Kubernetes harus dilakukan secara terkontrol, bukan melalui `apt upgrade`.
-- **Simpan output `kubeadm init`** -- perintah join yang ditampilkan di akhir itu penting. Kalau hilang, bisa di-generate ulang tapi lebih baik disimpan dari awal.
-- **Pilih CNI sesuai kebutuhan** -- Flannel untuk setup simpel tanpa Network Policy, Calico kalau butuh kontrol traffic antar pod. Keduanya production-ready, tapi fitur yang ditawarkan berbeda.
-- **Test connectivity setelah CNI** -- setelah install CNI plugin, deploy simple pod di masing-masing node dan pastikan bisa saling ping. Jangan tunggu sampai deploy aplikasi baru menemukan network tidak jalan.
-- **Repository `pkgs.k8s.io` adalah yang resmi** -- jangan pakai `apt.kubernetes.io` yang sudah deprecated. Package di repository lama tidak akan di-update lagi.
+- **Jangan skip persiapan sistem**: disable swap, load kernel modules, dan set sysctl parameters itu bukan opsional. Satu yang terlewat bisa bikin debugging berjam-jam.
+- **Pin versi Kubernetes**: gunakan `apt-mark hold` dan tentukan versi spesifik di repository. Upgrade Kubernetes harus dilakukan secara terkontrol, bukan melalui `apt upgrade`.
+- **Simpan output `kubeadm init`**: perintah join yang ditampilkan di akhir itu penting. Kalau hilang, bisa di-generate ulang tapi lebih baik disimpan dari awal.
+- **Pilih CNI sesuai kebutuhan**: Flannel untuk setup simpel tanpa Network Policy, Calico kalau butuh kontrol traffic antar pod. Keduanya production-ready, tapi fitur yang ditawarkan berbeda.
+- **Test connectivity setelah CNI**: setelah install CNI plugin, deploy simple pod di masing-masing node dan pastikan bisa saling ping. Jangan tunggu sampai deploy aplikasi baru menemukan network tidak jalan.
+- **Repository `pkgs.k8s.io` adalah yang resmi**: jangan pakai `apt.kubernetes.io` yang sudah deprecated. Package di repository lama tidak akan di-update lagi.
 
 ## Penutup
 
@@ -367,6 +367,6 @@ Setup Kubernetes cluster di Debian dengan 1 control plane dan 1 worker node itu 
 
 ## Referensi
 
-- [Kubernetes - Installing kubeadm](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm/) -- Diakses pada 2026-04-08
-- [Computing For Geeks - Install Kubernetes Cluster on Debian 12](https://computingforgeeks.com/install-kubernetes-cluster-on-debian-12-bookworm/) -- Diakses pada 2026-04-08
-- [Steve Notes - Kubernetes Provisioning](https://github.com/steve-notes/Kubernetes-Provisioning) -- Diakses pada 2026-04-08
+- [Kubernetes - Installing kubeadm](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm/), diakses pada2026-04-08
+- [Computing For Geeks - Install Kubernetes Cluster on Debian 12](https://computingforgeeks.com/install-kubernetes-cluster-on-debian-12-bookworm/), diakses pada2026-04-08
+- [Steve Notes - Kubernetes Provisioning](https://github.com/steve-notes/Kubernetes-Provisioning), diakses pada2026-04-08

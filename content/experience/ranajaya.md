@@ -45,7 +45,7 @@ Working as a Backend Engineer at PT. Ranajaya Citaprasada Thani Indonesia, build
 
 ### GrabPay Payment Gateway Aggregator
 
-Built a payment gateway aggregator service in Go with multi-provider integration -- unifying several third-party payment providers behind a single API for GrabPay transactions. Designed a smart routing system that selects the optimal provider per transaction based on success rate, latency, and provider health scores tracked in Redis. The routing engine supports automatic failover -- when a primary provider fails or responds above the latency threshold, the system reroutes through alternative providers without interrupting the user flow. Implemented provider-level circuit breakers to prevent cascading failures across the payment pipeline. Used RabbitMQ for asynchronous reconciliation jobs that match settlement records across providers and flag discrepancies for manual review.
+Built a payment gateway aggregator service in Go with multi-provider integration, unifying several third-party payment providers behind a single API for GrabPay transactions. Designed a smart routing system that selects the optimal provider per transaction based on success rate, latency, and provider health scores tracked in Redis. The routing engine supports automatic failover: when a primary provider fails or responds above the latency threshold, the system reroutes through alternative providers without interrupting the user flow. Implemented provider-level circuit breakers to prevent cascading failures across the payment pipeline. Used RabbitMQ for asynchronous reconciliation jobs that match settlement records across providers and flag discrepancies for manual review.
 
 ### CLI Log Collection Tool
 
@@ -57,7 +57,7 @@ Developed a data importer in Go that processes bulk recipient data for the SMS b
 
 ### EDC Platform Core Backend
 
-Developed and maintain the core backend for an EDC (Electronic Data Capture) platform in Go. The system manages the full transaction lifecycle — from device registration and terminal configuration to transaction processing and end-of-day settlement. Handles communication with physical EDC terminals over TCP, processing transaction requests and returning authorization responses.
+Developed and maintain the core backend for an EDC (Electronic Data Capture) platform in Go. The system manages the full transaction lifecycle, from device registration and terminal configuration to transaction processing and end-of-day settlement. Handles communication with physical EDC terminals over TCP, processing transaction requests and returning authorization responses.
 
 ### Loan Mini Apps Dashboard
 
@@ -73,8 +73,8 @@ Standardized deployment across all services by creating optimized multi-stage Do
 
 ## Impact
 
-- Reduced payment transaction failures through smart routing system that selects optimal providers based on success rate, latency, and health scores -- with circuit breakers and automatic failover ensuring uninterrupted payment flow
-- Enabled real-time loan transaction monitoring with filterable views and aggregate metrics -- replacing manual database queries with a self-service dashboard for operations and partner teams
+- Reduced payment transaction failures through smart routing system that selects optimal providers based on success rate, latency, and health scores, with circuit breakers and automatic failover ensuring uninterrupted payment flow
+- Enabled real-time loan transaction monitoring with filterable views and aggregate metrics, replacing manual database queries with a self-service dashboard for operations and partner teams
 - Improved debugging efficiency by replacing manual SSH log inspection with a centralized CLI tool and API
 - Enabled the backend team to ship higher-quality code through structured code reviews and established Go coding standards
 - Cut junior developer onboarding time through hands-on mentorship and pair programming sessions

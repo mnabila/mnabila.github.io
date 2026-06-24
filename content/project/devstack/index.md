@@ -3,7 +3,7 @@ draft = false
 date = '2026-03-14T21:22:30+07:00'
 title = 'Devstack'
 type = 'project'
-description = 'One Docker Compose file for all my local dev infrastructure -- PostgreSQL, MariaDB, RabbitMQ, Redis, Portainer, and n8n with persistent storage.'
+description = 'One Docker Compose file for all my local dev infrastructure: PostgreSQL, MariaDB, RabbitMQ, Redis, Portainer, and n8n with persistent storage.'
 image = ''
 repository = 'https://github.com/mnabila/devstack'
 languages = ['dockerfile']
@@ -12,7 +12,7 @@ tools = ['docker', 'docker-compose', 'podman', 'postgresql', 'mariadb', 'rabbitm
 
 Every developer eventually faces the same problem: "it works on my machine, but I need a database, a message broker, a cache layer, and three other services running before I can even start coding." Setting up local infrastructure should not be the thing that slows you down on day one of a project.
 
-Devstack is a single Docker Compose file that provisions an entire local development infrastructure -- databases, message brokers, caching, workflow automation, and container management -- with one command. It is the foundation I use across all my projects.
+Devstack is a single Docker Compose file that provisions an entire local development infrastructure, including databases, message brokers, caching, workflow automation, and container management, with one command. It is the foundation I use across all my projects.
 
 ## Problem Background
 
@@ -26,7 +26,7 @@ The typical approach is ad-hoc: spin up individual containers, remember the port
 - **Missing plugins** or custom configurations that are not captured anywhere reproducible
 - **Onboarding friction** when a new team member needs to replicate the same setup
 
-I needed a single, declarative source of truth for all the infrastructure services I use in development -- something I could `docker compose up -d` and forget about.
+I needed a single, declarative source of truth for all the infrastructure services I use in development, something I could `docker compose up -d` and forget about.
 
 ## Solution Overview
 
@@ -34,7 +34,7 @@ Devstack consolidates all commonly used development infrastructure into a single
 
 **Tech stack:** Docker / Podman, Docker Compose, PostgreSQL, MariaDB, RabbitMQ, Redis, Portainer, n8n
 
-**My role:** Sole developer -- service selection, configuration, custom image builds, and volume management
+**My role:** Sole developer, responsible for service selection, configuration, custom image builds, and volume management
 
 ## System Architecture
 
@@ -66,16 +66,16 @@ The service definitions follow a consistent pattern: official images where possi
 | Redis      | `redis:8.2`                      | `6379`           | In-memory key-value store and cache              |
 | n8n        | `n8nio/n8n:latest`               | `5678`           | Visual workflow automation tool                  |
 
-All services are connected via a shared bridge network, allowing inter-service communication by container name -- useful when n8n workflows need to query PostgreSQL or when application services within the same Compose context need to reach the broker.
+All services are connected via a shared bridge network, allowing inter-service communication by container name, useful when n8n workflows need to query PostgreSQL or when application services within the same Compose context need to reach the broker.
 
 ## Key Features
 
-- **Single-command startup** -- `docker compose up -d` provisions the entire infrastructure stack. Individual services can be started selectively with `docker compose up -d postgresql redis`
-- **Persistent storage** -- all service data is mounted to the local `data/` directory, so nothing is lost when containers are stopped, removed, or rebuilt. The directory is gitignored to keep the repository clean
-- **Custom RabbitMQ image** -- a purpose-built Dockerfile extends the official `rabbitmq:4.2-management` image to include the [delayed message exchange plugin](https://github.com/rabbitmq/rabbitmq-delayed-message-exchange), which is not bundled by default but is commonly needed for scheduling and retry patterns
-- **Standardized credentials** -- every service uses simple, consistent default credentials documented in the README, eliminating the "what was the password again?" problem during development
-- **Podman compatibility** -- the Portainer configuration mounts the Podman socket (`/run/user/1000/podman/podman.sock`), making the stack compatible with rootless Podman as a Docker alternative
-- **Timezone consistency** -- services that support it (MariaDB, n8n) are configured with `Asia/Jakarta` timezone to match the development locale, preventing timestamp confusion during debugging
+- **Single-command startup**: `docker compose up -d` provisions the entire infrastructure stack. Individual services can be started selectively with `docker compose up -d postgresql redis`
+- **Persistent storage**: all service data is mounted to the local `data/` directory, so nothing is lost when containers are stopped, removed, or rebuilt. The directory is gitignored to keep the repository clean
+- **Custom RabbitMQ image**: a purpose-built Dockerfile extends the official `rabbitmq:4.2-management` image to include the [delayed message exchange plugin](https://github.com/rabbitmq/rabbitmq-delayed-message-exchange), which is not bundled by default but is commonly needed for scheduling and retry patterns
+- **Standardized credentials**: every service uses simple, consistent default credentials documented in the README, eliminating the "what was the password again?" problem during development
+- **Podman compatibility**: the Portainer configuration mounts the Podman socket (`/run/user/1000/podman/podman.sock`), making the stack compatible with rootless Podman as a Docker alternative
+- **Timezone consistency**: services that support it (MariaDB, n8n) are configured with `Asia/Jakarta` timezone to match the development locale, preventing timestamp confusion during debugging
 
 ## Technical Challenges and Solutions
 
@@ -95,7 +95,7 @@ RUN rabbitmq-plugins enable rabbitmq_delayed_message_exchange
 
 **Data persistence across container lifecycle.** By default, Docker containers lose all data when removed. Bind-mounting each service's data directory to the host ensures that database contents, broker state, and workflow definitions survive `docker compose down` and `docker compose up` cycles. The trade-off is that the `data/` directory can grow large over time, but for local development this is acceptable and the gitignore ensures it never gets committed.
 
-**Podman rootless compatibility.** Running Portainer with Podman requires mounting the user-level Podman socket instead of the Docker daemon socket. The `security_opt: label=disable` directive disables SELinux label confinement, which is necessary for Podman socket access in rootless mode. This is a development-only trade-off -- in production, you would configure this more tightly.
+**Podman rootless compatibility.** Running Portainer with Podman requires mounting the user-level Podman socket instead of the Docker daemon socket. The `security_opt: label=disable` directive disables SELinux label confinement, which is necessary for Podman socket access in rootless mode. This is a development-only trade-off, and in production, you would configure this more tightly.
 
 **Service isolation vs. convenience.** A design decision was whether to put each service in its own Compose file for maximum isolation or consolidate everything into a single file for convenience. I chose the single-file approach because in practice, the overhead of managing multiple Compose files, remembering which one to start, and coordinating networks between them outweighed the isolation benefits for a local development context.
 
@@ -111,7 +111,7 @@ RUN rabbitmq-plugins enable rabbitmq_delayed_message_exchange
 
 ## Conclusion
 
-Devstack is not a complex project -- and that is the point. It is a deliberate investment in reducing the friction between "I want to start working" and "I am actually working." One file, one command, and the entire infrastructure layer is ready.
+Devstack is not a complex project, and that is the point. It is a deliberate investment in reducing the friction between "I want to start working" and "I am actually working." One file, one command, and the entire infrastructure layer is ready.
 
 ```bash
 # Start everything

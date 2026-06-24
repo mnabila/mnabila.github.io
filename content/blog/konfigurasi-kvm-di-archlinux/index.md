@@ -10,17 +10,17 @@ tags = ['kvm', 'qemu', 'libvirt', 'virtualisasi', 'archlinux']
 
 ## Latar Belakang
 
-Virtualisasi sudah jadi kebutuhan saya sebagai developer -- entah untuk testing environment, menjalankan OS lain, atau simulasi infrastruktur. Di Linux, **KVM (Kernel-based Virtual Machine)** adalah hypervisor yang langsung terintegrasi di kernel, artinya performanya mendekati bare metal tanpa overhead besar seperti VirtualBox.
+Virtualisasi sudah jadi kebutuhan saya sebagai developer, entah untuk testing environment, menjalankan OS lain, atau simulasi infrastruktur. Di Linux, **KVM (Kernel-based Virtual Machine)** adalah hypervisor yang langsung terintegrasi di kernel, artinya performanya mendekati bare metal tanpa overhead besar seperti VirtualBox.
 
 ## Permasalahan
 
 Beberapa alasan kenapa virtualisasi di local machine itu penting:
 
-- **Testing environment yang terisolasi** -- butuh environment bersih untuk testing deployment, konfigurasi server, atau eksperimen tanpa merusak host system
-- **Menjalankan OS lain** -- kadang butuh Windows untuk aplikasi tertentu, atau distro Linux lain untuk compatibility testing
-- **VirtualBox performanya kurang** -- virtualBox punya overhead yang cukup terasa terutama untuk I/O intensive workload
-- **Simulasi infrastruktur** -- butuh beberapa VM sekaligus untuk simulasi cluster, networking, atau multi-tier architecture
-- **Reproducible environment** -- VM bisa di-snapshot, di-clone, dan di-share ke tim untuk memastikan environment yang konsisten
+- **Testing environment yang terisolasi**: butuh environment bersih untuk testing deployment, konfigurasi server, atau eksperimen tanpa merusak host system
+- **Menjalankan OS lain**: kadang butuh Windows untuk aplikasi tertentu, atau distro Linux lain untuk compatibility testing
+- **VirtualBox performanya kurang**: virtualBox punya overhead yang cukup terasa terutama untuk I/O intensive workload
+- **Simulasi infrastruktur**: butuh beberapa VM sekaligus untuk simulasi cluster, networking, atau multi-tier architecture
+- **Reproducible environment**: VM bisa di-snapshot, di-clone, dan di-share ke tim untuk memastikan environment yang konsisten
 
 Yang dibutuhkan adalah solusi virtualisasi yang performanya bagus, fleksibel, dan terintegrasi baik dengan Linux.
 
@@ -38,11 +38,11 @@ Ada beberapa opsi virtualisasi di Linux:
 
 Saya memilih **KVM/QEMU dengan libvirt** karena:
 
-1. **Performa mumpuni** -- KVM berjalan langsung di kernel sebagai hypervisor type-1, tidak ada overhead translation layer
+1. **Performa mumpuni**: KVM berjalan langsung di kernel sebagai hypervisor type-1, tidak ada overhead translation layer
 
-2. **Virtio driver** -- driver khusus yang dioptimasi untuk VM, jauh lebih cepat dari emulasi hardware biasa
-3. **Ecosystem yang mature** -- libvirt, virsh, virt-manager memberikan management layer yang lengkap
-4. **Sudah bawaan kernel** -- tidak perlu install kernel module terpisah seperti VirtualBox
+2. **Virtio driver**: driver khusus yang dioptimasi untuk VM, jauh lebih cepat dari emulasi hardware biasa
+3. **Ecosystem yang mature**: libvirt, virsh, virt-manager memberikan management layer yang lengkap
+4. **Sudah bawaan kernel**: tidak perlu install kernel module terpisah seperti VirtualBox
 
 > **Note:** Hypervisor type-1 (bare-metal) berjalan langsung di atas hardware, berbeda dengan type-2 (seperti VirtualBox) yang berjalan sebagai aplikasi di atas OS sehingga ada layer tambahan yang mengurangi performa.
 
@@ -113,13 +113,13 @@ $ sudo pacman -S qemu virt-manager virt-viewer dnsmasq vde2 bridge-utils openbsd
 
 Penjelasan masing-masing paket:
 
-- **qemu** -- emulator dan virtualizer utama, menyediakan emulasi hardware dan integrasi KVM
-- **virt-manager** -- GUI berbasis GTK untuk membuat dan mengelola VM
-- **virt-viewer** -- console viewer untuk mengakses display VM via SPICE/VNC
-- **dnsmasq** -- DHCP dan DNS server untuk NAT networking di VM
-- **vde2** -- virtual distributed ethernet, untuk konektivitas jaringan antar VM
-- **bridge-utils** -- utility untuk membuat dan mengelola bridge network
-- **openbsd-netcat** -- network utility yang dibutuhkan libvirt untuk komunikasi
+- **qemu**: emulator dan virtualizer utama, menyediakan emulasi hardware dan integrasi KVM
+- **virt-manager**: GUI berbasis GTK untuk membuat dan mengelola VM
+- **virt-viewer**: console viewer untuk mengakses display VM via SPICE/VNC
+- **dnsmasq**: DHCP dan DNS server untuk NAT networking di VM
+- **vde2**: virtual distributed ethernet, untuk konektivitas jaringan antar VM
+- **bridge-utils**: utility untuk membuat dan mengelola bridge network
+- **openbsd-netcat**: network utility yang dibutuhkan libvirt untuk komunikasi
 
 ### Konfigurasi Libvirt
 
@@ -199,7 +199,7 @@ Output yang diharapkan:
  default   active   yes         yes
 ```
 
-NAT network sudah cukup untuk kebanyakan use case -- VM bisa akses internet dan berkomunikasi satu sama lain lewat bridge `virbr0`.
+NAT network sudah cukup untuk kebanyakan use case agar VM bisa akses internet dan berkomunikasi satu sama lain lewat bridge `virbr0`.
 
 
 ### Membuat Virtual Machine
@@ -218,7 +218,7 @@ Langkah membuat VM baru:
 2. Pilih **Local install media (ISO image)**
 3. Browse ke file ISO yang sudah didownload
 4. Set alokasi **RAM** dan jumlah **CPU**
-5. Buat disk virtual -- pilih format **qcow2** (mendukung snapshot dan thin provisioning)
+5. Buat disk virtual, pilih format **qcow2** (mendukung snapshot dan thin provisioning)
 6. Di bagian **Network**, pastikan menggunakan **Virtual network 'default': NAT**
 7. Centang **Customize configuration before install** untuk tuning tambahan
 
@@ -260,17 +260,17 @@ $ virt-install \
 
 Beberapa insight setelah menggunakan KVM di Archlinux:
 
-- **Perbedaan performa KVM vs VirtualBox sangat terasa** -- terutama untuk disk I/O. VM yang sama terasa jauh lebih responsif di KVM dengan virtio dibanding VirtualBox, bahkan dengan konfigurasi resource yang identik.
-- **Fitur Snapshot** -- sebelum melakukan update besar atau eksperimen, buat snapshot dulu. Kalau ada yang salah, revert dalam hitungan detik. Ini jauh lebih cepat dari backup manual.
-- **`host-passthrough` CPU mode wajib diaktifkan** -- default CPU model di virt-manager biasanya generic yang tidak mengekspos semua fitur CPU. Dengan `host-passthrough`, VM mendapat akses penuh ke fitur CPU host termasuk instruksi AES-NI, AVX, dan lainnya.
-- **Nested virtualization** -- jika butuh menjalankan VM di dalam VM (misalnya untuk belajar Kubernetes), untuk mengaktifkan nested virtualization cukup dengan menambahkan `options kvm_intel nested=1` di `/etc/modprobe.d/kvm_intel.conf` di host kvmnya.
+- **Perbedaan performa KVM vs VirtualBox sangat terasa**, terutama untuk disk I/O. VM yang sama terasa jauh lebih responsif di KVM dengan virtio dibanding VirtualBox, bahkan dengan konfigurasi resource yang identik.
+- **Fitur Snapshot**: sebelum melakukan update besar atau eksperimen, buat snapshot dulu. Kalau ada yang salah, revert dalam hitungan detik. Ini jauh lebih cepat dari backup manual.
+- **`host-passthrough` CPU mode wajib diaktifkan**: default CPU model di virt-manager biasanya generic yang tidak mengekspos semua fitur CPU. Dengan `host-passthrough`, VM mendapat akses penuh ke fitur CPU host termasuk instruksi AES-NI, AVX, dan lainnya.
+- **Nested virtualization**: jika butuh menjalankan VM di dalam VM (misalnya untuk belajar Kubernetes), untuk mengaktifkan nested virtualization cukup dengan menambahkan `options kvm_intel nested=1` di `/etc/modprobe.d/kvm_intel.conf` di host kvmnya.
 
 ## Penutup
 
-KVM dengan libvirt dan virt-manager adalah solusi virtualisasi terbaik di Linux -- performa mendekati bare metal karena terintegrasi langsung di kernel, management yang fleksibel lewat GUI maupun CLI, dan ecosystem yang mature. Setup awalnya memang lebih banyak langkah dibanding VirtualBox, tapi hasilnya sepadan: VM yang lebih cepat, lebih stabil, dan lebih production-ready. 
+KVM dengan libvirt dan virt-manager adalah solusi virtualisasi terbaik di Linux: performa mendekati bare metal karena terintegrasi langsung di kernel, management yang fleksibel lewat GUI maupun CLI, dan ecosystem yang mature. Setup awalnya memang lebih banyak langkah dibanding VirtualBox, tapi hasilnya sepadan: VM yang lebih cepat, lebih stabil, dan lebih production-ready. 
 
 ## Referensi
 
-- [Arch Wiki - KVM](https://wiki.archlinux.org/title/KVM) -- Diakses pada 2026-04-06
-- [Arch Wiki - QEMU](https://wiki.archlinux.org/title/QEMU) -- Diakses pada 2026-04-06
-- [Arch Wiki - Libvirt](https://wiki.archlinux.org/title/Libvirt) -- Diakses pada 2026-04-06
+- [Arch Wiki - KVM](https://wiki.archlinux.org/title/KVM), diakses pada 2026-04-06
+- [Arch Wiki - QEMU](https://wiki.archlinux.org/title/QEMU), diakses pada 2026-04-06
+- [Arch Wiki - Libvirt](https://wiki.archlinux.org/title/Libvirt), diakses pada 2026-04-06

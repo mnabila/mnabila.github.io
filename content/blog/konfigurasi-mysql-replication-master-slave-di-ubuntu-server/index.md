@@ -20,11 +20,11 @@ Setup ini saya lakukan di dua Ubuntu Server 22.04 dalam satu network. Satu jadi 
 
 Pakai satu instance MySQL untuk semuanya mulai terasa limitasinya:
 
-- **Semua query numpuk di satu server** -- read dan write rebutan resource di tempat yang sama, lock contention makin sering, response time naik
-- **Tidak ada fallback** -- kalau server database down, ya wassalam seluruh aplikasi ikut mati dan user tidak bisa akses aplikasinya
-- **Scaling mentok** -- nambah RAM dan CPU ada batasnya dan costnya mahal. Horizontal scaling tidak bisa tanpa replication
-- **Backup ganggu production** -- jalankan `mysqldump` di server yang sama berarti table lock dan itu terasa banget di aplikasi
-- **Read-heavy tapi tidak terdistribusi** -- rasio read vs write di aplikasi ini sekitar 80:20, tapi semua tetap masuk ke satu node
+- **Semua query numpuk di satu server**: read dan write rebutan resource di tempat yang sama, lock contention makin sering, response time naik
+- **Tidak ada fallback**: kalau server database down, ya wassalam seluruh aplikasi ikut mati dan user tidak bisa akses aplikasinya
+- **Scaling mentok**: nambah RAM dan CPU ada batasnya dan costnya mahal. Horizontal scaling tidak bisa tanpa replication
+- **Backup ganggu production**: jalankan `mysqldump` di server yang sama berarti table lock dan itu terasa banget di aplikasi
+- **Read-heavy tapi tidak terdistribusi**: rasio read vs write di aplikasi ini sekitar 80:20, tapi semua tetap masuk ke satu node
 
 ## Pendekatan Solusi
 
@@ -69,7 +69,7 @@ Lalu jalankan `mysql_secure_installation` untuk setup keamanan dasar:
 $ sudo mysql_secure_installation
 ```
 
-Kemudian Ikuti prompt-nya -- set root password, hapus anonymous user, disable remote root login, hapus test database. Ini dilakukan di kedua server.
+Kemudian Ikuti prompt-nya meliputi set root password, hapus anonymous user, disable remote root login, hapus test database. Ini dilakukan di kedua server.
 
 ### Konfigurasi Master
 
@@ -120,7 +120,7 @@ GRANT REPLICATION SLAVE ON *.* TO 'slave'@'192.168.1.11';
 FLUSH PRIVILEGES;
 ```
 
-User `slave` cuma punya privilege `REPLICATION SLAVE` -- cukup untuk nerima binary log, tidak bisa ngubah data apapun. IP yang didaftarkan adalah IP slave server.
+User `slave` cuma punya privilege `REPLICATION SLAVE`, cukup untuk nerima binary log, tidak bisa ngubah data apapun. IP yang didaftarkan adalah IP slave server.
 
 > **Penting:** Pakai password yang kuat untuk user replication. Meskipun privilege-nya terbatas, akses ke binary log artinya bisa lihat seluruh perubahan data.
 
@@ -143,7 +143,7 @@ Output-nya kurang lebih seperti ini:
 +------------------+----------+--------------+------------------+
 ```
 
-Catat nilai `File` dan `Position` -- dua nilai ini nanti dipakai saat konfigurasi slave. Jangan tutup session ini dulu, table masih ke-lock.
+Catat nilai `File` dan `Position`; dua nilai ini nanti dipakai saat konfigurasi slave. Jangan tutup session ini dulu, table masih ke-lock.
 
 ### Dump Data dari Master
 
@@ -257,8 +257,8 @@ Read_Master_Log_Pos: 857
 
 Dua hal yang harus bernilai `Yes`:
 
-- **Slave_IO_Running** -- thread yang ngambil binary log dari master
-- **Slave_SQL_Running** -- thread yang njalanin event dari relay log ke database slave
+- **Slave_IO_Running**: thread yang ngambil binary log dari master
+- **Slave_SQL_Running**: thread yang njalanin event dari relay log ke database slave
 
 `Seconds_Behind_Master` menunjukkan seberapa jauh slave ketinggalan dari master. Idealnya `0`, tapi pas beban tinggi bisa naik sementara.
 
@@ -338,15 +338,15 @@ Yang paling bikin pusing adalah **mismatch binary log position**. Kalau lupa dic
 
 Masalah lain yang cukup bikin bingung di awal adalah **server-id yang sama**. Kalau lupa mengganti `server-id` di slave sehingga nilainya sama dengan master (atau dua-duanya masih default `1`), replication tidak mau jalan kemudian memunculkan error message-nya yang tidak jelas. MySQL cuma bilang IO thread gagal connect tanpa kasih tahu kalau penyebabnya duplicate server-id, dan pastikan tiap node punya `server-id` yang beda sebelum mulai.
 
-**Replication lag** juga jadi masalah tersendiri, terutama pas ada bulk operation di master -- `ALTER TABLE` di tabel besar, batch insert jutaan row. Slave memproses event secara single-threaded (di konfigurasi default), jadi operasi berat di master bisa bikin slave ketinggalan jauh. Kalau ini sering terjadi, coba pakai parallel replication lewat parameter `slave_parallel_workers`. Satu lagi yang sering kelewat -- pastikan firewall di kedua server sudah buka port 3306. Koneksi yang putus di tengah replication bikin slave perlu di-resync ulang.
+**Replication lag** juga jadi masalah tersendiri, terutama pas ada bulk operation di master seperti `ALTER TABLE` di tabel besar, batch insert jutaan row. Slave memproses event secara single-threaded (di konfigurasi default), jadi operasi berat di master bisa bikin slave ketinggalan jauh. Kalau ini sering terjadi, coba pakai parallel replication lewat parameter `slave_parallel_workers`. Satu lagi yang sering kelewat, pastikan firewall di kedua server sudah buka port 3306. Koneksi yang putus di tengah replication bikin slave perlu di-resync ulang.
 
 ## Insight dan Pembelajaran
 
-- **Urutan langkah itu krusial** -- lock table dulu, catat posisi binary log, dump data, baru unlock. Salah urutan, data di slave bisa inkonsisten dan debugging-nya makan waktu yang cukup lama
-- **Binary log itu jantungnya replication** -- semua perubahan data di master tercatat di sini. Kalau binary log corrupt atau terhapus sebelum slave sempat baca bisa dikatakan replication putus
-- **Read-only di slave bukan opsional** -- tanpa `read_only = 1`, siapapun yang punya akses write ke slave bisa bikin data drift. Sekali data di slave beda dari master sehingga mengembalikan konsistensinya jadi susah
-- **Monitoring itu wajib, bukan nice-to-have** -- replication bisa putus kapan saja. Tanpa monitoring aktif, bisa-bisa slave sudah ketinggalan berjam-jam sebelum ada yang sadar
-- **Pisahkan connection pool di aplikasi** -- pakai pool terpisah untuk read (ke slave) dan write (ke master). Jangan hardcode, pakai config supaya bisa switch node tanpa perlu deploy ulang
+- **Urutan langkah itu krusial**: lock table dulu, catat posisi binary log, dump data, baru unlock. Salah urutan, data di slave bisa inkonsisten dan debugging-nya makan waktu yang cukup lama
+- **Binary log itu jantungnya replication**: semua perubahan data di master tercatat di sini. Kalau binary log corrupt atau terhapus sebelum slave sempat baca bisa dikatakan replication putus
+- **Read-only di slave bukan opsional**: tanpa `read_only = 1`, siapapun yang punya akses write ke slave bisa bikin data drift. Sekali data di slave beda dari master sehingga mengembalikan konsistensinya jadi susah
+- **Monitoring itu wajib, bukan nice-to-have**: replication bisa putus kapan saja. Tanpa monitoring aktif, bisa-bisa slave sudah ketinggalan berjam-jam sebelum ada yang sadar
+- **Pisahkan connection pool di aplikasi**: pakai pool terpisah untuk read (ke slave) dan write (ke master). Jangan hardcode, pakai config supaya bisa switch node tanpa perlu deploy ulang
 
 ## Penutup
 
@@ -354,5 +354,5 @@ MySQL replication master-slave sudah cukup untuk meningkatkan performa dan avail
 
 ## Referensi
 
-- [How To Set Up Replication in MySQL](https://www.digitalocean.com/community/tutorials/how-to-set-up-replication-in-mysql) -- Diakses pada 2026-04-23
-- [MySQL Master-Slave Replication](https://phoenixnap.com/kb/mysql-master-slave-replication) -- Diakses pada 2026-04-23
+- [How To Set Up Replication in MySQL](https://www.digitalocean.com/community/tutorials/how-to-set-up-replication-in-mysql), diakses pada 2026-04-23
+- [MySQL Master-Slave Replication](https://phoenixnap.com/kb/mysql-master-slave-replication), diakses pada 2026-04-23

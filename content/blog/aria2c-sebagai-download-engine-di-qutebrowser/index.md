@@ -11,29 +11,30 @@ tags = ['browser', 'download', 'cli', 'userscript', 'monkeyscript']
 
 ## Latar Belakang
 
-Sebagai pengguna **Qutebrowser** -- browser yang mengandalkan keyboard untuk navigasi -- saya sudah cukup lama merasa kurang puas dengan kemampuan download bawaannya. Qutebrowser memang bukan browser mainstream; dibangun menggunakan Python dengan module PyQt5, backend-nya qt5-webengine, dan tampilannya sangat minimalis. Bisa dibilang, pengguna qutebrowser punya selera tersendiri yang rela menghafal keymap demi kenyamanan navigasi tanpa mouse.
+Sebagai pengguna **Qutebrowser**, browser yang mengandalkan keyboard untuk navigasi, saya sudah cukup lama merasa kurang puas dengan kemampuan download bawaannya. Qutebrowser memang bukan browser mainstream yang dibangun menggunakan Python dengan module PyQt5, backend-nya qt5-webengine, dan tampilannya sangat minimalis. Bisa dibilang pengguna qutebrowser punya selera tersendiri yang rela menghafal keymap demi kenyamanan navigasi tanpa mouse.
 
-Di sisi lain, saya sudah menggunakan **aria2c** sebagai download manager utama di terminal. Aria2c adalah download manager berbasis CLI yang mendukung berbagai protokol -- HTTP(S), FTP, SFTP, BitTorrent, hingga Metalink. Cukup satu tool ini saja dan tidak perlu lagi install torrent client terpisah. Yang lebih menarik, aria2c bisa dijadikan download service yang diakses dari berbagai frontend, baik GUI seperti [UGET](https://ugetdm.com/) dan [Persepolis](https://persepolisdm.github.io/), web seperti [AriaNg](https://github.com/mayswind/AriaNg) dan [webui-aria2](https://github.com/ziahamza/webui-aria2), hingga TUI seperti [aria2p](https://github.com/pawamoy/aria2p/).
+Di sisi lain, saya sudah menggunakan **aria2c** sebagai download manager utama di terminal. Aria2c adalah download manager berbasis CLI yang mendukung berbagai protokol: HTTP(S), FTP, SFTP, BitTorrent, hingga Metalink. Cukup satu tool ini saja dan tidak perlu lagi install torrent client terpisah. Yang lebih menarik, aria2c bisa dijadikan download service yang diakses dari berbagai frontend, baik GUI seperti [UGET](https://ugetdm.com/) dan [Persepolis](https://persepolisdm.github.io/), web seperti [AriaNg](https://github.com/mayswind/AriaNg) dan [webui-aria2](https://github.com/ziahamza/webui-aria2), hingga TUI seperti [aria2p](https://github.com/pawamoy/aria2p/).
 
 Muncul pertanyaan sederhana: bagaimana kalau dua tool ini digabungkan?
 
 ## Permasalahan
 
-Download bawaan qutebrowser cukup terbatas -- tidak mendukung resume, tidak bisa multi-connection, dan tidak ada integrasi dengan download manager eksternal secara default. Sementara aria2c sudah berjalan sebagai service di background via JSON-RPC, tinggal mencari cara mengirimkan URL dari qutebrowser ke aria2c.
+Download bawaan qutebrowser cukup terbatas seperti tidak mendukung resume, tidak bisa multi-connection, dan tidak ada integrasi dengan download manager eksternal secara default. Sementara aria2c sudah berjalan sebagai service di background via JSON-RPC sehingga tinggal mencari cara mengirimkan URL dari qutebrowser ke aria2c.
 
 ## Pendekatan Solusi
 
-Saya menemukan dua pendekatan untuk mengintegrasikan keduanya: **userscript** dan **monkeyscript** (Greasemonkey).
+Saya menemukan dua pendekatan untuk mengintegrasikan keduanya yakni via **userscript** dan **monkeyscript** (Greasemonkey).
 
-Userscript dipilih untuk kebutuhan manual -- ketika saya ingin memilih link tertentu di halaman web lalu mengirimnya ke aria2c. Keunggulan userscript di qutebrowser adalah bisa ditulis dalam bahasa pemrograman apapun selama mampu membaca environment variable yang disediakan qutebrowser. Daftar lengkap environment variable-nya tersedia di [qutebrowser/userscript](https://qutebrowser.org/doc/userscripts.html).
+Userscript dipilih untuk kebutuhan manual ketika saya ingin memilih link tertentu di halaman web lalu mengirimnya ke aria2c. Keunggulan userscript di qutebrowser adalah bisa ditulis dalam bahasa pemrograman apapun selama mampu membaca environment variable yang disediakan qutebrowser. 
+Monkeyscript dipilih untuk kebutuhan otomatis, khususnya di situs file hosting tertentu yang ingin langsung dikirim ke aria2c tanpa interaksi manual.
 
-Monkeyscript dipilih untuk kebutuhan otomatis -- khususnya di situs file hosting tertentu yang ingin langsung dikirim ke aria2c tanpa interaksi manual.
+> **Note:** Daftar lengkap environment variable-nya tersedia di [qutebrowser/userscript](https://qutebrowser.org/doc/userscripts.html).
 
 ## Implementasi Teknis
 
 ### UserScript: qb2aria
 
-Saya menulis userscript sederhana bernama `qb2aria` yang mengirimkan URL aktif ke aria2c melalui JSON-RPC:
+Saya menulis userscript sederhana bernama `qb2aria` yang mengirimkan URL aktif ke aria2c melalui JSON-RPC
 
 ```bash
 #!/bin/bash
@@ -60,7 +61,7 @@ fi
 
 File disimpan di `/home/$USER/.config/qutebrowser/userscripts` dan diberi hak akses eksekusi:
 
-```
+```bash
 $ chmod +x qb2aria
 ```
 
@@ -169,7 +170,7 @@ Setiap fungsi (`zippyshare`, `solidfile`, `anonfiles`, `mediafire`) mengekstrak 
 
 ## Tantangan yang Dihadapi
 
-Tantangan utama ada pada monkeyscript -- khususnya masalah **CORS**. Karena aria2c berjalan di `localhost:6800` sementara monkeyscript dieksekusi di domain situs file hosting, browser memblokir request cross-origin. Menggunakan `mode: 'no-cors'` pada fetch memang menghilangkan error di console, tapi bukan solusi yang ideal karena response dari server tidak bisa dibaca. Untuk kebutuhan saya saat itu -- cukup fire-and-forget tanpa perlu membaca response -- pendekatan ini masih bisa diterima.
+Tantangan utama ada pada monkeyscript yakni masalah **CORS**. Karena aria2c berjalan di `localhost:6800` sementara monkeyscript dieksekusi di domain situs file hosting, browser memblokir request cross-origin. Menggunakan `mode: 'no-cors'` pada fetch memang menghilangkan error di console, tapi bukan solusi yang ideal karena response dari server tidak bisa dibaca. Untuk kebutuhan saya saat itu cukup fire-and-forget tanpa perlu membaca response dan untuk endekatan ini masih bisa diterima.
 
 Selain itu, setiap situs file hosting memiliki struktur DOM yang berbeda untuk menyembunyikan direct link. Solidfiles misalnya, menyimpan URL download di dalam tag `<script>` sebagai JSON, sehingga perlu XPath dan regex untuk mengekstraknya.
 
@@ -185,5 +186,5 @@ Integrasi aria2c dengan qutebrowser melalui dua pendekatan ini sudah berjalan se
 
 ## Referensi
 
-- manpage aria2c -- Diakses pada 2022-01-07
-- [Qutebrowser](https://qutebrowser.org/index.html) -- Diakses pada 2022-01-07
+- manpage aria2c,  Diakses pada 2022-01-07
+- [Qutebrowser](https://qutebrowser.org/index.html), diakses pada 2022-01-07

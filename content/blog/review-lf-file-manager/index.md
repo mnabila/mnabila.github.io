@@ -11,11 +11,11 @@ tags = ['tui', 'file manager', 'lf', 'ranger']
 
 ## Latar Belakang
 
-Selama lebih dari 2 tahun, **ranger** menjadi file manager utama saya di terminal. Ranger termasuk dalam kategori TUI (Terminal User Interface) file manager yang cukup populer di kalangan pengguna GNU/Linux. Workflow-nya sudah menyatu dengan kebiasaan sehari-hari -- navigasi cepat, preview file, dan integrasi dengan berbagai program eksternal.
+Selama lebih dari 2 tahun, **ranger** menjadi file manager utama saya di terminal. Ranger termasuk dalam kategori TUI (Terminal User Interface) file manager yang cukup populer di kalangan pengguna GNU/Linux. Workflow-nya sudah menyatu dengan kebiasaan sehari-hari: navigasi cepat, preview file, dan integrasi dengan berbagai program eksternal.
 
 ## Permasalahan
 
-Seiring waktu, masalah-masalah "ghaib" mulai muncul di ranger. File manager tiba-tiba freeze saat copy file besar, CPU usage mendadak 100% gara-gara file previewer, dan terkadang responsnya terasa lambat -- seolah mengajak santai di saat saya butuh yang sat set. Yang paling menjengkelkan, list file kadang tidak terupdate meskipun sudah di-restart, terutama saat mengakses removable disk.
+Seiring waktu, masalah-masalah "ghaib" mulai muncul di ranger. File manager tiba-tiba freeze saat copy file besar, CPU usage mendadak 100% gara-gara file previewer, dan terkadang responsnya terasa lambat, seolah mengajak santai di saat saya butuh yang sat set. Yang paling menjengkelkan, list file kadang tidak terupdate meskipun sudah di-restart, terutama saat mengakses removable disk.
 
 Karena hal-hal ghaib itulah, rasa penasaran untuk mencoba alternatif lain mulai muncul.
 
@@ -23,7 +23,7 @@ Karena hal-hal ghaib itulah, rasa penasaran untuk mencoba alternatif lain mulai 
 
 Saya menjelajahi GitHub dan menemukan dua kandidat pengganti: **nnn** dan **lf**. Sebelum memutuskan, saya menetapkan tiga kriteria perbandingan: user interface (UI), file konfigurasi, dan workflow.
 
-Dari ketiganya, **lf** yang paling cocok -- UI dan workflow-nya mirip ranger sehingga transisi tidak perlu mengubah workflow yang sudah ada, sementara it file konfigurasinya berbasis shell script yang justru lebih mudah jika dibanding Python-nya ranger.
+Dari ketiganya, **lf** yang paling cocok: UI dan workflow-nya mirip ranger sehingga transisi tidak perlu mengubah workflow yang sudah ada, sementara it file konfigurasinya berbasis shell script yang justru lebih mudah jika dibanding Python-nya ranger.
 
 ### Perbandingan Lf vs Ranger
 
@@ -31,9 +31,9 @@ Dari ketiganya, **lf** yang paling cocok -- UI dan workflow-nya mirip ranger seh
 |:------|:---|:-------|
 | **Fitur** | Builtin fitur sangat minim, tapi karena konfigurasinya berbasis shell script, pengguna bebas menambahkan fitur sesuai kebutuhan. | Fitur jauh lebih lengkap, tanpa debat. Bisa juga ditambah fitur baru yang ditulis dengan Python. Sayangnya, belum semua fiturnya sempat saya manfaatkan. |
 | **Konfigurasi** | Default config minimalis dan mudah dipahami. Tapi di balik kesederhanaannya, tersimpan tantangan tersendiri. | Default config cukup banyak dan bisa membingungkan pemula yang ingin melakukan kustomisasi. |
-| **Performa** | Lebih cepat dari ranger -- terasa hampir instan saat dibuka. | Cukup cepat, tapi sesekali bisa sangat lambat -- terutama saat mengakses removable disk. |
+| **Performa** | Lebih cepat dari ranger, terasa hampir instan saat dibuka. | Cukup cepat, tapi sesekali bisa sangat lambat, terutama saat mengakses removable disk. |
 | **Kenyamanan** | Di awal terasa tidak nyaman, terutama untuk handle multiple file dalam satu instance. Butuh beberapa hari eksplorasi untuk menemukan solusinya. | Kenyamanan sudah tidak diragukan. Zona nyaman yang membuat saya betah hampir 2 tahun lebih. |
-| **Tampilan** | Mirip ranger tapi tidak identik. Sayangnya kurang informatif saat proses copy/move -- hanya menampilkan persentase kecil di pojok, bukan progress bar seperti ranger. | Tampilan informasi proses file lebih lengkap dengan progress bar yang jelas. |
+| **Tampilan** | Mirip ranger tapi tidak identik. Sayangnya kurang informatif saat proses copy/move, hanya menampilkan persentase kecil di pojok, bukan progress bar seperti ranger. | Tampilan informasi proses file lebih lengkap dengan progress bar yang jelas. |
 
 ## Implementasi Teknis
 
@@ -239,11 +239,11 @@ cmd rclone ${{
 
 Beberapa command yang cukup berguna dalam workflow harian: `fzf_select` untuk navigasi cepat menggunakan fuzzy finder, `extract` untuk ekstraksi berbagai format arsip, dan `rclone` untuk mount cloud storage langsung dari file manager.
 
-**Catatan penting:** Beberapa snippet dari wiki lf justru bisa menambah masalah. Contohnya pada `cmd open` -- secara default jika kita memilih beberapa file lalu membukanya, setiap file akan dibuka di instance terpisah. Pilih 10 video? Maka akan muncul 10 window video player, bukan satu playlist. Masalah ini saya bahas lebih detail di tulisan terpisah.
+**Catatan penting:** Beberapa snippet dari wiki lf justru bisa menambah masalah. Contohnya pada `cmd open`, secara default jika kita memilih beberapa file lalu membukanya, setiap file akan dibuka di instance terpisah. Pilih 10 video? Maka akan muncul 10 window video player, bukan satu playlist. Masalah ini saya bahas lebih detail di tulisan terpisah.
 
 ## Tantangan yang Dihadapi
 
-Tantangan terbesar adalah melepaskan zona nyaman ranger. Setelah 2 tahun terbiasa, banyak muscle memory yang harus di-rewire. Beberapa fitur yang di ranger tinggal pakai, di lf harus dibuat sendiri dari nol -- mulai dari file opener, bulk rename, hingga integrasi dengan removable disk via udisks.
+Tantangan terbesar adalah melepaskan zona nyaman ranger. Setelah 2 tahun terbiasa, banyak muscle memory yang harus di-rewire. Beberapa fitur yang di ranger tinggal pakai, di lf harus dibuat sendiri dari nol, mulai dari file opener, bulk rename, hingga integrasi dengan removable disk via udisks.
 
 Selain itu, kurangnya progress bar yang informatif saat copy/move file besar cukup mengganggu. Lf hanya menampilkan persentase kecil di pojok layar, berbeda dengan ranger yang menampilkan progress bar lengkap.
 
@@ -255,7 +255,7 @@ Pertama, tool yang minimalis belum tentu inferior. Justru karena minim fitur baw
 
 Kedua, konfigurasi berbasis shell script adalah pendekatan yang sangat powerful. Berbeda dengan konfigurasi Python di ranger yang butuh pemahaman API internal, di lf cukup menulis shell command biasa. Setiap orang yang familiar dengan terminal bisa langsung produktif.
 
-Ketiga, ranger tidak benar-benar dipensiunkan -- lebih tepatnya dipindahkan ke bangku cadangan. Ranger masih berperan sebagai file chooser untuk qutebrowser dan file picker untuk neomutt, karena fitur ini belum tersedia di lf.
+Ketiga, ranger tidak benar-benar dipensiunkan, lebih tepatnya dipindahkan ke bangku cadangan. Ranger masih berperan sebagai file chooser untuk qutebrowser dan file picker untuk neomutt, karena fitur ini belum tersedia di lf.
 
 ## Penutup
 
@@ -263,4 +263,4 @@ Lf berhasil menggantikan ranger sebagai file manager utama di workflow harian sa
 
 ## Referensi
 
-- [LF Wiki](https://github.com/gokcehan/lf/wiki) -- Diakses pada 2022-01-11
+- [LF Wiki](https://github.com/gokcehan/lf/wiki), diakses pada 2022-01-11

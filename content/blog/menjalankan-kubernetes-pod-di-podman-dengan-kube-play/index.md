@@ -12,15 +12,15 @@ tags = ['podman', 'kubernetes', 'container']
 
 Kubernetes sudah jadi standar untuk container orchestration, tapi tidak semua situasi butuh full cluster untuk menjalankan pod. Kadang kita cuma mau test YAML manifest yang baru ditulis, atau jalankan beberapa container di local tanpa harus setup minikube, kind, atau cluster sungguhan. Rasanya overkill kalau harus spin up cluster cuma untuk validasi satu pod.
 
-Ternyata Podman punya fitur yang bisa menyelesaikan masalah ini: **`podman kube play`**. Command ini bisa membaca Kubernetes YAML manifest dan langsung membuat pod beserta container-nya di local machine -- tanpa cluster, tanpa daemon, tanpa ribet.
+Ternyata Podman punya fitur yang bisa menyelesaikan masalah ini: **`podman kube play`**. Command ini bisa membaca Kubernetes YAML manifest dan langsung membuat pod beserta container-nya di local machine, tanpa cluster, tanpa daemon, tanpa ribet.
 
 ## Permasalahan
 
 Beberapa masalah yang sering ditemui saat ingin test atau jalankan Kubernetes manifest di local:
 
-- **Setup cluster yang overkill** -- minikube atau kind butuh resource yang tidak sedikit, dan setup-nya memakan waktu padahal cuma mau test satu pod
-- **Perbedaan environment** -- Docker Compose formatnya berbeda dengan Kubernetes manifest, jadi kalau develop di local pakai Compose lalu deploy ke cluster pakai YAML, ada proses konversi yang rawan error
-- **Dependency pada daemon** -- Docker butuh daemon yang jalan di background dengan root privilege, yang tidak selalu ideal untuk local development
+- **Setup cluster yang overkill**: minikube atau kind butuh resource yang tidak sedikit, dan setup-nya memakan waktu padahal cuma mau test satu pod
+- **Perbedaan environment**: Docker Compose formatnya berbeda dengan Kubernetes manifest, jadi kalau develop di local pakai Compose lalu deploy ke cluster pakai YAML, ada proses konversi yang rawan error
+- **Dependency pada daemon**: Docker butuh daemon yang jalan di background dengan root privilege, yang tidak selalu ideal untuk local development
 
 Yang dibutuhkan adalah cara untuk langsung jalankan Kubernetes YAML di local tanpa overhead setup cluster dan tanpa butuh daemon.
 
@@ -109,7 +109,7 @@ $ podman kube play nginx-pod.yaml --down
 
 ### Multi-Container Pod: Backend Service + PostgreSQL
 
-Sekarang contoh yang lebih real-world. Misalnya mau jalankan backend service dengan PostgreSQL dalam satu pod -- setup yang umum untuk API development:
+Sekarang contoh yang lebih real-world. Misalnya mau jalankan backend service dengan PostgreSQL dalam satu pod: setup yang umum untuk API development:
 
 ```yaml
 # backend-pod.yaml
@@ -178,7 +178,7 @@ Jalankan:
 $ podman kube play backend-pod.yaml
 ```
 
-Karena container dalam satu pod berbagi network namespace yang sama, backend service bisa akses PostgreSQL via `127.0.0.1:5432` -- sama persis seperti behaviour di Kubernetes. Test dengan curl:
+Karena container dalam satu pod berbagi network namespace yang sama, backend service bisa akses PostgreSQL via `127.0.0.1:5432`, sama persis seperti behaviour di Kubernetes. Test dengan curl:
 
 ```bash
 $ curl http://localhost:3000
@@ -279,17 +279,17 @@ Tantangan pertama adalah **port mapping yang berbeda dari Kubernetes**. Di Kuber
 
 Tantangan kedua adalah **tidak semua field di Kubernetes YAML di-support**. Resource seperti Service, Ingress, dan HPA tidak bisa dijalankan di Podman karena komponen-komponen tersebut butuh cluster. Jadi `podman kube play` cocoknya untuk test pod dan container, bukan untuk simulasi full cluster.
 
-Satu hal lagi -- **image path harus lengkap**. Berbeda dengan Kubernetes yang punya default registry (`docker.io`), Podman lebih strict soal image reference. Kalau cuma tulis `nginx:alpine` tanpa prefix registry, Podman bisa bingung mau pull dari mana.
+Satu hal lagi, **image path harus lengkap**. Berbeda dengan Kubernetes yang punya default registry (`docker.io`), Podman lebih strict soal image reference. Kalau cuma tulis `nginx:alpine` tanpa prefix registry, Podman bisa bingung mau pull dari mana.
 
 ## Insight dan Pembelajaran
 
 Beberapa hal yang bisa diambil dari penggunaan `podman kube play`:
 
-- **Selalu pakai full image path** -- gunakan `docker.io/library/nginx:alpine` daripada cuma `nginx:alpine` untuk menghindari ambiguitas registry.
-- **Gunakan `--down` untuk cleanup** -- jangan manual `podman pod rm`, pakai `podman kube play --down` supaya semua resource yang dibuat dari manifest tersebut ter-cleanup dengan benar.
-- **Manfaatkan `kube generate`** -- kalau tidak hafal format YAML Kubernetes, bikin container biasa dulu lalu generate YAML-nya. Ini shortcut yang sangat membantu.
-- **Satu manifest bisa dipakai dua arah** -- develop dan test di local dengan `podman kube play`, kalau sudah oke tinggal `kubectl apply` ke cluster. Manifest-nya sama, tidak perlu konversi.
-- **Cocok untuk CI/CD pipeline** -- di environment CI yang tidak punya Kubernetes, `podman kube play` bisa jadi alternatif untuk test container dari manifest yang sama.
+- **Selalu pakai full image path**: gunakan `docker.io/library/nginx:alpine` daripada cuma `nginx:alpine` untuk menghindari ambiguitas registry.
+- **Gunakan `--down` untuk cleanup**: jangan manual `podman pod rm`, pakai `podman kube play --down` supaya semua resource yang dibuat dari manifest tersebut ter-cleanup dengan benar.
+- **Manfaatkan `kube generate`**: kalau tidak hafal format YAML Kubernetes, bikin container biasa dulu lalu generate YAML-nya. Ini shortcut yang sangat membantu.
+- **Satu manifest bisa dipakai dua arah**: develop dan test di local dengan `podman kube play`, kalau sudah oke tinggal `kubectl apply` ke cluster. Manifest-nya sama, tidak perlu konversi.
+- **Cocok untuk CI/CD pipeline**: di environment CI yang tidak punya Kubernetes, `podman kube play` bisa jadi alternatif untuk test container dari manifest yang sama.
 
 ## Penutup
 
@@ -297,4 +297,4 @@ Beberapa hal yang bisa diambil dari penggunaan `podman kube play`:
 
 ## Referensi
 
-- [Podman - podman-kube-play(1)](https://docs.podman.io/en/latest/markdown/podman-kube-play.1.html) -- Diakses pada 2026-04-11
+- [Podman - podman-kube-play(1)](https://docs.podman.io/en/latest/markdown/podman-kube-play.1.html), diakses pada 2026-04-11

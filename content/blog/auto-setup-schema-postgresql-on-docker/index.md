@@ -12,16 +12,16 @@ tags = ['postgresql', 'docker', 'docker-compose']
 
 Setiap kali mulai project baru atau onboard developer lain, langkah yang paling sering terlewat adalah setup database. Pull repo, jalankan `docker compose up`, lalu baru sadar tabel belum ada karena belum ada yang jalankan migration script. Akhirnya harus masuk ke container, konek ke **PostgreSQL**, lalu jalankan SQL satu per satu secara manual.
 
-Saya ingin setup yang benar-benar zero effort -- `docker compose up` dan database langsung siap pakai lengkap dengan schema, extension, bahkan seed data kalau perlu. Ternyata **Docker** image resmi PostgreSQL sudah menyediakan mekanisme untuk ini lewat direktori `/docker-entrypoint-initdb.d/`.
+Saya ingin setup yang benar-benar zero effort tinggal `docker compose up` dan database langsung siap pakai lengkap dengan schema, extension, bahkan seed data kalau perlu. Ternyata **Docker** image resmi PostgreSQL sudah menyediakan mekanisme untuk ini lewat direktori `/docker-entrypoint-initdb.d/`.
 
 ## Permasalahan
 
 Beberapa masalah yang saya hadapi saat mengandalkan setup database manual:
 
-- **Developer lupa jalankan migration** -- setelah clone repo dan `docker compose up`, aplikasi langsung error karena tabel belum ada dan developer baru bingung harus ngapain
-- **Schema tidak konsisten antar developer** -- ada yang sudah apply migration terbaru, ada yang belum, debugging jadi susah karena skema-nya beda-beda
-- **Rebuild container berarti setup ulang** -- setiap kali volume dihapus atau environment di-reset, harus jalankan migration manual lagi dari awal
-- **Tidak ada single source of truth** -- migration script ada tapi tidak otomatis dijalankan, jadi developer harus tahu urutannya dan menjalankan manual
+- **Developer lupa jalankan migration**: setelah clone repo dan `docker compose up`, aplikasi langsung error karena tabel belum ada dan developer baru bingung harus ngapain
+- **Schema tidak konsisten antar developer**: ada yang sudah apply migration terbaru, ada yang belum, debugging jadi susah karena skema-nya beda-beda
+- **Rebuild container berarti setup ulang**: setiap kali volume dihapus atau environment direset, harus jalankan migration manual lagi dari awal
+- **Tidak ada single source of truth**: migration script ada tapi tidak otomatis dijalankan, jadi developer harus tahu urutannya dan menjalankan manual
 
 ## Pendekatan Solusi
 
@@ -51,7 +51,7 @@ project/
     └── 03-data-seeder.sql
 ```
 
-Direktori `migrations/` berisi file SQL yang akan di-mount ke container. File dieksekusi secara **alfanumeris** -- makanya pakai prefix angka untuk mengontrol urutan eksekusi.
+Direktori `migrations/` berisi file SQL yang akan di-mount ke container. File dieksekusi secara **alfanumeris**, makanya pakai prefix angka untuk mengontrol urutan eksekusi.
 
 ### Membuat File SQL Migrasi
 
@@ -98,7 +98,7 @@ VALUES ('admin', 'admin@example.com', crypt('password123', gen_salt('bf')))
 ON CONFLICT (username) DO NOTHING;
 ```
 
-Setiap file menggunakan `IF NOT EXISTS` dan `ON CONFLICT` supaya aman kalau dijalankan ulang -- meskipun dalam konteks `docker-entrypoint-initdb.d` script hanya dijalankan sekali. Perhatikan juga bahwa `03-data-seeder.sql` menggunakan fungsi `crypt()` dari extension `pgcrypto` -- makanya `01-init.sql` harus dieksekusi lebih dulu supaya extension sudah aktif saat seed data dijalankan.
+Setiap file menggunakan `IF NOT EXISTS` dan `ON CONFLICT` supaya aman kalau dijalankan ulang, meskipun dalam konteks `docker-entrypoint-initdb.d` script hanya dijalankan sekali. Perhatikan juga bahwa `03-data-seeder.sql` menggunakan fungsi `crypt()` dari extension `pgcrypto`, makanya `01-init.sql` harus dieksekusi lebih dulu supaya extension sudah aktif saat seed data dijalankan.
 
 ### Menyiapkan Docker Compose
 
@@ -186,11 +186,11 @@ Satu hal lagi yang sempat bikin bingung adalah urutan eksekusi file. PostgreSQL 
 
 ## Insight dan Pembelajaran
 
-- **Built-in feature sering sudah cukup** -- sebelum install tool tambahan, cek dulu apakah image resmi sudah menyediakan mekanisme yang dibutuhkan, `docker-entrypoint-initdb.d` adalah contoh fitur yang sering terlewat
-- **Prefix angka untuk kontrol urutan** -- jangan andalkan nama file untuk urutan eksekusi, pakai prefix numerik supaya urutannya eksplisit dan predictable
-- **Pahami lifecycle volume Docker** -- banyak masalah debugging bisa dihindari kalau paham bahwa init script hanya jalan saat volume kosong, bukan setiap container restart
-- **Pisahkan concern di file terpisah** -- satu file besar untuk semua migration memang bisa, tapi file terpisah per concern (extension, schema, seed) lebih mudah di-maintain dan di-debug
-- **Read-only mount untuk safety** -- mount migration file dengan flag `:ro` supaya tidak ada proses di container yang bisa mengubah file migration
+- **Built-in feature sering sudah cukup**: sebelum install tool tambahan, cek dulu apakah image resmi sudah menyediakan mekanisme yang dibutuhkan, `docker-entrypoint-initdb.d` adalah contoh fitur yang sering terlewat
+- **Prefix angka untuk kontrol urutan**: jangan andalkan nama file untuk urutan eksekusi, pakai prefix numerik supaya urutannya eksplisit dan predictable
+- **Pahami lifecycle volume Docker**: banyak masalah debugging bisa dihindari kalau paham bahwa init script hanya jalan saat volume kosong, bukan setiap container restart
+- **Pisahkan concern di file terpisah**: satu file besar untuk semua migration memang bisa, tapi file terpisah per concern (extension, schema, seed) lebih mudah di-maintain dan di-debug
+- **Read-only mount untuk safety**: mount migration file dengan flag `:ro` supaya tidak ada proses di container yang bisa mengubah file migration
 
 ## Penutup
 
@@ -198,5 +198,5 @@ Mekanisme `docker-entrypoint-initdb.d` adalah cara paling simpel untuk mengotoma
 
 ## Referensi
 
-- [Docker Official Images - PostgreSQL](https://github.com/docker-library/docs/blob/master/postgres/README.md) -- Diakses pada 2026-06-03
-- [PostgreSQL Docker Hub](https://hub.docker.com/_/postgres) -- Diakses pada 2026-06-03
+- [Docker Official Images - PostgreSQL](https://github.com/docker-library/docs/blob/master/postgres/README.md), diakses pada 2026-06-03
+- [PostgreSQL Docker Hub](https://hub.docker.com/_/postgres), diakses pada 2026-06-03

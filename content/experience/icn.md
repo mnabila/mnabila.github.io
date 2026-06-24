@@ -24,7 +24,7 @@ tasks = [
 
 ## Overview
 
-Worked as a Backend Engineer at PT. Insan Cendekia Nusantara, building backend services for digital payment and education technology products using Go and JavaScript. Developed two core products from scratch — a payment processing platform and an e-learning system — handling everything from API design to deployment with Docker and Nginx.
+Worked as a Backend Engineer at PT. Insan Cendekia Nusantara, building backend services for digital payment and education technology products using Go and JavaScript. Developed two core products from scratch: a payment processing platform and an e-learning system, handling everything from API design to deployment with Docker and Nginx.
 
 ## Key Projects
 

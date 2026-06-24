@@ -3,7 +3,7 @@ draft = false
 date = '2025-08-24T11:54:13+07:00'
 title = 'Software Engineer'
 type = 'skill'
-description = 'Backend-focused development in Go and TypeScript — APIs, services, databases, and the occasional frontend when the project needs it.'
+description = 'Backend-focused development in Go and TypeScript and the occasional frontend when the project needs it.'
 languages = ['golang', 'javascript', 'typescript', 'sql', 'rust']
 tools = [
   'git',
@@ -36,6 +36,6 @@ Most of my day-to-day is writing Go and TypeScript for backend services. SQL tie
 
 I split code into layers (controllers, services, data access) so I can change one part without touching everything else. It sounds obvious, but it matters when you're maintaining several services at once.
 
-In Go, I lean on the type system to catch problems at compile time. In TypeScript, I use Zod to validate at the API boundary and trust the types from there no extra nil checks deep inside the app where the data is already known to be valid.
+In Go, I lean on the type system to catch problems at compile time. In TypeScript, I use Zod to validate at the API boundary and trust the types from there with no extra nil checks deep inside the app where the data is already known to be valid.
 
 I keep commit history clean, use meaningful branch names, and write PRs that someone can review by reading the diff.

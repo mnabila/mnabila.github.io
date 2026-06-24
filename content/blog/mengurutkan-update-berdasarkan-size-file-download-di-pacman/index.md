@@ -11,7 +11,7 @@ tags = ['pacman', 'update', 'bash']
 
 ## Latar Belakang
 
-Sebagai pengguna Archlinux, rutinitas update sistem adalah sesuatu yang idealnya dilakukan secara berkala. Archlinux adalah rolling release -- artinya update datang terus-menerus, bukan dalam siklus rilis besar seperti Ubuntu atau Fedora. Menunda update terlalu lama justru meningkatkan risiko dependency conflict dan breaking changes yang menumpuk.
+Sebagai pengguna Archlinux, rutinitas update sistem adalah sesuatu yang idealnya dilakukan secara berkala. Archlinux adalah rolling release, artinya update datang terus-menerus, bukan dalam siklus rilis besar seperti Ubuntu atau Fedora. Menunda update terlalu lama justru meningkatkan risiko dependency conflict dan breaking changes yang menumpuk.
 
 Masalahnya, koneksi internet yang saya gunakan saat itu sangat terbatas dari sisi bandwidth. Proses `pacman -Syu` yang harus mengunduh ratusan megabyte atau bahkan gigabyte setelah lama tidak update menjadi beban tersendiri buat pengguna kouta internet seperti saya. 
 
@@ -63,7 +63,7 @@ $ sudo pacman -Su
 
 ## Tantangan yang Dihadapi
 
-Tantangan pertama ada pada pemilihan metode yang tepat. Metode query package ternyata jauh lebih lambat karena `pacman -Qui` harus menampilkan seluruh informasi tiap paket -- termasuk deskripsi, dependency, dan metadata lain -- lalu diolah menggunakan `awk`. Ini terasa overkill dan boros waktu, terutama di sistem dengan ratusan paket terinstall.
+Tantangan pertama ada pada pemilihan metode yang tepat. Metode query package ternyata jauh lebih lambat karena `pacman -Qui` harus menampilkan seluruh informasi tiap paket, termasuk deskripsi, dependency, dan metadata lain, lalu diolah menggunakan `awk`. Ini terasa overkill dan boros waktu, terutama di sistem dengan ratusan paket terinstall.
 
 Metode update package jauh lebih efisien karena `pacman -Su --print-format` langsung memberikan informasi yang dibutuhkan tanpa overhead parsing informasi yang tidak relevan.
 
@@ -85,5 +85,5 @@ Metode update package terbukti menjadi solusi yang paling efisien untuk kebutuha
 
 ## Referensi
 
-- [Wiki Archlinux - Pacman Tips and Tricks](https://wiki.archlinux.org/title/Pacman/Tips_and_tricks) -- Diakses pada 2022-04-26
-- `man pacman` -- Diakses pada 2022-04-26
+- [Wiki Archlinux - Pacman Tips and Tricks](https://wiki.archlinux.org/title/Pacman/Tips_and_tricks), diakses pada 2022-04-26
+- `man pacman`, diakses pada 2022-04-26

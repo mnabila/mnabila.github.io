@@ -10,19 +10,19 @@ tags = ['rabbitmq', 'docker', 'docker-compose', 'high-availability', 'ubuntu']
 
 ## Latar Belakang
 
-Beberapa service microservices yang saya kelola menggunakan **RabbitMQ** sebagai message broker. Selama ini RabbitMQ hanya berjalan di satu server -- satu instance, satu node, tanpa redundansi apapun. Selama trafik normal dan server stabil, tidak ada masalah. Tapi begitu server mengalami gangguan -- entah restart mendadak, update OS, atau network issue -- semua service yang bergantung pada RabbitMQ ikut terdampak. Queue tidak bisa diakses, message menumpuk di producer, dan consumer berhenti total.
+Beberapa service microservices yang saya kelola menggunakan **RabbitMQ** sebagai message broker. Selama ini RabbitMQ hanya berjalan di satu server, satu instance, satu node, tanpa redundansi apapun. Selama trafik normal dan server stabil, tidak ada masalah. Tapi begitu server mengalami gangguan, entah restart mendadak, update OS, atau network issue, semua service yang bergantung pada RabbitMQ ikut terdampak. Queue tidak bisa diakses, message menumpuk di producer, dan consumer berhenti total.
 
-Situasi ini klasik: **single point of failure**. Satu komponen down, seluruh pipeline messaging lumpuh. Saya perlu setup RabbitMQ yang punya redundansi -- kalau satu node mati, message tetap aman dan service tetap bisa beroperasi.
+Situasi ini klasik: **single point of failure**. Satu komponen down, seluruh pipeline messaging lumpuh. Saya perlu setup RabbitMQ yang punya redundansi, kalau satu node mati, message tetap aman dan service tetap bisa beroperasi.
 
 ## Permasalahan
 
 Mengandalkan satu instance RabbitMQ untuk seluruh messaging microservices mulai jadi risiko:
 
-- **Single point of failure** -- satu server down berarti seluruh message broker tidak bisa diakses, semua service yang bergantung padanya ikut berhenti
-- **Tidak ada replikasi message** -- queue dan message hanya ada di satu node, kalau node itu mati sebelum consumer sempat proses, message hilang
-- **Tidak ada failover otomatis** -- ketika server bermasalah, harus manual restart dan pastikan semua service reconnect
-- **Kapasitas terbatas di satu server** -- connection dari banyak service numpuk di satu node, berpotensi bottleneck saat trafik tinggi
-- **Monitoring terpusat di satu titik** -- **Management UI** hanya ada di satu server, kalau server itu down tidak bisa monitoring sama sekali
+- **Single point of failure**: satu server down berarti seluruh message broker tidak bisa diakses, semua service yang bergantung padanya ikut berhenti
+- **Tidak ada replikasi message**: queue dan message hanya ada di satu node, kalau node itu mati sebelum consumer sempat proses, message hilang
+- **Tidak ada failover otomatis**: ketika server bermasalah, harus manual restart dan pastikan semua service reconnect
+- **Kapasitas terbatas di satu server**: connection dari banyak service numpuk di satu node, berpotensi bottleneck saat trafik tinggi
+- **Monitoring terpusat di satu titik**: **Management UI** hanya ada di satu server, kalau server itu down tidak bisa monitoring sama sekali
 
 ## Pendekatan Solusi
 
@@ -37,11 +37,11 @@ Ada beberapa cara untuk mencapai high availability pada RabbitMQ:
 
 Saya pilih **RabbitMQ Cluster dengan Quorum Queue** karena ini adalah mekanisme replikasi yang direkomendasikan RabbitMQ untuk high availability.
 
-**Quorum Queue** adalah tipe queue di RabbitMQ yang mereplikasi data ke beberapa node sekaligus menggunakan **Raft consensus protocol**. Cara kerjanya -- setiap message yang masuk tidak langsung dianggap **tersimpan** sampai majority node (lebih dari setengah) mengonfirmasi bahwa mereka sudah menerima salinan message tersebut. Dengan 3 node, majority berarti minimal 2 node harus mengonfirmasi. Kalau 1 node mati, 2 node yang tersisa masih memenuhi majority sehingga queue tetap bisa menerima dan mengirim message tanpa gangguan.
+**Quorum Queue** adalah tipe queue di RabbitMQ yang mereplikasi data ke beberapa node sekaligus menggunakan **Raft consensus protocol**. Cara kerjanya: setiap message yang masuk tidak langsung dianggap **tersimpan** sampai majority node (lebih dari setengah) mengonfirmasi bahwa mereka sudah menerima salinan message tersebut. Dengan 3 node, majority berarti minimal 2 node harus mengonfirmasi. Kalau 1 node mati, 2 node yang tersisa masih memenuhi majority sehingga queue tetap bisa menerima dan mengirim message tanpa gangguan.
 
 Berbeda dengan classic queue yang hanya menyimpan message di satu node (dan hilang kalau node itu mati), quorum queue menjamin message tetap ada selama majority node masih hidup. Ini yang membuat quorum queue cocok untuk skenario high availability.
 
-Arsitektur yang dibangun -- 1 node per VM, masing-masing VM terpisah sehingga kehilangan VM manapun tidak mengganggu operasional cluster:
+Arsitektur yang dibangun, 1 node per VM, masing-masing VM terpisah sehingga kehilangan VM manapun tidak mengganggu operasional cluster:
 
 | Komponen | Hostname | VM | IP Address | Peran |
 |----------|----------|----|------------|-------|
@@ -53,10 +53,10 @@ Port yang digunakan (sama di ketiga VM):
 
 | Port | Fungsi |
 |------|--------|
-| `5672` | AMQP -- protokol utama untuk producer dan consumer |
-| `15672` | Management UI -- web dashboard untuk monitoring dan administrasi |
-| `25672` | Cluster Communication -- komunikasi internal antar node cluster |
-| `4369` | EPMD (Erlang Port Mapper Daemon) -- service discovery antar node Erlang |
+| `5672` | AMQP, protokol utama untuk producer dan consumer |
+| `15672` | Management UI, web dashboard untuk monitoring dan administrasi |
+| `25672` | Cluster Communication, komunikasi internal antar node cluster |
+| `4369` | EPMD (Erlang Port Mapper Daemon), service discovery antar node Erlang |
 
 ## Implementasi Teknis
 
@@ -117,7 +117,7 @@ $ openssl rand -hex 32
 a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2
 ```
 
-Simpan nilai ini -- akan digunakan di Docker Compose semua node.
+Simpan nilai ini, akan digunakan di Docker Compose semua node.
 
 > **Penting:** Erlang cookie bukan password untuk client. Ini khusus untuk autentikasi antar node Erlang/OTP dalam cluster. Jaga kerahasiaannya karena siapa pun yang punya cookie ini bisa join ke cluster.
 
@@ -185,7 +185,7 @@ Untuk **VM 3**, ganti menjadi:
       RABBITMQ_NODENAME: rabbit@rabbitmq-03
 ```
 
-Sisanya sama persis -- port, volume, `extra_hosts`, environment variable lainnya tidak berubah.
+Sisanya sama persis, port, volume, `extra_hosts`, environment variable lainnya tidak berubah.
 
 Penjelasan konfigurasi penting:
 
@@ -195,10 +195,10 @@ Penjelasan konfigurasi penting:
 | `RABBITMQ_ERLANG_COOKIE` | Shared secret untuk autentikasi antar node cluster |
 | `RABBITMQ_NODENAME` | Nama node dalam format `rabbit@hostname`, digunakan untuk identifikasi di cluster |
 | `extra_hosts` | Menambahkan entry DNS di dalam container supaya bisa resolve hostname node lain |
-| `rabbitmq_data` | Named volume untuk persist data RabbitMQ -- queue, message, konfigurasi cluster |
+| `rabbitmq_data` | Named volume untuk persist data RabbitMQ: queue, message, konfigurasi cluster |
 | `restart: unless-stopped` | Container otomatis restart kecuali di-stop manual |
 
-> **Warning:** Jangan gunakan `restart: always` untuk RabbitMQ cluster. Kalau ada masalah cluster yang perlu investigasi, container yang terus restart bisa memperparah situasi -- misalnya node yang terus join-leave cluster secara berulang.
+> **Warning:** Jangan gunakan `restart: always` untuk RabbitMQ cluster. Kalau ada masalah cluster yang perlu investigasi, container yang terus restart bisa memperparah situasi. Misalnya node yang terus join-leave cluster secara berulang.
 
 ### Menjalankan RabbitMQ di Semua VM
 
@@ -264,7 +264,7 @@ Penjelasan setiap command:
 | `join_cluster` | Bergabung ke cluster yang sudah ada di node target |
 | `start_app` | Menjalankan kembali RabbitMQ application setelah join cluster |
 
-> **Penting:** `rabbitmqctl reset` akan **menghapus semua data** di node tersebut -- queue, message, user, vhost. Pastikan node yang di-reset memang node baru atau node yang tidak punya data penting.
+> **Penting:** `rabbitmqctl reset` akan **menghapus semua data** di node tersebut: queue, message, user, vhost. Pastikan node yang di-reset memang node baru atau node yang tidak punya data penting.
 
 ### Verifikasi Cluster
 
@@ -301,9 +301,9 @@ Node: rabbit@rabbitmq-03, status: not under maintenance
 
 Yang perlu dicek:
 
-- **Disk Nodes** -- ketiga node terdaftar sebagai disk node (data persisten ke disk)
-- **Running Nodes** -- ketiga node dalam status running
-- **Maintenance status** -- tidak ada node yang sedang maintenance
+- **Disk Nodes**: ketiga node terdaftar sebagai disk node (data persisten ke disk)
+- **Running Nodes**: ketiga node dalam status running
+- **Maintenance status**: tidak ada node yang sedang maintenance
 
 Kalau ada node yang tidak muncul di Running Nodes, cek koneksi network dan pastikan Erlang cookie-nya sama.
 
@@ -449,20 +449,20 @@ Ketiga node seharusnya kembali muncul di Running Nodes.
 
 ## Tantangan yang Dihadapi
 
-Tantangan pertama yang cukup membingungkan adalah **hostname resolution antar container di VM berbeda**. RabbitMQ cluster bergantung pada Erlang distribution protocol yang menggunakan hostname untuk identifikasi node. Container Docker secara default punya hostname sendiri yang terisolasi dan tidak bisa resolve hostname container di VM lain. Konfigurasi `extra_hosts` di Docker Compose menyelesaikan masalah ini dari sisi container, tapi kalau network interface antar VM belum terhubung dengan benar, `rabbitmqctl join_cluster` tetap gagal dengan error `unable to connect to node`. Yang membingungkan -- error ini juga muncul kalau Erlang cookie tidak match, jadi harus cek dua hal sekaligus.
+Tantangan pertama yang cukup membingungkan adalah **hostname resolution antar container di VM berbeda**. RabbitMQ cluster bergantung pada Erlang distribution protocol yang menggunakan hostname untuk identifikasi node. Container Docker secara default punya hostname sendiri yang terisolasi dan tidak bisa resolve hostname container di VM lain. Konfigurasi `extra_hosts` di Docker Compose menyelesaikan masalah ini dari sisi container, tapi kalau network interface antar VM belum terhubung dengan benar, `rabbitmqctl join_cluster` tetap gagal dengan error `unable to connect to node`. Yang membingungkan, error ini juga muncul kalau Erlang cookie tidak match, jadi harus cek dua hal sekaligus.
 
 **Erlang cookie mismatch** juga jadi masalah yang tidak langsung obvious. RabbitMQ menyimpan Erlang cookie di `/var/lib/rabbitmq/.erlang.cookie` di dalam container. Kalau volume sudah pernah digunakan dengan cookie yang berbeda, cookie dari environment variable bisa di-ignore karena file cookie yang ada di volume lebih diprioritaskan. Solusinya adalah pastikan volume bersih sebelum deploy pertama kali, atau hapus file `.erlang.cookie` di volume kalau perlu ganti cookie.
 
-Satu hal lagi -- **Docker Compose tidak menangani orchestration lintas host**. Setiap VM menjalankan Docker Compose sendiri-sendiri tanpa tahu keberadaan container di VM lain. Proses join cluster harus dilakukan manual setelah semua container running. Kalau ada node yang restart dan gagal rejoin otomatis, perlu masuk ke container dan join ulang secara manual. Untuk production yang butuh self-healing, pertimbangkan Docker Swarm atau Kubernetes.
+Satu hal lagi, **Docker Compose tidak menangani orchestration lintas host**. Setiap VM menjalankan Docker Compose sendiri-sendiri tanpa tahu keberadaan container di VM lain. Proses join cluster harus dilakukan manual setelah semua container running. Kalau ada node yang restart dan gagal rejoin otomatis, perlu masuk ke container dan join ulang secara manual. Untuk production yang butuh self-healing, pertimbangkan Docker Swarm atau Kubernetes.
 
 ## Insight dan Pembelajaran
 
-- **RabbitMQ cluster bukan database replication** -- cluster RabbitMQ berbagi metadata (exchange, binding, user) secara otomatis, tapi message di classic queue hanya ada di satu node. Untuk replikasi message, harus pakai quorum queue secara eksplisit
-- **1 node per VM adalah distribusi ideal** -- kehilangan VM manapun tidak mengganggu cluster karena 2 node yang tersisa masih memenuhi majority. Menaruh lebih dari 1 node di VM yang sama mengurangi efektivitas fault tolerance
-- **Erlang cookie itu krusial tapi mudah terlewat** -- satu karakter berbeda di cookie dan cluster gagal terbentuk. Selalu generate cookie sekali dan distribusikan ke semua node, jangan biarkan masing-masing node generate sendiri
-- **Persistent volume bukan opsional** -- tanpa volume, restart container berarti kehilangan semua data -- queue definition, message, cluster membership. Node yang restart tanpa volume akan dianggap node baru dan perlu join cluster ulang
-- **Management UI bukan mekanisme replikasi** -- Management UI hanya untuk monitoring dan administrasi. Replikasi data ditangani oleh Erlang distribution protocol dan Raft consensus, bukan oleh Management plugin
-- **Konfigurasi identik di semua node** -- dengan 1 node per VM, Docker Compose di setiap VM nyaris sama. Yang berbeda hanya hostname dan node name, sehingga mudah di-template dan di-automate
+- **RabbitMQ cluster bukan database replication**: cluster RabbitMQ berbagi metadata (exchange, binding, user) secara otomatis, tapi message di classic queue hanya ada di satu node. Untuk replikasi message, harus pakai quorum queue secara eksplisit
+- **1 node per VM adalah distribusi ideal**: kehilangan VM manapun tidak mengganggu cluster karena 2 node yang tersisa masih memenuhi majority. Menaruh lebih dari 1 node di VM yang sama mengurangi efektivitas fault tolerance
+- **Erlang cookie itu krusial tapi mudah terlewat**: satu karakter berbeda di cookie dan cluster gagal terbentuk. Selalu generate cookie sekali dan distribusikan ke semua node, jangan biarkan masing-masing node generate sendiri
+- **Persistent volume bukan opsional**: tanpa volume, restart container berarti kehilangan semua data, queue definition, message, cluster membership. Node yang restart tanpa volume akan dianggap node baru dan perlu join cluster ulang
+- **Management UI bukan mekanisme replikasi**: Management UI hanya untuk monitoring dan administrasi. Replikasi data ditangani oleh Erlang distribution protocol dan Raft consensus, bukan oleh Management plugin
+- **Konfigurasi identik di semua node**: dengan 1 node per VM, Docker Compose di setiap VM nyaris sama. Yang berbeda hanya hostname dan node name, sehingga mudah di-template dan di-automate
 
 ## Penutup
 
@@ -470,7 +470,7 @@ RabbitMQ cluster 3 node dengan quorum queue di 3 VM terpisah memberikan high ava
 
 ## Referensi
 
-- [RabbitMQ Clustering Guide](https://www.rabbitmq.com/docs/clustering) -- Diakses pada 2026-06-20
-- [RabbitMQ Quorum Queues](https://www.rabbitmq.com/docs/quorum-queues) -- Diakses pada 2026-06-20
-- [RabbitMQ Docker Official Image](https://hub.docker.com/_/rabbitmq) -- Diakses pada 2026-06-20
-- [Deploying RabbitMQ with Docker](https://www.rabbitmq.com/docs/docker) -- Diakses pada 2026-06-20
+- [RabbitMQ Clustering Guide](https://www.rabbitmq.com/docs/clustering), diakses pada2026-06-20
+- [RabbitMQ Quorum Queues](https://www.rabbitmq.com/docs/quorum-queues), diakses pada2026-06-20
+- [RabbitMQ Docker Official Image](https://hub.docker.com/_/rabbitmq), diakses pada2026-06-20
+- [Deploying RabbitMQ with Docker](https://www.rabbitmq.com/docs/docker), diakses pada2026-06-20

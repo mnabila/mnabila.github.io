@@ -3,7 +3,7 @@ draft = false
 date = '2025-08-24T11:54:13+07:00'
 title = 'QA Engineer'
 type = 'skill'
-description = 'Building test automation infrastructure with Playwright and Appium — turning manual QA workflows into API-driven pipelines.'
+description = 'Building test automation infrastructure with Playwright and Appium for turning manual QA workflows into API-driven pipelines.'
 languages = ['javascript', 'golang']
 tools = [
   'appium',

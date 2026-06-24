@@ -16,10 +16,10 @@ Bootloader adalah komponen pertama yang jalan saat komputer dinyalakan tugasnya 
 
 Beberapa alasan kenapa saya beralih dari GRUB ke systemd-boot:
 
-- **GRUB terlalu complex untuk single OS** -- fitur seperti theming, submenu, dan scripting di `grub.cfg` itu tidak terpakai kalau cuma boot satu OS
-- **Config auto-generated susah dibaca** -- setiap perubahan kernel parameter harus lewat `grub-mkconfig` yang generate file config ratusan baris yang susah di-debug manual
-- **Overhead yang tidak perlu** -- GRUB punya layer abstraksi tambahan yang sebenarnya tidak dibutuhkan untuk setup sederhana
-- **Maintenance ribet** -- setiap update kernel atau perubahan parameter, harus regenerate config dan berharap hasilnya benar
+- **GRUB terlalu complex untuk single OS**: fitur seperti theming, submenu, dan scripting di `grub.cfg` itu tidak terpakai kalau cuma boot satu OS
+- **Config auto-generated susah dibaca**: setiap perubahan kernel parameter harus lewat `grub-mkconfig` yang generate file config ratusan baris yang susah di-debug manual
+- **Overhead yang tidak perlu**: GRUB punya layer abstraksi tambahan yang sebenarnya tidak dibutuhkan untuk setup sederhana
+- **Maintenance ribet**: setiap update kernel atau perubahan parameter, harus regenerate config dan berharap hasilnya benar
 
 Yang dibutuhkan adalah bootloader yang simpel, cepat, dan konfigurasinya bisa diedit langsung tanpa tool perantara.
 
@@ -36,10 +36,10 @@ Ada beberapa pilihan bootloader untuk sistem UEFI:
 
 Saya memilih **systemd-boot** karena:
 
-1. **Sudah ada di sistem** -- tidak perlu install package apapun, sudah bawaan dari `systemd`
-2. **Konfigurasi readable** -- file config berupa plain text yang mudah diedit dan dipahami
-3. **Update otomatis** -- bisa di-setup untuk auto-update lewat systemd service
-4. **Cukup untuk kebutuhan** -- boot satu OS dengan opsi fallback, itu saja yang dibutuhkan
+1. **Sudah ada di sistem**: tidak perlu install package apapun, sudah bawaan dari `systemd`
+2. **Konfigurasi readable**: file config berupa plain text yang mudah diedit dan dipahami
+3. **Update otomatis**: bisa di-setup untuk auto-update lewat systemd service
+4. **Cukup untuk kebutuhan**: boot satu OS dengan opsi fallback, itu saja yang dibutuhkan
 
 > **Note:** systemd-boot hanya bisa digunakan pada sistem **UEFI**. Kalau masih pakai BIOS/Legacy boot, GRUB tetap jadi pilihan utama.
 
@@ -91,7 +91,7 @@ Penjelasan masing-masing package:
 
 | Package | Fungsi |
 |---------|--------|
-| `linux-zen` | Kernel yang sudah di-patch untuk responsiveness lebih baik di desktop -- include scheduling optimization dan lower latency |
+| `linux-zen` | Kernel yang sudah di-patch untuk responsiveness lebih baik di desktop, include scheduling optimization dan lower latency |
 | `linux-zen-headers` | Header kernel, dibutuhkan untuk compile module pihak ketiga (misalnya NVIDIA DKMS) |
 
 Jangan lupa install microcode sesuai CPU:
@@ -145,7 +145,7 @@ Penjelasan tiap parameter:
 | `default` | `arch-zen.conf` | Entry yang di-boot secara default |
 | `timeout` | `3` | Tampilkan menu selama 3 detik sebelum auto-boot |
 | `console-mode` | `max` | Gunakan resolusi konsol tertinggi yang tersedia |
-| `editor` | `no` | Nonaktifkan editing kernel parameter di menu boot -- mencegah siapa saja dengan akses fisik mengubah parameter boot |
+| `editor` | `no` | Nonaktifkan editing kernel parameter di menu boot; mencegah siapa saja dengan akses fisik mengubah parameter boot |
 
 Set `timeout 0` kalau mau langsung boot tanpa menu. Menu tetap bisa diakses dengan menekan **Space** saat boot. Bisa juga set `default @saved` kalau ingin systemd-boot mengingat entry terakhir yang di-boot.
 
@@ -169,9 +169,9 @@ Penjelasan tiap baris:
 |-------|-----------|
 | `title` | Teks yang ditampilkan di menu boot |
 | `linux` | Path ke kernel image, relatif terhadap root ESP |
-| `initrd` (pertama) | Microcode CPU -- **harus sebelum** initramfs |
+| `initrd` (pertama) | Microcode CPU, **harus sebelum** initramfs |
 | `initrd` (kedua) | Initramfs image |
-| `options` | Kernel parameter -- minimal butuh `root=` untuk menunjuk partisi root |
+| `options` | Kernel parameter, minimal butuh `root=` untuk menunjuk partisi root |
 
 Untuk mendapatkan UUID partisi root:
 
@@ -179,7 +179,7 @@ Untuk mendapatkan UUID partisi root:
 $ blkid /dev/sdXY
 ```
 
-Ganti `amd-ucode.img` dengan `intel-ucode.img` kalau pakai Intel. Path file (`/vmlinuz-linux-zen`, `/initramfs-linux-zen.img`) itu relatif terhadap root ESP -- jadi kalau ESP di-mount di `/boot`, file `/boot/vmlinuz-linux-zen` ditulis sebagai `/vmlinuz-linux-zen` di entry config.
+Ganti `amd-ucode.img` dengan `intel-ucode.img` kalau pakai Intel. Path file (`/vmlinuz-linux-zen`, `/initramfs-linux-zen.img`) itu relatif terhadap root ESP. Jadi kalau ESP di-mount di `/boot`, file `/boot/vmlinuz-linux-zen` ditulis sebagai `/vmlinuz-linux-zen` di entry config.
 
 Template entry juga tersedia di `/usr/share/systemd/bootctl/arch.conf` sebagai referensi.
 
@@ -195,7 +195,7 @@ initrd  /initramfs-linux-zen-fallback.img
 options root=UUID=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx rw
 ```
 
-Entry fallback menggunakan initramfs yang berisi **semua** module -- berguna kalau initramfs default gagal boot karena module yang hilang.
+Entry fallback menggunakan initramfs yang berisi **semua** module, berguna kalau initramfs default gagal boot karena module yang hilang.
 
 ### Verifikasi Konfigurasi
 
@@ -225,29 +225,29 @@ Service ini menjalankan `bootctl update` setiap boot, memastikan EFI binary sela
 
 ## Tantangan yang Dihadapi
 
-Tantangan pertama adalah soal **path relatif di boot entry**. Semua path di file entry config itu relatif terhadap root ESP, bukan root filesystem. Ini sering bikin bingung di awal -- kalau ESP di-mount di `/boot`, maka file `/boot/vmlinuz-linux-zen` ditulis sebagai `/vmlinuz-linux-zen`, bukan `/boot/vmlinuz-linux-zen`. Salah tulis path berarti kernel tidak ditemukan dan boot gagal.
+Tantangan pertama adalah soal **path relatif di boot entry**. Semua path di file entry config itu relatif terhadap root ESP, bukan root filesystem. Ini sering bikin bingung di awal: kalau ESP di-mount di `/boot`, maka file `/boot/vmlinuz-linux-zen` ditulis sebagai `/vmlinuz-linux-zen`, bukan `/boot/vmlinuz-linux-zen`. Salah tulis path berarti kernel tidak ditemukan dan boot gagal.
 
 Tantangan kedua adalah **UUID yang harus tepat**. Tidak seperti GRUB yang punya `grub-mkconfig` untuk auto-detect partisi, di systemd-boot kita harus manual memasukkan UUID partisi root. Salah ketik satu karakter saja berarti kernel panic saat boot. Selalu double-check dengan `blkid` dan pastikan UUID yang dimasukkan benar.
 
-Satu hal lagi -- **urutan `initrd` itu penting**. Microcode harus di-load sebelum initramfs. Kalau urutannya terbalik, microcode tidak akan ter-apply meskipun tidak menyebabkan boot failure. Ini silent issue yang baru ketahuan kalau cek manual.
+Satu hal lagi, **urutan `initrd` itu penting**. Microcode harus di-load sebelum initramfs. Kalau urutannya terbalik, microcode tidak akan ter-apply meskipun tidak menyebabkan boot failure. Ini silent issue yang baru ketahuan kalau cek manual.
 
 ## Insight dan Pembelajaran
 
 Setelah migrasi ke systemd-boot, beberapa insight yang didapat:
 
-- **Simplicity is a feature** -- tidak semua hal butuh tool yang complex. Untuk single-boot system, systemd-boot jauh lebih straightforward dibanding GRUB. Satu file entry berisi semua yang perlu diketahui.
-- **Plain text config itu powerful** -- bisa di-track di dotfiles, mudah di-backup, dan gampang di-debug kalau ada masalah. Tidak ada auto-generated config yang misterius.
-- **Keyboard shortcut di menu berguna untuk troubleshooting** -- tekan **d** untuk set default entry, **t/T** untuk adjust timeout, dan **e** untuk edit kernel parameter (kalau editor diaktifkan).
-- **`editor no` wajib di-set untuk keamanan** -- secara default, siapa saja dengan akses fisik bisa edit kernel parameter di menu boot. Ini bisa dieksploitasi untuk bypass security, jadi selalu nonaktifkan.
-- **Auto-detect Windows sudah built-in** -- meskipun tidak se-canggih GRUB yang punya `os-prober`, systemd-boot otomatis mendeteksi Windows Boot Manager kalau file `EFI/Microsoft/Boot/Bootmgfw.efi` ada di ESP.
-- **`systemctl reboot --firmware-setup`** -- command ini berguna untuk reboot langsung ke UEFI firmware setup tanpa harus spam tombol F2/Del saat boot.
+- **Simplicity is a feature**: tidak semua hal butuh tool yang complex. Untuk single-boot system, systemd-boot jauh lebih straightforward dibanding GRUB. Satu file entry berisi semua yang perlu diketahui.
+- **Plain text config itu powerful**: bisa di-track di dotfiles, mudah di-backup, dan gampang di-debug kalau ada masalah. Tidak ada auto-generated config yang misterius.
+- **Keyboard shortcut di menu berguna untuk troubleshooting**: tekan **d** untuk set default entry, **t/T** untuk adjust timeout, dan **e** untuk edit kernel parameter (kalau editor diaktifkan).
+- **`editor no` wajib di-set untuk keamanan**: secara default, siapa saja dengan akses fisik bisa edit kernel parameter di menu boot. Ini bisa dieksploitasi untuk bypass security, jadi selalu nonaktifkan.
+- **Auto-detect Windows sudah built-in**: meskipun tidak se-canggih GRUB yang punya `os-prober`, systemd-boot otomatis mendeteksi Windows Boot Manager kalau file `EFI/Microsoft/Boot/Bootmgfw.efi` ada di ESP.
+- **`systemctl reboot --firmware-setup`**: command ini berguna untuk reboot langsung ke UEFI firmware setup tanpa harus spam tombol F2/Del saat boot.
 
 ## Penutup
 
-Migrasi dari GRUB ke systemd-boot itu straightforward dan hasilnya worth it -- terutama untuk setup single OS. Konfigurasinya minimal (satu file loader.conf dan satu file entry per kernel), maintenance-nya hampir zero dengan `systemd-boot-update.service`, dan sudah terintegrasi dengan systemd ecosystem. Kuncinya ada di tiga hal: mount ESP di `/boot` agar kernel otomatis tersimpan di tempat yang benar, pastikan UUID dan path di boot entry sudah tepat, dan set `editor no` untuk keamanan.
+Migrasi dari GRUB ke systemd-boot itu straightforward dan hasilnya worth it, terutama untuk setup single OS. Konfigurasinya minimal (satu file loader.conf dan satu file entry per kernel), maintenance-nya hampir zero dengan `systemd-boot-update.service`, dan sudah terintegrasi dengan systemd ecosystem. Kuncinya ada di tiga hal: mount ESP di `/boot` agar kernel otomatis tersimpan di tempat yang benar, pastikan UUID dan path di boot entry sudah tepat, dan set `editor no` untuk keamanan.
 
 ## Referensi
 
-- [Arch Wiki - Systemd-boot](https://wiki.archlinux.org/title/Systemd-boot) -- Diakses pada 2026-04-07
-- [The Boot Loader Specification - systemd.io](https://systemd.io/BOOT/) -- Diakses pada 2026-04-07
-- [Arch Wiki - Kernel](https://wiki.archlinux.org/title/Kernel#Officially_supported_kernels) -- Diakses pada 2026-04-07
+- [Arch Wiki - Systemd-boot](https://wiki.archlinux.org/title/Systemd-boot), diakses pada2026-04-07
+- [The Boot Loader Specification - systemd.io](https://systemd.io/BOOT/), diakses pada2026-04-07
+- [Arch Wiki - Kernel](https://wiki.archlinux.org/title/Kernel#Officially_supported_kernels), diakses pada2026-04-07

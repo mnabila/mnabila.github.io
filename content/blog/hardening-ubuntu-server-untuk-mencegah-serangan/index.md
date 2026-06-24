@@ -12,7 +12,7 @@ tags = ['security', 'ubuntu', 'server', 'hardening', 'linux']
 
 Pernah ngecek server dan tiba-tiba CPU usage mentok 100% padahal tidak ada workload yang berjalan? Buka `top`, ada proses dengan nama random yang memakan seluruh resource. Cek koneksi outbound, ada traffic ke IP asing di port aneh sehingga bisa disimpulkan server ini sudah disusupi crypto miner.
 
-Kalau deploy Ubuntu Server di VPS atau public cloud dengan konfigurasi default, server tersebut sudah langsung menjadi target operasi mereka. SSH exposed di port 22, firewall belum aktif, root login masih terbuka -- dalam hitungan jam, bot otomatis sudah mulai brute force. Tidak perlu jadi target spesifik; cukup punya IP publik saja sudah cukup untuk masuk radar scanner.
+Kalau deploy Ubuntu Server di VPS atau public cloud dengan konfigurasi default, server tersebut sudah langsung menjadi target operasi mereka. SSH exposed di port 22, firewall belum aktif, root login masih terbuka dan dalam hitungan jam, bot otomatis sudah mulai melakukan brute force. Tidak perlu jadi target spesifik cukup punya IP publik saja sudah cukup untuk masuk radar scanner.
 
 **Hardening** adalah proses memperkuat konfigurasi server agar attack surface sekecil mungkin. Bukan tool atau software tunggal, tapi kumpulan langkah-langkah konfigurasi yang secara keseluruhan membuat server jauh lebih sulit ditembus.
 
@@ -20,12 +20,12 @@ Kalau deploy Ubuntu Server di VPS atau public cloud dengan konfigurasi default, 
 
 Secara default, Ubuntu Server di VPS/public cloud punya beberapa kelemahan yang sering diabaikan:
 
-- **SSH terbuka di port 22 dengan password authentication** -- ini target utama brute force bot yang scan seluruh internet 24/7
-- **Root login masih aktif** -- kalau password root lemah atau bocor, attacker langsung dapat akses penuh tanpa perlu privilege escalation
-- **Firewall tidak aktif** -- semua port terbuka, service apapun yang berjalan langsung accessible dari luar
-- **Tidak ada proteksi brute force** -- tidak ada mekanisme untuk memblokir IP yang gagal login berulang kali
-- **Service default yang tidak dibutuhkan tetap berjalan** -- menambah attack surface tanpa manfaat
-- **Tidak ada monitoring atau audit logging** -- tidak ada cara untuk tahu kalau ada proses mencurigakan atau koneksi outbound aneh
+- **SSH terbuka di port 22 dengan password authentication**: ini target utama brute force bot yang scan seluruh internet 24/7
+- **Root login masih aktif**: kalau password root lemah atau bocor, attacker langsung dapat akses penuh tanpa perlu privilege escalation
+- **Firewall tidak aktif**: semua port terbuka, service apapun yang berjalan langsung accessible dari luar
+- **Tidak ada proteksi brute force**: tidak ada mekanisme untuk memblokir IP yang gagal login berulang kali
+- **Service default yang tidak dibutuhkan tetap berjalan**: menambah attack surface tanpa manfaat
+- **Tidak ada monitoring atau audit logging**: tidak ada cara untuk tahu kalau ada proses mencurigakan atau koneksi outbound aneh
 
 Yang dibutuhkan adalah baseline security yang bisa diterapkan segera setelah server pertama kali di-deploy, tanpa perlu setup yang terlalu rumit.
 
@@ -33,22 +33,22 @@ Yang dibutuhkan adalah baseline security yang bisa diterapkan segera setelah ser
 
 Ada beberapa layer hardening yang bisa diterapkan, masing-masing menangani aspek keamanan yang berbeda:
 
-| Layer | Tujuan | Tools/Metode |
-|-------|--------|-------------|
-| **Access control** | Membatasi siapa yang bisa masuk | Non-root user, SSH key-only, custom port |
-| **Network filtering** | Membatasi port/service yang terekspos | UFW (firewall) |
-| **Brute force protection** | Memblokir percobaan login berulang | Fail2ban |
-| **System maintenance** | Menutup vulnerability yang sudah diketahui | Unattended upgrades |
-| **Malware detection** | Mendeteksi rootkit dan software mencurigakan | rkhunter, chkrootkit |
-| **Audit dan monitoring** | Tracking aktivitas dan deteksi anomali | auditd, journalctl, proses monitoring |
+| Layer                      | Tujuan                                       | Tools/Metode                             |
+| -------------------------- | -------------------------------------------- | ---------------------------------------- |
+| **Access control**         | Membatasi siapa yang bisa masuk              | Non-root user, SSH key-only, custom port |
+| **Network filtering**      | Membatasi port/service yang terekspos        | UFW (firewall)                           |
+| **Brute force protection** | Memblokir percobaan login berulang           | Fail2ban                                 |
+| **System maintenance**     | Menutup vulnerability yang sudah diketahui   | Unattended upgrades                      |
+| **Malware detection**      | Mendeteksi rootkit dan software mencurigakan | rkhunter, chkrootkit                     |
+| **Audit dan monitoring**   | Tracking aktivitas dan deteksi anomali       | auditd, journalctl, proses monitoring    |
 
-Pendekatan yang dipakai di sini adalah **defense in depth** -- tidak bergantung pada satu layer saja, tapi kombinasi beberapa mekanisme yang saling melengkapi. Kalau satu layer bypass, layer berikutnya masih bisa menahan.
+Pendekatan yang dipakai di sini adalah **defense in depth** tidak bergantung pada satu layer saja, tapi kombinasi beberapa mekanisme yang saling melengkapi. Kalau satu layer bypass, layer berikutnya masih bisa menahan.
 
 ## Implementasi Teknis
 
 ### Membuat User Non-Root dan Disable Root Login
 
-Langkah paling basic -- jangan pernah pakai root untuk operasi sehari-hari. Buat user biasa dengan akses sudo:
+Langkah paling basic yakni jangan pernah pakai root untuk operasi sehari-hari. Buat user biasa dengan akses sudo:
 
 ```
 $ adduser admin
@@ -77,7 +77,7 @@ Ganti port SSH default untuk mengurangi noise dari automated scanner. Di `/etc/s
 Port 2222
 ```
 
-Lalu setup key-based authentication dan disable password login sepenuhnya. Di mesin lokal, generate SSH key kalau belum punya:
+Lalu setup key-based authentication dan disable password login sepenuhnya. Di mesin lokal, generate SSH key terlebih dahulu kalau belum punya:
 
 ```
 $ ssh-keygen -t ed25519 -C "email@domain.com"
@@ -89,7 +89,7 @@ Copy public key ke server:
 $ ssh-copy-id -p 2222 admin@server-ip
 ```
 
-Setelah memastikan bisa login dengan key, disable password authentication di `/etc/ssh/sshd_config`:
+Setelah memastikan bisa login dengan key dan disable password authentication di `/etc/ssh/sshd_config`:
 
 ```
 PasswordAuthentication no
@@ -246,31 +246,31 @@ $ ss -tulnp
 $ sudo netstat -tulnp
 ```
 
-Kalau ada proses dengan nama random yang memakan CPU tinggi, atau koneksi outbound ke IP/port yang tidak dikenal -- itu red flag yang perlu diinvestigasi segera.
+Kalau ada proses dengan nama random yang memakan CPU tinggi, atau koneksi outbound ke IP/port yang tidak dikenal, itu red flag yang perlu diinvestigasi segera.
 
 ## Tantangan yang Dihadapi
 
 Tantangan pertama adalah **mendeteksi crypto miner yang sudah terlanjur masuk**. Pernah mengalami situasi di mana server tiba-tiba lambat, CPU 100% terus-menerus. Saat dicek dengan `top`, terlihat proses asing dengan nama random. Investigasi lebih lanjut menunjukkan proses tersebut masuk melalui SSH brute force (password lemah + root login aktif), menginstall dirinya via crontab, dan menambahkan SSH key asing ke `authorized_keys` untuk persistent access. Langkah response-nya: kill proses, bersihkan crontab dan authorized_keys, ganti semua password, lalu terapkan hardening. Tapi kalau tidak yakin sejauh mana server ter-compromise, rebuild dari awal lebih aman daripada membersihkan satu per satu.
 
-Tantangan kedua adalah **menentukan port mana yang perlu dibuka di firewall**. Kalau terlalu ketat, service yang legitimate bisa terganggu. Kalau terlalu longgar, sama saja tidak pakai firewall. Pendekatannya: mulai dari deny all, lalu buka port satu per satu sesuai kebutuhan -- SSH, HTTP/HTTPS, dan port spesifik yang dipakai aplikasi. Kalau ragu apakah suatu port dibutuhkan, coba tutup dulu dan lihat apakah ada service yang terdampak.
+Tantangan kedua adalah **menentukan port mana yang perlu dibuka di firewall**. Kalau terlalu ketat, service yang dideploy bisa terganggu. Kalau terlalu longgar, sama saja tidak pakai firewall. Pendekatannya: mulai dari deny all, lalu buka port satu per satu sesuai kebutuhan: SSH, HTTP/HTTPS, dan port spesifik yang dipakai aplikasi. Kalau ragu apakah suatu port dibutuhkan, coba tutup dulu dan lihat apakah ada service yang terdampak.
 
-Satu hal lagi -- **false positive dari fail2ban** bisa jadi masalah. Kalau `maxretry` terlalu rendah atau `findtime` terlalu panjang, IP yang legitimate (termasuk IP sendiri) bisa ikut ter-ban. Untuk mengatasinya, tambahkan IP trusted ke whitelist di konfigurasi fail2ban menggunakan directive `ignoreip`.
+Satu hal lagi, **false positive dari fail2ban** bisa jadi masalah. Kalau `maxretry` terlalu rendah atau `findtime` terlalu panjang, IP yang legitimate (termasuk IP sendiri) bisa ikut ter-ban. Untuk mengatasinya, tambahkan IP trusted ke whitelist di konfigurasi fail2ban menggunakan directive `ignoreip`.
 
 ## Insight dan Pembelajaran
 
 Beberapa hal yang bisa diambil dari pengalaman hardening server:
 
-- **Hardening bukan sekali setup lalu selesai** -- threat landscape terus berubah, vulnerability baru terus ditemukan. Minimal review konfigurasi secara berkala dan pastikan automatic updates aktif.
-- **Server publik tanpa hardening hampir pasti akan disusupi** -- dari pengalaman, server dengan konfigurasi default di public cloud bisa mulai menerima brute force attempt dalam hitungan menit setelah deploy.
-- **Key-based SSH authentication adalah non-negotiable** -- password authentication di server publik itu terlalu berisiko. Satu langkah ini saja sudah mengeliminasi mayoritas brute force attack.
-- **Defense in depth lebih efektif daripada satu solusi** -- firewall saja tidak cukup, fail2ban saja tidak cukup. Kombinasi beberapa layer yang saling melengkapi memberikan proteksi yang jauh lebih baik.
-- **Logging dan monitoring sering diabaikan tapi krusial** -- tanpa logging yang baik, kalau server disusupi, tidak ada cara untuk tahu apa yang terjadi, kapan, dan bagaimana. Ini menyulitkan incident response dan mencegah pembelajaran dari insiden.
-- **Gunakan configuration management untuk konsistensi** -- kalau punya banyak server, gunakan tools seperti Ansible untuk menerapkan hardening secara konsisten. Manual setup satu per satu rawan terlewat dan tidak scalable.
+- **Hardening bukan sekali setup lalu selesai**: threat landscape terus berubah, vulnerability baru terus ditemukan. Minimal review konfigurasi secara berkala dan pastikan automatic updates aktif.
+- **Server publik tanpa hardening hampir pasti akan disusupi**: dari pengalaman, server dengan konfigurasi default di public cloud bisa mulai menerima brute force attempt dalam hitungan menit setelah deploy.
+- **Key-based SSH authentication adalah non-negotiable**: password authentication di server publik itu terlalu berisiko. Satu langkah ini saja sudah mengeliminasi mayoritas brute force attack.
+- **Defense in depth lebih efektif daripada satu solusi**: firewall saja tidak cukup, fail2ban saja tidak cukup. Kombinasi beberapa layer yang saling melengkapi memberikan proteksi yang jauh lebih baik.
+- **Logging dan monitoring sering diabaikan tapi krusial**: tanpa logging yang baik, kalau server disusupi, tidak ada cara untuk tahu apa yang terjadi, kapan, dan bagaimana. Ini menyulitkan incident response dan mencegah pembelajaran dari insiden.
+- **Gunakan configuration management untuk konsistensi**: kalau punya banyak server, gunakan tools seperti Ansible untuk menerapkan hardening secara konsisten. Manual setup satu per satu rawan terlewat dan tidak scalable.
 
 ## Penutup
 
-Hardening Ubuntu Server bukan sesuatu yang rumit, tapi sering terabaikan karena dianggap "nanti saja". Padahal minimal baseline seperti secure SSH (key-only, custom port, no root), firewall aktif, fail2ban, dan automatic security updates sudah bisa mencegah mayoritas serangan umum. Semua langkah di atas tidak membutuhkan waktu lama untuk diimplementasikan, tapi dampaknya signifikan -- perbedaan antara server yang bertahan berbulan-bulan tanpa insiden dan server yang disusupi dalam hitungan jam setelah deploy.
+Hardening Ubuntu Server bukan sesuatu yang rumit, tapi sering terabaikan karena dianggap "nanti saja". Padahal minimal baseline seperti secure SSH (key-only, custom port, no root), firewall aktif, fail2ban, dan automatic security updates sudah bisa mencegah mayoritas serangan umum. Semua langkah di atas tidak membutuhkan waktu lama untuk diimplementasikan, tapi dampaknya signifikan: perbedaan antara server yang bertahan berbulan-bulan tanpa insiden dan server yang disusupi dalam hitungan jam setelah deploy.
 
 ## Referensi
 
-- [Linux Server Hardening Security Tips - nixCraft](https://www.cyberciti.biz/tips/linux-security.html) -- Diakses pada 2026-04-18
+- [Linux Server Hardening Security Tips - nixCraft](https://www.cyberciti.biz/tips/linux-security.html), diakses pada 2026-04-18

@@ -11,9 +11,9 @@ tags = ['tuned', 'performance', 'power-management', 'archlinux']
 
 ## Latar Belakang
 
-Salah satu hal yang sering diabaikan di Linux desktop adalah **tuning performa sistem**. Kebanyakan dari kita langsung pakai default setting setelah install -- CPU governor di `schedutil`, I/O scheduler default, dan parameter kernel apa adanya. Padahal, kebutuhan setiap workload itu berbeda. Saat ngoding, kita butuh responsivitas. Saat build project, kita butuh throughput maksimal. Saat di battery, kita butuh efisiensi daya.
+Salah satu hal yang sering diabaikan di Linux desktop adalah **tuning performa sistem**. Kebanyakan dari kita langsung pakai default setting setelah install, CPU governor di `schedutil`, I/O scheduler default, dan parameter kernel apa adanya. Padahal, kebutuhan setiap workload itu berbeda. Saat ngoding, kita butuh responsivitas. Saat build project, kita butuh throughput maksimal. Saat di battery, kita butuh efisiensi daya.
 
-Di sinilah **tuned** masuk. Tool ini awalnya dikembangkan oleh Red Hat untuk RHEL, tapi karena open source, kita bisa menggunakannya di Archlinux juga. Tuned adalah daemon yang secara dinamis mengoptimasi parameter sistem berdasarkan profil yang kita pilih -- tanpa perlu tweaking manual satu per satu.
+Di sinilah **tuned** masuk. Tool ini awalnya dikembangkan oleh Red Hat untuk RHEL, tapi karena open source, kita bisa menggunakannya di Archlinux juga. Tuned adalah daemon yang secara dinamis mengoptimasi parameter sistem berdasarkan profil yang kita pilih, tanpa perlu tweaking manual satu per satu.
 
 ## Permasalahan
 
@@ -39,17 +39,17 @@ Beberapa profil bawaan yang tersedia:
 
 | Profil | Kegunaan |
 |--------|----------|
-| `balanced` | Keseimbangan antara performa dan power saving -- cocok untuk daily use |
+| `balanced` | Keseimbangan antara performa dan power saving, cocok untuk daily use |
 | `throughput-performance` | Maksimalkan throughput, cocok untuk server atau saat build project |
 | `latency-performance` | Minimalkan latency, cocok untuk real-time workload |
-| `powersave` | Hemat daya semaksimal mungkin -- ideal untuk laptop saat di battery |
+| `powersave` | Hemat daya semaksimal mungkin, ideal untuk laptop saat di battery |
 | `desktop` | Optimasi untuk penggunaan desktop interaktif |
 | `virtual-guest` | Optimasi untuk VM guest |
 | `virtual-host` | Optimasi untuk VM host |
 | `network-latency` | Minimalkan network latency |
 | `network-throughput` | Maksimalkan network throughput |
 
-Saya memilih tuned karena tidak perlu reinvent the wheel -- profil-profil ini sudah dioptimasi oleh engineer Red Hat dan komunitas, jadi tinggal pakai.
+Saya memilih tuned karena tidak perlu reinvent the wheel, profil-profil ini sudah dioptimasi oleh engineer Red Hat dan komunitas, jadi tinggal pakai.
 
 ## Implementasi Teknis
 
@@ -164,11 +164,11 @@ Penjelasan parameter:
 
 Profil di atas menggunakan `balanced` sebagai base, lalu menonaktifkan turbo boost dan mengatur CPU agar lebih hemat daya. Kenapa mau mematikan turbo? Beberapa alasannya:
 
-- **Temperatur lebih terkontrol** -- turbo boost mendorong clock speed di atas base frequency, yang berarti panas lebih tinggi. Tanpa turbo, suhu CPU lebih stabil dan fan tidak berisik.
-- **Konsumsi daya lebih rendah** -- cocok untuk laptop yang ingin battery life lebih panjang tanpa harus masuk full `powersave`.
-- **Performa tetap konsisten** -- turbo boost bisa menyebabkan thermal throttling di workload yang sustained, sehingga performa naik-turun. Tanpa turbo, performa lebih predictable meskipun sedikit lebih rendah.
+- **Temperatur lebih terkontrol**: turbo boost mendorong clock speed di atas base frequency, yang berarti panas lebih tinggi. Tanpa turbo, suhu CPU lebih stabil dan fan tidak berisik.
+- **Konsumsi daya lebih rendah**: cocok untuk laptop yang ingin battery life lebih panjang tanpa harus masuk full `powersave`.
+- **Performa tetap konsisten**: turbo boost bisa menyebabkan thermal throttling di workload yang sustained, sehingga performa naik-turun. Tanpa turbo, performa lebih predictable meskipun sedikit lebih rendah.
 
-Directive `include` sangat berguna supaya tidak perlu menulis ulang semua parameter dari nol -- cukup override yang ingin diubah saja.
+Directive `include` sangat berguna supaya tidak perlu menulis ulang semua parameter dari nol, cukup override yang ingin diubah saja.
 
 Aktifkan profil custom:
 
@@ -192,7 +192,7 @@ $ cat /sys/devices/system/cpu/intel_pstate/no_turbo
 
 Beberapa profil bawaan tuned dirancang untuk RHEL/CentOS, jadi ada parameter yang mungkin tidak relevan atau tidak tersedia di kernel Archlinux yang lebih baru. Misalnya, beberapa setting terkait `tuned-adm` plugin tertentu mungkin membutuhkan package tambahan yang belum terinstall. Jalankan `tuned-adm verify` setelah mengganti profil untuk memastikan semua setting berhasil diterapkan.
 
-Satu hal lagi -- tuned bisa bentrok dengan tool power management lain seperti `tlp` atau `power-profiles-daemon`. Pastikan hanya satu tool yang aktif untuk menghindari konflik. Jika sebelumnya menggunakan TLP:
+Satu hal lagi, tuned bisa bentrok dengan tool power management lain seperti `tlp` atau `power-profiles-daemon`. Pastikan hanya satu tool yang aktif untuk menghindari konflik. Jika sebelumnya menggunakan TLP:
 
 ```
 $ sudo systemctl disable --now tlp
@@ -203,9 +203,9 @@ $ sudo systemctl disable --now tlp
 Setelah menggunakan tuned beberapa waktu, beberapa insight yang didapat:
 
 - **Profil `balanced` sudah cukup bagus** untuk penggunaan sehari-hari. Tidak perlu langsung jump ke `throughput-performance` kecuali memang butuh.
-- **Custom profil dengan `include`** adalah fitur killer -- bisa extend profil yang sudah ada tanpa harus menulis semua parameter dari awal.
-- **Switching profil sangat cepat** -- tidak perlu restart service, langsung apply. Ini berguna saat mau build project besar lalu kembali ke mode hemat daya.
-- **`tuned-adm verify`** adalah command yang sering terlupakan tapi penting -- memastikan tidak ada parameter yang gagal diterapkan karena konflik atau dependency yang kurang.
+- **Custom profil dengan `include`** adalah fitur killer, bisa extend profil yang sudah ada tanpa harus menulis semua parameter dari awal.
+- **Switching profil sangat cepat**: tidak perlu restart service, langsung apply. Ini berguna saat mau build project besar lalu kembali ke mode hemat daya.
+- **`tuned-adm verify`** adalah command yang sering terlupakan tapi penting, memastikan tidak ada parameter yang gagal diterapkan karena konflik atau dependency yang kurang.
 Dibanding melakukan tuning manual, tuned memberikan pendekatan yang lebih terstruktur dan reproducible. Profil bisa di-backup, di-share, dan di-version control.
 
 ## Penutup
@@ -214,6 +214,6 @@ Tuned adalah tool yang simpel tapi powerful untuk optimasi performa sistem di Ar
 
 ## Referensi
 
-- [Red Hat - Tuned Documentation](https://docs.redhat.com/en/documentation/red_hat_enterprise_linux/7/html/power_management_guide/tuned) -- Diakses pada 2026-04-05
-- [Arch Wiki - Power Management](https://wiki.archlinux.org/title/Power_management) -- Diakses pada 2026-04-05
-- [Tuned Project GitHub](https://github.com/redhat-performance/tuned) -- Diakses pada 2026-04-05
+- [Red Hat - Tuned Documentation](https://docs.redhat.com/en/documentation/red_hat_enterprise_linux/7/html/power_management_guide/tuned), diakses pada 2026-04-05
+- [Arch Wiki - Power Management](https://wiki.archlinux.org/title/Power_management), diakses pada 2026-04-05
+- [Tuned Project GitHub](https://github.com/redhat-performance/tuned), diakses pada 2026-04-05

@@ -10,9 +10,9 @@ tags = ['redis', 'replication', 'ubuntu', 'server']
 
 ## Latar Belakang
 
-Aplikasi production yang saya kelola mulai menunjukkan gejala bottleneck di layer cache. Semua operasi read dan write Redis masuk ke satu instance yang sama. Selama trafik normal tidak ada masalah, tapi begitu peak hour tiba -- response time naik drastis dan terkadang ada beberapa request yang timeout karena Redis tidak sanggup menangani semua beban sendirian.
+Aplikasi production yang saya kelola mulai menunjukkan gejala bottleneck di layer cache. Semua operasi read dan write Redis masuk ke satu instance yang sama. Selama trafik normal tidak ada masalah, tapi begitu peak hour tiba, response time naik drastis dan terkadang ada beberapa request yang timeout karena Redis tidak sanggup menangani semua beban sendirian.
 
-Setelah saya cek, mayoritas operasi ke Redis adalah read -- session lookup, cache hit, rate limiting check. Write hanya terjadi saat ada update data atau cache invalidation. Artinya, kalau beban read bisa didistribusikan ke node lain, master tidak perlu kerja sendirian lagi.
+Setelah saya cek, Mayoritas operasi ke Redis adalah read, session lookup, cache hit, rate limiting check. Write hanya terjadi saat ada update data atau cache invalidation. Artinya, kalau beban read bisa didistribusikan ke node lain, master tidak perlu kerja sendirian lagi.
 
 Solusi yang saya ambil adalah setup **Redis replication** dengan skema master-slave. Master fokus handle write, slave fokus handle read. Selain performa lebih baik, slave juga berfungsi sebagai fallback kalau master tiba-tiba down. Setup ini saya lakukan di dua Ubuntu Server 22.04 dalam satu network.
 
@@ -20,11 +20,11 @@ Solusi yang saya ambil adalah setup **Redis replication** dengan skema master-sl
 
 Mengandalkan satu instance Redis untuk semua operasi mulai jadi masalah:
 
-- **Semua operasi numpuk di satu node** -- read dan write rebutan resource di instance yang sama, latency naik terutama saat peak hour
-- **Tidak ada redundansi** -- kalau Redis down, semua service yang bergantung padanya ikut terdampak dan request langsung tembus ke database
-- **Read scalability mentok** -- menambah resource di satu server ada batasnya, dan mayoritas operasi adalah read yang seharusnya bisa didistribusikan
-- **Tidak bisa pisah workload** -- operasi read-heavy seperti session check dan cache lookup bercampur dengan write operation
-- **Performa drop saat trafik tinggi** -- Redis yang overloaded bikin response time naik, dan service yang bergantung padanya ikut lambat karena menunggu reply dari Redis
+- **Semua operasi numpuk di satu node**: read dan write rebutan resource di instance yang sama, latency naik terutama saat peak hour
+- **Tidak ada redundansi**: kalau Redis down, semua service yang bergantung padanya ikut terdampak dan request langsung tembus ke database
+- **Read scalability mentok**: menambah resource di satu server ada batasnya, dan mayoritas operasi adalah read yang seharusnya bisa didistribusikan
+- **Tidak bisa pisah workload**: operasi read-heavy seperti session check dan cache lookup bercampur dengan write operation
+- **Performa drop saat trafik tinggi**: Redis yang overloaded bikin response time naik, dan service yang bergantung padanya ikut lambat karena menunggu reply dari Redis
 
 ## Pendekatan Solusi
 
@@ -187,10 +187,10 @@ repl_backlog_histlen:1234
 
 Yang perlu diperhatikan:
 
-- **role:master** -- konfirmasi bahwa node ini berjalan sebagai master
-- **connected_slaves:1** -- ada satu slave yang terhubung
-- **state:online** -- slave dalam kondisi aktif dan sinkron
-- **lag:0** -- tidak ada delay replication
+- **role:master**: konfirmasi bahwa node ini berjalan sebagai master
+- **connected_slaves:1**: ada satu slave yang terhubung
+- **state:online**: slave dalam kondisi aktif dan sinkron
+- **lag:0**: tidak ada delay replication
 
 Cek juga dari sisi slave:
 
@@ -452,26 +452,26 @@ Tambahkan baris:
 
 ## Tantangan yang Dihadapi
 
-Tantangan pertama yang saya temui adalah **replication bersifat asynchronous**. Artinya setelah write berhasil di master, tidak ada jaminan data langsung tersedia di slave. Ada jeda waktu -- meskipun biasanya dalam hitungan milidetik, tapi di saat trafik sangat tinggi, jeda ini bisa membesar. Ini jadi masalah kalau aplikasi langsung baca dari slave setelah write ke master. Misal user update profile, lalu redirect ke halaman profile yang baca dari slave -- data lama yang muncul. Solusinya, untuk operasi yang butuh konsistensi ketat, arahkan read ke master juga. Pisahkan mana read yang boleh stale dan mana yang harus fresh.
+Tantangan pertama yang saya temui adalah **replication bersifat asynchronous**. Artinya setelah write berhasil di master, tidak ada jaminan data langsung tersedia di slave. Ada jeda waktu, meskipun biasanya dalam hitungan milidetik, tapi di saat trafik sangat tinggi, jeda ini bisa membesar. Ini jadi masalah kalau aplikasi langsung baca dari slave setelah write ke master. Misal user update profile, lalu redirect ke halaman profile yang baca dari slave, data lama yang muncul. Solusinya, untuk operasi yang butuh konsistensi ketat, arahkan read ke master juga. Pisahkan mana read yang boleh stale dan mana yang harus fresh.
 
-**Full sync** juga jadi masalah tersendiri. Saat slave pertama kali connect atau setelah putus cukup lama, Redis melakukan full synchronization -- master membuat RDB snapshot dan mengirimnya ke slave. Proses ini menyebabkan spike CPU dan disk I/O di master yang cukup signifikan, dan selama proses berlangsung performa master bisa turun. Dengan mengaktifkan `repl-diskless-sync`, overhead disk I/O berkurang karena data dikirim langsung via socket. Tapi tetap saja, full sync di jam sibuk sebaiknya dihindari.
+**Full sync** juga jadi masalah tersendiri. Saat slave pertama kali connect atau setelah putus cukup lama, Redis melakukan full synchronization. Master membuat RDB snapshot dan mengirimnya ke slave. Proses ini menyebabkan spike CPU dan disk I/O di master yang cukup signifikan, dan selama proses berlangsung performa master bisa turun. Dengan mengaktifkan `repl-diskless-sync`, overhead disk I/O berkurang karena data dikirim langsung via socket. Tapi tetap saja, full sync di jam sibuk sebaiknya dihindari.
 
-Satu hal lagi yang tidak langsung obvious -- **scaling write tetap terbatas pada master**. Mau tambah slave berapapun, semua write tetap masuk ke satu node. Kalau bottleneck-nya ada di write, master-slave replication tidak akan menyelesaikan masalah. Untuk kasus itu, perlu pertimbangkan **Redis Cluster** yang mendukung sharding. Dan soal failover, tanpa **Redis Sentinel**, promosi slave ke master harus dilakukan manual. Ada window time di mana service tidak bisa menerima write sama sekali. Untuk production yang critical, Sentinel atau solusi orchestration lain hampir wajib.
+Satu hal lagi yang tidak langsung obvious, **scaling write tetap terbatas pada master**. Mau tambah slave berapapun, semua write tetap masuk ke satu node. Kalau bottleneck-nya ada di write, master-slave replication tidak akan menyelesaikan masalah. Untuk kasus itu, perlu pertimbangkan **Redis Cluster** yang mendukung sharding. Dan soal failover, tanpa **Redis Sentinel**, promosi slave ke master harus dilakukan manual, dan ada window time di mana service tidak bisa menerima write sama sekali. Untuk production yang critical, Sentinel atau solusi orchestration lain hampir wajib.
 
 ## Insight dan Pembelajaran
 
-- **Asynchronous replication punya trade-off** -- performa tinggi tapi konsistensi tidak dijamin. Pahami mana read yang boleh stale dan mana yang harus konsisten, lalu route query-nya sesuai
-- **Full sync itu mahal** -- hindari kondisi yang memicu full sync di jam sibuk. Perbesar `repl-backlog-size` supaya partial resync lebih sering berhasil dan tidak perlu fallback ke full sync
-- **Persistence dan performa itu trade-off** -- mematikan RDB dan AOF bikin Redis lebih cepat tapi data hilang saat restart. Putuskan berdasarkan apakah Redis dipakai sebagai cache atau data store
-- **Monitoring bukan opsional** -- replication bisa putus tanpa warning. Tanpa monitoring aktif, slave bisa serving data stale berjam-jam tanpa ada yang sadar
-- **Master-slave bukan solusi untuk semua masalah** -- kalau bottleneck di write, tambah slave tidak membantu. Kenali dulu profil workload sebelum memilih arsitektur
-- **Tuning OS sama pentingnya dengan tuning Redis** -- `vm.overcommit_memory`, `somaxconn`, dan transparent hugepage bisa jadi pembeda signifikan di production
+- **Asynchronous replication punya trade-off**: performa tinggi tapi konsistensi tidak dijamin. Pahami mana read yang boleh stale dan mana yang harus konsisten, lalu route query-nya sesuai
+- **Full sync itu mahal**: hindari kondisi yang memicu full sync di jam sibuk. Perbesar `repl-backlog-size` supaya partial resync lebih sering berhasil dan tidak perlu fallback ke full sync
+- **Persistence dan performa itu trade-off**: mematikan RDB dan AOF bikin Redis lebih cepat tapi data hilang saat restart. Putuskan berdasarkan apakah Redis dipakai sebagai cache atau data store
+- **Monitoring bukan opsional**: replication bisa putus tanpa warning. Tanpa monitoring aktif, slave bisa serving data stale berjam-jam tanpa ada yang sadar
+- **Master-slave bukan solusi untuk semua masalah**: kalau bottleneck di write, tambah slave tidak membantu. Kenali dulu profil workload sebelum memilih arsitektur
+- **Tuning OS sama pentingnya dengan tuning Redis**: `vm.overcommit_memory`, `somaxconn`, dan transparent hugepage bisa jadi pembeda signifikan di production
 
 ## Penutup
 
-Redis replication master-slave cukup efektif untuk mendistribusikan beban read dan meningkatkan availability, terutama di workload yang read-heavy. Konfigurasinya lebih simpel dibanding MySQL replication karena tidak perlu dump data manual -- Redis menangani sinkronisasi awal secara otomatis. Yang perlu diperhatikan adalah sifat asynchronous-nya, batasan write scaling di master, dan pentingnya monitoring yang jalan terus supaya masalah replication bisa terdeteksi sebelum berdampak ke user.
+Redis replication master-slave cukup efektif untuk mendistribusikan beban read dan meningkatkan availability, terutama di workload yang read-heavy. Konfigurasinya lebih simpel dibanding MySQL replication karena tidak perlu dump data manual. Redis menangani sinkronisasi awal secara otomatis. Yang perlu diperhatikan adalah sifat asynchronous-nya, batasan write scaling di master, dan pentingnya monitoring yang jalan terus supaya masalah replication bisa terdeteksi sebelum berdampak ke user.
 
 ## Referensi
 
-- [Redis Master Slave](https://www.educba.com/redis-master-slave/) -- Diakses pada 2026-05-14
-- [Redis Replication Documentation](https://redis.io/docs/management/replication/) -- Diakses pada 2026-05-14
+- [Redis Master Slave](https://www.educba.com/redis-master-slave/), diakses pada2026-05-14
+- [Redis Replication Documentation](https://redis.io/docs/management/replication/), diakses pada2026-05-14
