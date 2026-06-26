@@ -35,11 +35,19 @@ tasks = [
   'Built loan mini apps dashboard for monitoring loan transactions',
   'Managed Rubee Dashboard backend with cross-team collaboration',
 ]
+impact = [
+  'Reduced payment transaction failures through smart routing with automatic failover and circuit breakers ensuring uninterrupted payment flow',
+  'Enabled real-time loan transaction monitoring with filterable views and aggregate metrics, replacing manual database queries with a self-service dashboard',
+  'Improved debugging efficiency by replacing manual SSH log inspection with a centralized CLI tool and API',
+  'Enabled the backend team to ship higher-quality code through structured code reviews and established Go coding standards',
+  'Cut junior developer onboarding time through hands-on mentorship and pair programming sessions',
+  'Eliminated environment drift between development and production by standardizing Docker-based deployment workflows',
+]
 +++
 
 ## Overview
 
-Working as a Backend Engineer at PT. Ranajaya Citaprasada Thani Indonesia, building backend systems across payment gateways, internal tooling, and electronic transaction platforms using Go, TypeScript, and various infrastructure tools. Taking on leadership responsibilities by leading the backend team, conducting code reviews, and mentoring junior developers.
+My scope here spans payment infrastructure, internal tooling, and electronic transaction platforms. The most technically demanding project is a payment gateway aggregator for GrabPay with smart routing and circuit breakers across multiple providers. Beyond individual projects, I lead the backend team through code reviews, mentor junior developers, and own the Docker-based deployment pipeline that standardized how we ship services to production.
 
 ## Key Projects
 
@@ -70,12 +78,3 @@ Managed the backend for "Rubee Dashboard", a centralized management platform bui
 ### Docker Infrastructure
 
 Standardized deployment across all services by creating optimized multi-stage Docker builds for Go applications, configuring Nginx as a reverse proxy, and setting up MinIO for object storage. Established Docker Compose configurations for local development that mirror production topology, reducing "works on my machine" issues.
-
-## Impact
-
-- Reduced payment transaction failures through smart routing system that selects optimal providers based on success rate, latency, and health scores, with circuit breakers and automatic failover ensuring uninterrupted payment flow
-- Enabled real-time loan transaction monitoring with filterable views and aggregate metrics, replacing manual database queries with a self-service dashboard for operations and partner teams
-- Improved debugging efficiency by replacing manual SSH log inspection with a centralized CLI tool and API
-- Enabled the backend team to ship higher-quality code through structured code reviews and established Go coding standards
-- Cut junior developer onboarding time through hands-on mentorship and pair programming sessions
-- Eliminated environment drift between development and production by standardizing Docker-based deployment workflows

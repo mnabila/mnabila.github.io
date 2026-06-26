@@ -4,7 +4,6 @@ date = '2025-08-24T02:52:17+07:00'
 title = 'CV. Nestech'
 type = 'experience'
 role = 'Backend Engineer'
-period = 'April 2022 - July 2022'
 period_begin = '2022-04-07'
 period_finish = '2022-07-14'
 location = 'South Jakarta, Jakarta'
@@ -20,11 +19,16 @@ tasks = [
   'Integrated OCR for automated multi-location data input',
   'Optimized data processing for faster membership updates',
 ]
+impact = [
+  'Replaced a fragmented paper-based membership process with a centralized digital system accessible across all administrative levels',
+  'Reduced manual data entry workload through OCR automation while maintaining data accuracy with validation and review workflows',
+  'Improved query performance for membership reports, enabling administrators to access up-to-date data without delays',
+]
 +++
 
 ## Overview
 
-Worked as a freelance Backend Engineer at CV. Nestech on a 3-month remote engagement, building a membership management system in Go with PostgreSQL. The project digitized membership data collection for an organization spanning provincial and district levels, replacing a manual paper-based process with a centralized backend service.
+A 3-month engagement to digitize a paper-based membership system used across provincial and district offices. The existing process relied on physical forms and manual data entry, creating bottlenecks at every administrative level. I built a centralized backend that models the full organizational hierarchy, integrated OCR to automate form processing, and optimized database queries to handle concurrent submissions from multiple districts.
 
 ## Key Projects
 
@@ -39,9 +43,3 @@ Integrated an OCR engine to automate data entry from physical membership forms s
 ### Data Processing Optimization
 
 Optimized PostgreSQL queries and batch processing workflows to handle concurrent data submissions from multiple districts. Added database indexes on frequently queried columns, rewrote N+1 query patterns into batch queries, and implemented connection pooling to handle spikes when multiple districts submit data simultaneously.
-
-## Impact
-
-- Replaced a fragmented paper-based membership process with a centralized digital system accessible across all administrative levels
-- Reduced manual data entry workload through OCR automation while maintaining data accuracy with validation and review workflows
-- Improved query performance for membership reports, enabling administrators to access up-to-date data without delays
