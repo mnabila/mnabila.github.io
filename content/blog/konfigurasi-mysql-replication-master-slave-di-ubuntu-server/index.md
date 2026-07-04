@@ -37,7 +37,7 @@ Ada beberapa cara untuk mendistribusikan beban database:
 | **MySQL Group Replication**   | Built-in fault tolerance, automatic failover           | Butuh minimal 3 node, ada overhead consensus                       |
 | **ProxySQL / MySQL Router**   | Query routing otomatis, load balancing                 | Nambah layer infrastruktur, bisa jadi single point of failure baru |
 
-Pada kasus ini saya pilih **Master-Slave Replication** karena paling straightforward untuk kebutuhan ini. Cukup untuk misahin beban antara read dan write, dan slave bisa sekaligus jadi backup node. Di sisi aplikasi, tinggal arahkan query read ke slave dan write ke master.
+Pada kasus ini saya pilih **Master-Slave Replication** karena paling simpel untuk kebutuhan ini. Cukup untuk misahin beban antara read dan write, dan slave bisa sekaligus jadi backup node. Di sisi aplikasi, tinggal arahkan query read ke slave dan write ke master.
 
 Arsitektur yang dibangun:
 

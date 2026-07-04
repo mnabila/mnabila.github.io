@@ -34,7 +34,7 @@ Ada beberapa cara untuk mendistribusikan beban database PostgreSQL:
 | **Logical Replication**      | Bisa replicate per tabel, subscriber bisa read-write                             | Tidak replicate DDL, setup lebih kompleks |
 | **PgBouncer + Read Replica** | Connection pooling + distribusi read otomatis                                    | Nambah layer infrastruktur                |
 
-Saya pilih **Streaming Replication** karena paling straightforward untuk kebutuhan saat ini. Mekanisme ini menggunakan **WAL (Write-Ahead Log)**, setiap perubahan data yang terjadi di primary dicatat ke WAL, lalu dikirim secara streaming ke replica yang kemudian me-replay perubahan tersebut. Hasilnya, replica punya salinan data yang nyaris identik dengan primary secara real-time.
+Saya pilih **Streaming Replication** karena paling simpel untuk kebutuhan saat ini. Mekanisme ini menggunakan **WAL (Write-Ahead Log)**, setiap perubahan data yang terjadi di primary dicatat ke WAL, lalu dikirim secara streaming ke replica yang kemudian me-replay perubahan tersebut. Hasilnya, replica punya salinan data yang nyaris identik dengan primary secara real-time.
 
 Setup yang saya bangun menggunakan **Docker Compose** di 2 VM terpisah. Primary node handle semua write, replica node handle read. Masing-masing jalan di VM sendiri supaya kehilangan satu server tidak membuat database sepenuhnya mati. Selain performa lebih baik karena beban terdistribusi, replica juga berfungsi sebagai standby kalau primary bermasalah.
 

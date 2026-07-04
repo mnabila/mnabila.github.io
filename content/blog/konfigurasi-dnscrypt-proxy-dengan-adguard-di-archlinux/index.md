@@ -204,7 +204,7 @@ Beberapa insight setelah menggunakan dnscrypt-proxy dengan AdGuard DNS:
 
 ## Penutup
 
-dnscrypt-proxy dengan AdGuard DNS adalah kombinasi yang solid untuk mengamankan DNS di Archlinux. Satu tool menangani dua kebutuhan sekaligus: enkripsi DNS query agar tidak bisa disadap ISP, dan ad blocking di level DNS yang bekerja untuk seluruh sistem. Konfigurasinya cukup straightforward, edit satu file TOML, set resolv.conf, dan aktifkan service. Untuk yang peduli dengan privasi dan ingin mengurangi iklan tanpa banyak setup, ini solusi yang minimal effort tapi high impact.
+dnscrypt-proxy dengan AdGuard DNS adalah kombinasi yang solid untuk mengamankan DNS di Archlinux. Satu tool menangani dua kebutuhan sekaligus: enkripsi DNS query agar tidak bisa disadap ISP, dan ad blocking di level DNS yang bekerja untuk seluruh sistem. Konfigurasinya cukup simpel, edit satu file TOML, set resolv.conf, dan aktifkan service. Untuk yang peduli dengan privasi dan ingin mengurangi iklan tanpa banyak setup, ini solusi yang minimal effort tapi high impact.
 
 ## Referensi
 

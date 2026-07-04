@@ -27,7 +27,7 @@ Ada beberapa cara mengintegrasikan NextDNS ke sistem Archlinux:
 - **systemd-resolved**: resolver DNS bawaan systemd
 - **dnscrypt-proxy**: proxy DNS terenkripsi
 
-Saya memilih **nextdns-client** karena paling straightforward: satu binary, satu service, minimal konfigurasi. Tidak perlu mengubah setup systemd-resolved yang bisa berdampak ke service lain.
+Saya memilih **nextdns-client** karena paling simpel: satu binary, satu service, minimal konfigurasi. Tidak perlu mengubah setup systemd-resolved yang bisa berdampak ke service lain.
 
 ## Implementasi Teknis
 

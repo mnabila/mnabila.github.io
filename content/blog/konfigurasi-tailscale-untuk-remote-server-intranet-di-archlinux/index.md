@@ -41,7 +41,7 @@ Ada dua pendekatan untuk mengakses server intranet:
 | **Install Tailscale di setiap server** | Koneksi langsung peer-to-peer, setiap server punya IP Tailscale sendiri | Harus install dan maintain Tailscale di setiap server |
 | **Subnet router** | Cukup install di satu device, seluruh subnet bisa diakses | Traffic melewati router node, performa bergantung pada device router |
 
-Untuk setup yang simpel dengan beberapa server, install langsung di setiap server lebih straightforward. Untuk intranet dengan banyak device (termasuk yang tidak bisa install Tailscale seperti printer atau IoT), subnet router lebih praktis.
+Untuk setup yang simpel dengan beberapa server, install langsung di setiap server lebih simpel. Untuk intranet dengan banyak device (termasuk yang tidak bisa install Tailscale seperti printer atau IoT), subnet router lebih praktis.
 
 ## Implementasi Teknis
 

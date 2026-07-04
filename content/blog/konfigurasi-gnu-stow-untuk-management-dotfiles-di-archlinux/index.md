@@ -2,7 +2,7 @@
 draft = false
 date = '2022-01-05'
 lastmod = '2026-03-15'
-title = 'Implementasi GNU Stow Untuk Management Dotfiles Di Archlinux'
+title = 'Konfigurasi GNU Stow untuk Management Dotfiles di Archlinux'
 type = 'blog'
 description = 'Cara menggunakan GNU Stow sebagai symlink manager untuk mengelola dotfiles di Archlinux.'
 image = ''

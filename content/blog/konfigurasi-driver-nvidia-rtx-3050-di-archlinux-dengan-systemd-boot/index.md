@@ -262,7 +262,7 @@ Setelah menjalani proses setup ini, beberapa insight:
 - **Pacman hook menyelamatkan dari lupa rebuild**: tanpa hook, setiap update kernel harus manual rebuild initramfs. Hook mengotomasi proses ini dan mencegah situasi boot gagal setelah update.
 - **Suspend/resume service sering terlupakan**: banyak yang setup driver NVIDIA tapi lupa enable service untuk power management. Akibatnya, laptop mengalami layar hitam setelah bangun dari sleep.
 - **PRIME render offload adalah sweet spot untuk laptop**: daily use pakai Intel iGPU yang hemat daya, lalu `prime-run` saat butuh performa NVIDIA. Tidak perlu logout atau restart untuk switching.
-- **Systemd-boot sebenarnya lebih straightforward dari GRUB**: meskipun manual, konfigurasinya minimal dan mudah dipahami. Satu file boot entry berisi semua yang perlu diketahui.
+- **Systemd-boot sebenarnya lebih simpel dari GRUB**: meskipun manual, konfigurasinya minimal dan mudah dipahami. Satu file boot entry berisi semua yang perlu diketahui.
 
 ## Penutup
 

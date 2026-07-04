@@ -37,7 +37,7 @@ Ada beberapa opsi untuk mendistribusikan beban Redis:
 | **Redis Cluster**       | Sharding otomatis, horizontal scaling untuk write   | Butuh minimal 6 node, aplikasi harus support cluster protocol    |
 | **Twemproxy / Envoy**   | Proxy layer untuk distribusi koneksi                | Nambah layer infrastruktur, single point of failure baru         |
 
-Saya pilih **Master-Slave Replication** karena paling straightforward untuk kebutuhan saat ini. Cukup untuk memisahkan beban read dan write, dan slave bisa sekaligus jadi node cadangan. Di sisi aplikasi, tinggal arahkan read ke slave dan write ke master.
+Saya pilih **Master-Slave Replication** karena paling simpel untuk kebutuhan saat ini. Cukup untuk memisahkan beban read dan write, dan slave bisa sekaligus jadi node cadangan. Di sisi aplikasi, tinggal arahkan read ke slave dan write ke master.
 
 Arsitektur yang dibangun:
 

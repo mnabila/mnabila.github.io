@@ -1,7 +1,7 @@
 +++
 draft = false
 date = '2026-06-03'
-title = 'Auto Setup Schema PostgreSQL on Docker'
+title = 'Konfigurasi Auto Setup Schema PostgreSQL di Docker'
 type = 'blog'
 description = 'Setup database PostgreSQL otomatis saat container pertama kali jalan menggunakan docker-entrypoint-initdb.d supaya tidak perlu migrasi manual tiap bikin environment baru'
 image = ''

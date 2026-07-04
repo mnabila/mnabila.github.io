@@ -10,7 +10,7 @@ tags = ['docker', 'ubuntu', 'docker-compose', 'troubleshooting', 'container']
 
 ## Latar Belakang
 
-Docker sudah jadi tool wajib untuk development modern hampir semua project yang melibatkan backend, database, atau service lain pasti pakai Docker supaya environment-nya konsisten. Instalasi Docker di Ubuntu biasanya straightforward, tinggal ikuti dokumentasi resmi dan selesai. Tapi kadang ada error yang muncul bukan saat instalasi, melainkan saat menjalankan container dan itu yang bikin frustasi karena kita merasa sudah install dengan benar.
+Docker sudah jadi tool wajib untuk development modern hampir semua project yang melibatkan backend, database, atau service lain pasti pakai Docker supaya environment-nya konsisten. Instalasi Docker di Ubuntu biasanya simpel, tinggal ikuti dokumentasi resmi dan selesai. Tapi kadang ada error yang muncul bukan saat instalasi, melainkan saat menjalankan container dan itu yang bikin frustasi karena kita merasa sudah install dengan benar.
 
 ## Permasalahan
 

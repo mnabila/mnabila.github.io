@@ -363,7 +363,7 @@ Beberapa hal yang bisa diambil dari pengalaman setup ini:
 
 ## Penutup
 
-Setup Kubernetes cluster di Debian dengan 1 control plane dan 1 worker node itu straightforward kalau langkah-langkahnya diikuti dengan urutan yang benar. Kuncinya ada di tiga hal: persiapan sistem yang lengkap (swap, modules, sysctl), container runtime yang dikonfigurasi dengan cgroup driver yang match, dan CIDR yang konsisten antara `kubeadm init` dan CNI plugin. Dari setup minimal ini, cluster bisa di-scale dengan menambah worker node menggunakan perintah `kubeadm join` yang sama.
+Setup Kubernetes cluster di Debian dengan 1 control plane dan 1 worker node itu simpel kalau langkah-langkahnya diikuti dengan urutan yang benar. Kuncinya ada di tiga hal: persiapan sistem yang lengkap (swap, modules, sysctl), container runtime yang dikonfigurasi dengan cgroup driver yang match, dan CIDR yang konsisten antara `kubeadm init` dan CNI plugin. Dari setup minimal ini, cluster bisa di-scale dengan menambah worker node menggunakan perintah `kubeadm join` yang sama.
 
 ## Referensi
 

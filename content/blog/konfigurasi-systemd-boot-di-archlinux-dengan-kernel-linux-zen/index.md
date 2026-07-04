@@ -1,7 +1,7 @@
 +++
 draft = false
 date = '2026-04-07'
-title = 'Setup Systemd Boot Di Archlinux Dengan Kernel Linux Zen'
+title = 'Konfigurasi Systemd Boot di Archlinux dengan Kernel Linux Zen'
 type = 'blog'
 description = 'Panduan setup systemd-boot sebagai bootloader di Archlinux menggunakan kernel linux-zen, mulai dari instalasi hingga konfigurasi boot entry.'
 image = ''
@@ -235,7 +235,7 @@ Satu hal lagi, **urutan `initrd` itu penting**. Microcode harus di-load sebelum 
 
 Setelah migrasi ke systemd-boot, beberapa insight yang didapat:
 
-- **Simplicity is a feature**: tidak semua hal butuh tool yang complex. Untuk single-boot system, systemd-boot jauh lebih straightforward dibanding GRUB. Satu file entry berisi semua yang perlu diketahui.
+- **Simplicity is a feature**: tidak semua hal butuh tool yang complex. Untuk single-boot system, systemd-boot jauh lebih simpel dibanding GRUB. Satu file entry berisi semua yang perlu diketahui.
 - **Plain text config itu powerful**: bisa di-track di dotfiles, mudah di-backup, dan gampang di-debug kalau ada masalah. Tidak ada auto-generated config yang misterius.
 - **Keyboard shortcut di menu berguna untuk troubleshooting**: tekan **d** untuk set default entry, **t/T** untuk adjust timeout, dan **e** untuk edit kernel parameter (kalau editor diaktifkan).
 - **`editor no` wajib di-set untuk keamanan**: secara default, siapa saja dengan akses fisik bisa edit kernel parameter di menu boot. Ini bisa dieksploitasi untuk bypass security, jadi selalu nonaktifkan.
@@ -244,7 +244,7 @@ Setelah migrasi ke systemd-boot, beberapa insight yang didapat:
 
 ## Penutup
 
-Migrasi dari GRUB ke systemd-boot itu straightforward dan hasilnya worth it, terutama untuk setup single OS. Konfigurasinya minimal (satu file loader.conf dan satu file entry per kernel), maintenance-nya hampir zero dengan `systemd-boot-update.service`, dan sudah terintegrasi dengan systemd ecosystem. Kuncinya ada di tiga hal: mount ESP di `/boot` agar kernel otomatis tersimpan di tempat yang benar, pastikan UUID dan path di boot entry sudah tepat, dan set `editor no` untuk keamanan.
+Migrasi dari GRUB ke systemd-boot itu simpel dan hasilnya worth it, terutama untuk setup single OS. Konfigurasinya minimal (satu file loader.conf dan satu file entry per kernel), maintenance-nya hampir zero dengan `systemd-boot-update.service`, dan sudah terintegrasi dengan systemd ecosystem. Kuncinya ada di tiga hal: mount ESP di `/boot` agar kernel otomatis tersimpan di tempat yang benar, pastikan UUID dan path di boot entry sudah tepat, dan set `editor no` untuk keamanan.
 
 ## Referensi
 

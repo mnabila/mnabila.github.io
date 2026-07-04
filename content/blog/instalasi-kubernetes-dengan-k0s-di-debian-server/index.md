@@ -23,7 +23,7 @@ Beberapa masalah yang sering ditemui saat setup Kubernetes secara tradisional di
 - **Konfigurasi container runtime yang tricky**: containerd harus di-set `SystemdCgroup = true` supaya match dengan kubelet, dan ini sering jadi sumber masalah
 - **Proses yang panjang untuk setup minimal**: bahkan untuk cluster 1 controller + 1 worker, butuh belasan langkah sebelum cluster ready
 
-Yang dibutuhkan adalah cara install Kubernetes yang lebih straightforward tanpa mengorbankan kompatibilitas dengan upstream Kubernetes.
+Yang dibutuhkan adalah cara install Kubernetes yang lebih simpel tanpa mengorbankan kompatibilitas dengan upstream Kubernetes.
 
 ## Pendekatan Solusi
 
@@ -278,7 +278,7 @@ Beberapa hal yang bisa diambil dari pengalaman setup k0s:
 
 ## Penutup
 
-Setup Kubernetes cluster di Debian dengan k0s jauh lebih straightforward dibanding kubeadm. Prosesnya bisa dirangkum dalam empat langkah yakni install binary, start controller, generate token, join worker. Tidak perlu install dependency tambahan, tidak perlu konfigurasi container runtime manual, dan tidak perlu disable swap atau load kernel modules. Dari setup minimal ini, cluster bisa di-scale dengan menambah worker node menggunakan token yang di-generate dari controller.
+Setup Kubernetes cluster di Debian dengan k0s jauh lebih simpel dibanding kubeadm. Prosesnya bisa dirangkum dalam empat langkah yakni install binary, start controller, generate token, join worker. Tidak perlu install dependency tambahan, tidak perlu konfigurasi container runtime manual, dan tidak perlu disable swap atau load kernel modules. Dari setup minimal ini, cluster bisa di-scale dengan menambah worker node menggunakan token yang di-generate dari controller.
 
 ## Referensi
 
