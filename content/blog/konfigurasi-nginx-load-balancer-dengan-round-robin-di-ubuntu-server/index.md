@@ -1,5 +1,5 @@
 +++
-draft = true
+draft = false
 date = '2026-06-27'
 title = 'Konfigurasi Nginx Load Balancer dengan Round Robin di Ubuntu Server'
 type = 'blog'

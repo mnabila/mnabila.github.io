@@ -1,5 +1,5 @@
 +++
-draft = true
+draft = false
 date = '2026-06-27'
 title = 'Komparasi Base Image Nginx dan Caddy untuk Dockerisasi Frontend'
 type = 'blog'

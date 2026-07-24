@@ -1,5 +1,5 @@
 +++
-draft = true
+draft = false
 date = '2026-06-27'
 title = 'Konfigurasi Canary Deployment dengan Nginx di Ubuntu Server'
 type = 'blog'
