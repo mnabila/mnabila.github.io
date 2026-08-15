@@ -10,9 +10,9 @@ tags = ['restic', 'rclone', 'ubuntu']
 
 ## Latar Belakang
 
-Log aplikasi gampang diabaikan sampai suatu hari benar-benar dibutuhkan. Aplikasi saya di `/opt/myapp/log` nulis log terus-menerus, dan biar disk tidak penuh, log-nya dirotate secara berkala. Rotasi ini otomatis ngehapus log lama setelah beberapa waktu. Masalahnya kerasa pas saya perlu nyelidikin kejadian yang sudah agak lama, misalnya nyari kapan sebuah error pertama muncul atau ngerekonstruksi sebuah insiden. Sering kali pas dicari, log-nya sudah keburu dihapus logrotator. Di beberapa post sebelumnya saya sudah bahas cara [menjadwalkan task dengan systemd timer](/blog/menjadwalkan-task-dengan-systemd-timer-sebagai-pengganti-cron-di-linux/) dan sinkronisasi Docker volume antar server, tapi keduanya belum nutup skenario ini: menyelamatkan log sebelum logrotator menghapusnya permanen.
+Log aplikasi gampang diabaikan sampai suatu hari benar-benar dibutuhkan. Aplikasi saya nulis log terus-menerus ke `/opt/myapp/log`, dan biar disk tidak penuh, log itu dirotate berkala sampai yang lama otomatis kebuang. Masalah justru muncul pas saya perlu nyelidikin kejadian yang sudah agak lama, entah nyari kapan sebuah error pertama muncul atau nyusun ulang jalannya sebuah insiden. Dan sering kali, pas log-nya dicari, ternyata sudah keburu dihapus logrotator.
 
-Jalan keluarnya adalah ngarsipin log ke lokasi terpisah sebelum dirotate. Simpan salinannya di storage lain, jadi kalaupun log lokal sudah dibuang rotasi, arsipnya tetap ada buat diperiksa nanti. Tapi ngarsipin log bikin beberapa syarat baru. Log sering ngandung info sensitif seperti IP, path internal, atau token, jadi tidak boleh disimpan mentah di storage terpisah dan harus terenkripsi. Log itu repetitif dan numpuk cepat, jadi nyalin ulang semuanya tiap hari boros storage dan bandwidth, butuh deduplikasi dan incremental. Dan arsip yang tidak pernah diuji restore sama saja dengan tidak punya arsip. Ketiga syarat inilah yang harus dipenuhi sebelum saya percaya sama arsipnya.
+Di beberapa post sebelumnya saya sudah bahas cara [menjadwalkan task dengan systemd timer](/blog/menjadwalkan-task-dengan-systemd-timer-sebagai-pengganti-cron-di-linux/) dan sinkronisasi Docker volume antar server, tapi keduanya belum nutup skenario ini. Yang saya butuhkan adalah cara menyelamatkan log sebelum logrotator menghapusnya permanen, dengan menyimpan salinannya di storage terpisah, supaya kalaupun log lokal sudah dibuang rotasi, arsipnya tetap ada buat diperiksa nanti. Sampai di sini belum ada satu pun tool yang saya pakai selama ini yang mengisi kebutuhan itu.
 
 ## Permasalahan
 
@@ -47,7 +47,7 @@ Sebagai contoh, saya akan melakukan backup direktori log `/opt/myapp/log` ke Rus
 
 ### Instalasi Restic dan Rclone
 
-Restic dan rclone sudah tersedia di repository Ubuntu, tapi versinya kerap tertinggal beberapa rilis. Biar dapat fitur dan perbaikan terbaru, saya pasang dari sumber resminya.
+Restic dan rclone sudah tersedia di repository Ubuntu, jadi rute paling simpel adalah pasang langsung lewat `apt`. Versinya memang kerap tertinggal beberapa rilis dari upstream, tapi buat kebutuhan backup log seperti ini sudah lebih dari cukup. Kalau butuh fitur atau perbaikan terbaru, restic dan rclone juga menyediakan binary resmi yang bisa dipasang manual.
 
 ```bash
 # Install dari repository (paling simpel)
@@ -269,7 +269,7 @@ Terakhir, saya belajar pentingnya **misahin verifikasi dari backup**. Perintah `
 
 ## Penutup
 
-Kombinasi restic dan rclone ngasih fondasi backup yang lengkap. Terenkripsi sejak di server, hemat berkat deduplikasi, fleksibel karena bisa nulis ke hampir semua cloud, dan otomatis lewat systemd timer. Sisanya tinggal disiplin di dua kebiasaan: misahin operasi berat dari backup rutin, dan menguji restore secara berkala. Arsip log baru benar-benar bernilai pas log aslinya sudah dihapus rotasi. Di momen itu, semua persiapan tadi terbayar lunas.
+Kombinasi restic dan rclone ngasih fondasi backup yang lengkap. Terenkripsi sejak di server, hemat berkat deduplikasi, fleksibel karena bisa nulis ke hampir semua cloud, dan otomatis lewat systemd timer. Sisanya tinggal disiplin di dua kebiasaan, yakni misahin operasi berat dari backup rutin dan menguji restore secara berkala. Arsip log baru benar-benar bernilai pas log aslinya sudah dihapus rotasi. Di momen itu, semua persiapan tadi terbayar lunas.
 
 ## Referensi
 
