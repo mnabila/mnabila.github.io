@@ -199,11 +199,11 @@ Script ini juga handle cleanup otomatis saat di-interrupt dengan Ctrl+C. Port fo
 
 ## Tantangan yang Dihadapi
 
-Tantangan pertama yang cukup membingungkan adalah **timing connection**. Server butuh waktu beberapa detik untuk start di device. Kalau ffmpeg mencoba connect sebelum server siap, connection refused dan harus restart semuanya. Solusinya cukup simpel: tambahkan `sleep 2` setelah start server. Tidak elegan, tapi reliable.
+Tantangan pertama yang cukup membingungkan adalah **timing connection**. Server butuh waktu beberapa detik untuk start di device. Kalau ffmpeg mencoba connect sebelum server siap, connection refused dan harus restart semuanya. Solusinya cukup simpel, tambahkan `sleep 2` setelah start server. Tidak elegan, tapi reliable.
 
 Tantangan kedua adalah soal **versi scrcpy server**. Flag-flag seperti `send_frame_meta` dan `send_codec_meta` baru ada di scrcpy versi 2.x ke atas. Kalau pakai versi lama, flag ini tidak dikenali dan server gagal start tanpa error message yang jelas. Pastikan versi yang di-pass ke server command sama persis dengan versi binary scrcpy yang terinstall.
 
-Yang juga perlu diperhatikan: kalau device masuk sleep mode atau layar mati, stream berhenti dan ffmpeg/mpv ikut exit. Untuk live monitoring yang benar-benar continuous, perlu tambahkan `stay_awake=true` dan `power_off_on_close=false` di flag server, plus logic restart di script wrapper kalau connection terputus.
+Yang juga perlu diperhatikan, kalau device masuk sleep mode atau layar mati, stream berhenti dan ffmpeg/mpv ikut exit. Untuk live monitoring yang benar-benar continuous, perlu tambahkan `stay_awake=true` dan `power_off_on_close=false` di flag server, plus logic restart di script wrapper kalau connection terputus.
 
 ## Insight dan Pembelajaran
 

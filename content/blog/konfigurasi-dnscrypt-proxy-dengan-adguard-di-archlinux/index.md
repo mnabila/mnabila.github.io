@@ -1,7 +1,7 @@
 +++
 draft = false
 date = '2026-04-05'
-title = 'Konfigurasi Dnscrypt Proxy Dengan Adguard Di Archlinux'
+title = 'Konfigurasi Dnscrypt Proxy dengan Adguard di Archlinux'
 type = 'blog'
 description = 'Cara mengkonfigurasi dnscrypt-proxy di Archlinux menggunakan AdGuard DNS untuk enkripsi DNS sekaligus ad blocking.'
 image = ''
@@ -12,7 +12,7 @@ tags = ['dnscrypt', 'dns', 'adguard', 'archlinux']
 
 DNS query secara default dikirim dalam bentuk plain text, artinya ISP, admin jaringan, atau siapapun yang berada di jalur koneksi bisa melihat domain apa saja yang kita akses. Selain masalah privasi, beberapa ISP juga melakukan DNS hijacking untuk mengarahkan traffic ke halaman iklan atau memblokir akses ke situs tertentu.
 
-**dnscrypt-proxy** adalah tool yang mengenkripsi DNS query menggunakan protokol DNSCrypt atau DNS-over-HTTPS (DoH), sehingga query DNS tidak bisa disadap atau dimanipulasi. dikombinasikan dengan **AdGuard DNS** sebagai upstream resolver, kita tidak hanya mendapat enkripsi tapi juga ad blocking dan tracker protection langsung di level DNS, tanpa perlu extension browser tambahan.
+Untuk mengatasi ini, DNS query perlu dienkripsi agar tidak bisa disadap atau dimanipulasi di perjalanan, dan idealnya sekaligus bisa memfilter iklan dan tracker untuk seluruh sistem tanpa perlu extension browser tambahan.
 
 ## Permasalahan
 
@@ -27,7 +27,7 @@ Yang dibutuhkan adalah satu solusi yang menangani enkripsi DNS sekaligus filteri
 
 ## Pendekatan Solusi
 
-Ada beberapa kombinasi tool dan DNS provider yang bisa dipakai:
+**dnscrypt-proxy** adalah tool yang mengenkripsi DNS query menggunakan protokol DNSCrypt atau DNS-over-HTTPS (DoH), dan bisa dikombinasikan dengan **AdGuard DNS** sebagai upstream resolver untuk mendapat ad blocking dan tracker protection langsung di level DNS. Ada beberapa kombinasi tool dan DNS provider yang bisa dipakai:
 
 | Pendekatan | Kelebihan | Kekurangan |
 |------------|-----------|------------|

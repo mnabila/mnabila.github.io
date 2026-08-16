@@ -1,7 +1,7 @@
 +++
 draft = false
 date = '2026-04-05'
-title = 'Konfigurasi Driver Nvidia Rtx 3050 Di Archlinux Dengan Systemd Boot'
+title = 'Konfigurasi Driver Nvidia Rtx 3050 di Archlinux dengan Systemd Boot'
 type = 'blog'
 description = 'Cara install dan konfigurasi driver NVIDIA RTX 3050 di Archlinux yang menggunakan systemd-boot sebagai bootloader.'
 image = ''
@@ -92,7 +92,7 @@ Flag `-P` akan rebuild initramfs untuk semua kernel yang terinstall, termasuk `l
 
 ### Pacman Hook untuk Auto-Rebuild
 
-Satu hal yang sering terlupakan: setiap kali kernel di-update, initramfs perlu di-rebuild agar module NVIDIA yang baru ikut masuk. Buat pacman hook agar proses ini otomatis:
+Satu hal yang sering terlupakan, setiap kali kernel di-update, initramfs perlu di-rebuild agar module NVIDIA yang baru ikut masuk. Buat pacman hook agar proses ini otomatis:
 
 Buat file `/etc/pacman.d/hooks/nvidia.hook`:
 
@@ -251,7 +251,7 @@ Tantangan pertama adalah memahami hubungan antara package driver dan kernel. Di 
 
 Tantangan kedua adalah soal **systemd-boot**. Karena tidak ada tool seperti `update-grub` yang otomatis mengurus kernel parameter, saya harus manual menambahkan parameter NVIDIA di boot entry. Ini sebenarnya lebih transparan, saya tahu persis apa yang dikonfigurasi, tapi juga berarti saya yang bertanggung jawab memastikan parameter-nya benar dan tidak ada yang terlewat.
 
-Satu hal yang perlu diingat: jika ingin menggunakan `nvidia-dkms`, pastikan `linux-zen-headers` sudah terinstall **sebelum** install driver. Tanpa header, DKMS tidak bisa compile module dan driver tidak akan tersedia saat boot.
+Satu hal yang perlu diingat, jika ingin menggunakan `nvidia-dkms`, pastikan `linux-zen-headers` sudah terinstall **sebelum** install driver. Tanpa header, DKMS tidak bisa compile module dan driver tidak akan tersedia saat boot.
 
 ## Insight dan Pembelajaran
 
@@ -266,7 +266,7 @@ Setelah menjalani proses setup ini, beberapa insight:
 
 ## Penutup
 
-Setup driver NVIDIA di Archlinux memang butuh beberapa langkah manual, tapi hasilnya worth it, performa GPU optimal, Wayland berjalan lancar, dan suspend/resume yang reliable. Dengan NVIDIA PRIME, saya bisa mendapatkan yang terbaik dari dua dunia: hemat daya pakai Intel iGPU untuk sehari-hari, dan performa penuh NVIDIA saat dibutuhkan lewat `prime-run`. Kuncinya ada di empat hal: install package yang sesuai kernel (`nvidia-dkms` untuk kernel non-standar), konfigurasi early loading di mkinitcpio, menambahkan kernel parameter `nvidia_drm.modeset=1` di boot entry systemd-boot, dan setup NVIDIA PRIME untuk hybrid GPU. Dengan pacman hook yang sudah di-setup, proses update kernel ke depannya juga tidak perlu khawatir karena initramfs otomatis di-rebuild.
+Setup driver NVIDIA di Archlinux memang butuh beberapa langkah manual, tapi hasilnya worth it, performa GPU optimal, Wayland berjalan lancar, dan suspend/resume yang reliable. Dengan NVIDIA PRIME, saya bisa mendapatkan yang terbaik dari dua dunia, hemat daya pakai Intel iGPU untuk sehari-hari, dan performa penuh NVIDIA saat dibutuhkan lewat `prime-run`. Kuncinya ada di empat hal, install package yang sesuai kernel (`nvidia-dkms` untuk kernel non-standar), konfigurasi early loading di mkinitcpio, menambahkan kernel parameter `nvidia_drm.modeset=1` di boot entry systemd-boot, dan setup NVIDIA PRIME untuk hybrid GPU. Dengan pacman hook yang sudah di-setup, proses update kernel ke depannya juga tidak perlu khawatir karena initramfs otomatis di-rebuild.
 
 ## Referensi
 

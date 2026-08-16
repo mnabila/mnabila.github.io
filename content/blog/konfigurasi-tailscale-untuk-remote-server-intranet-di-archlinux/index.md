@@ -1,7 +1,7 @@
 +++
 draft = false
 date = '2026-04-05'
-title = 'Konfigurasi Tailscale Untuk Remote Server Intranet Di Archlinux'
+title = 'Konfigurasi Tailscale untuk Remote Server Intranet di Archlinux'
 type = 'blog'
 description = 'Cara menggunakan Tailscale di Archlinux untuk mengakses server yang berada di jaringan intranet dari mana saja tanpa perlu VPN tradisional atau port forwarding.'
 image = ''
@@ -12,11 +12,9 @@ tags = ['tailscale', 'vpn', 'wireguard', 'networking', 'archlinux']
 
 Pernah dalam situasi di mana harus mengakses server kantor atau homelab yang ada di balik NAT/firewall, tapi tidak bisa karena sedang di luar jaringan? Biasanya solusinya adalah setup VPN tradisional: OpenVPN, WireGuard manual, atau minta IT buka port forwarding. Semua opsi ini butuh effort yang tidak sedikit dan maintenance yang cukup merepotkan.
 
-**Tailscale** hadir sebagai solusi yang jauh lebih simpel. Tailscale adalah mesh VPN berbasis **WireGuard** yang membuat semua device kita terhubung dalam satu jaringan privat (disebut **tailnet**), tanpa perlu konfigurasi firewall, port forwarding, atau setup server VPN. Cukup install di setiap device, login, dan semua device langsung bisa saling berkomunikasi, bahkan kalau berada di balik NAT yang berbeda.
-
 ## Permasalahan
 
-Skenarionya sederhana: ada beberapa server di jaringan intranet (misalnya homelab atau kantor) yang perlu diakses dari luar. Masalahnya:
+Skenarionya sederhana, ada beberapa server di jaringan intranet (misalnya homelab atau kantor) yang perlu diakses dari luar. Masalahnya:
 
 - Server berada di balik NAT/firewall tanpa public IP
 - Port forwarding bukan opsi karena tidak punya kontrol penuh atas router, atau terlalu berisiko dari sisi keamanan
@@ -27,7 +25,7 @@ Yang dibutuhkan adalah cara untuk mengakses server intranet dari mana saja, dari
 
 ## Pendekatan Solusi
 
-Tailscale menyelesaikan ini dengan beberapa pendekatan:
+**Tailscale** adalah mesh VPN berbasis **WireGuard** yang membuat semua device kita terhubung dalam satu jaringan privat (disebut **tailnet**), tanpa perlu konfigurasi firewall, port forwarding, atau setup server VPN. Cukup install di setiap device, login, dan semua device langsung bisa saling berkomunikasi, bahkan kalau berada di balik NAT yang berbeda. Tailscale menyelesaikan masalah tadi dengan beberapa pendekatan:
 
 1. **Mesh network peer-to-peer**: device berkomunikasi langsung tanpa melewati server pusat, sehingga latency rendah
 2. **NAT traversal otomatis**: Tailscale menggunakan teknik seperti STUN dan DERP relay untuk menembus NAT tanpa port forwarding
@@ -137,10 +135,10 @@ $ sudo sysctl -p /etc/sysctl.d/99-tailscale.conf
 Lalu advertise subnet yang ingin diekspos:
 
 ```
-$ sudo tailscale set --advertise-routes=192.168.1.0/24
+$ sudo tailscale set --advertise-routes=10.10.10.0/24
 ```
 
-Ganti `192.168.1.0/24` dengan subnet intranet yang sesuai. Setelah itu, approve route di [Tailscale Admin Console](https://login.tailscale.com/admin/machines): klik device yang menjadi router, lalu approve subnet route-nya.
+Ganti `10.10.10.0/24` dengan subnet intranet yang sesuai. Setelah itu, approve route di [Tailscale Admin Console](https://login.tailscale.com/admin/machines): klik device yang menjadi router, lalu approve subnet route-nya.
 
 Di device client yang ingin mengakses subnet tersebut, aktifkan penerimaan route:
 
@@ -148,7 +146,7 @@ Di device client yang ingin mengakses subnet tersebut, aktifkan penerimaan route
 $ sudo tailscale set --accept-routes
 ```
 
-Sekarang device client bisa mengakses semua IP di subnet `192.168.1.0/24` melalui Tailscale, seolah-olah berada di jaringan yang sama.
+Sekarang device client bisa mengakses semua IP di subnet `10.10.10.0/24` melalui Tailscale, seolah-olah berada di jaringan yang sama.
 
 ### MagicDNS
 

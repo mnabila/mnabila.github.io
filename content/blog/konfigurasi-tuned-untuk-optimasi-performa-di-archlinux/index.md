@@ -2,7 +2,7 @@
 draft = false
 date = '2026-04-05'
 lastmod = '2026-04-06'
-title = 'Konfigurasi Tuned Untuk Optimasi Performa Di Archlinux'
+title = 'Konfigurasi Tuned untuk Optimasi Performa di Archlinux'
 type = 'blog'
 description = 'Cara menggunakan tuned untuk optimasi performa sistem secara otomatis di Archlinux berdasarkan profil workload yang sedang berjalan.'
 image = ''
@@ -12,8 +12,6 @@ tags = ['tuned', 'performance', 'power-management', 'archlinux']
 ## Latar Belakang
 
 Salah satu hal yang sering diabaikan di Linux desktop adalah **tuning performa sistem**. Kebanyakan dari kita langsung pakai default setting setelah install, CPU governor di `schedutil`, I/O scheduler default, dan parameter kernel apa adanya. Padahal, kebutuhan setiap workload itu berbeda. Saat ngoding, kita butuh responsivitas. Saat build project, kita butuh throughput maksimal. Saat di battery, kita butuh efisiensi daya.
-
-Di sinilah **tuned** masuk. Tool ini awalnya dikembangkan oleh Red Hat untuk RHEL, tapi karena open source, kita bisa menggunakannya di Archlinux juga. Tuned adalah daemon yang secara dinamis mengoptimasi parameter sistem berdasarkan profil yang kita pilih, tanpa perlu tweaking manual satu per satu.
 
 ## Permasalahan
 
@@ -29,7 +27,7 @@ Tanpa tool khusus, kita harus menulis script sendiri atau mengubah parameter sat
 
 ## Pendekatan Solusi
 
-Tuned menyelesaikan masalah ini dengan pendekatan **profile-based tuning**. Konsepnya sederhana:
+**Tuned** adalah daemon yang secara dinamis mengoptimasi parameter sistem berdasarkan profil yang kita pilih, tanpa perlu tweaking manual satu per satu. Tool ini awalnya dikembangkan oleh Red Hat untuk RHEL, tapi karena open source, kita bisa menggunakannya di Archlinux juga. Tuned menyelesaikan masalah ini dengan pendekatan **profile-based tuning**. Konsepnya sederhana:
 
 1. **Pilih profil** yang sesuai dengan workload
 2. **Tuned daemon** menerapkan semua parameter yang didefinisikan di profil tersebut
@@ -168,7 +166,7 @@ Profil di atas menggunakan `balanced` sebagai base, lalu menonaktifkan turbo boo
 - **Konsumsi daya lebih rendah**: cocok untuk laptop yang ingin battery life lebih panjang tanpa harus masuk full `powersave`.
 - **Performa tetap konsisten**: turbo boost bisa menyebabkan thermal throttling di workload yang sustained, sehingga performa naik-turun. Tanpa turbo, performa lebih predictable meskipun sedikit lebih rendah.
 
-Directive `include` sangat berguna supaya tidak perlu menulis ulang semua parameter dari nol, cukup override yang ingin diubah saja.
+Opsi `include` sangat berguna supaya tidak perlu menulis ulang semua parameter dari nol, cukup override yang ingin diubah saja.
 
 Aktifkan profil custom:
 

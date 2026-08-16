@@ -28,7 +28,7 @@ Begitu paham `After=` cuma ngurus urutan, muncul beberapa pertanyaan baru yang b
 
 ## Ordering dan Dependency Itu Dua Hal Berbeda
 
-Kunci yang bikin semuanya klik itu ternyata sederhana. Di systemd, **ordering** dan **dependency** itu dua hal yang benar-benar terpisah. Ordering ngurus *kapan* sebuah unit start relatif ke unit lain, sedangkan dependency ngurus *apakah* unit lain ikut dijalankan waktu unit ini start.
+Kunci yang bikin semuanya klik itu ternyata sederhana. Di systemd, **ordering** dan **dependency** itu dua hal yang benar-benar terpisah. Ordering ngurus **kapan** sebuah unit start relatif ke unit lain, sedangkan dependency ngurus **apakah** unit lain ikut dijalankan waktu unit ini start.
 
 | Konsep         | Opsi                            | Pertanyaan yang dijawab                                    |
 | -------------- | ------------------------------- | ---------------------------------------------------------- |
@@ -41,7 +41,7 @@ Salah paham saya di awal murni karena mencampur dua hal ini jadi satu kata "butu
 
 ## Ordering: After dan Before
 
-**`After=`** dan **`Before=`** cuma mengatur urutan start, tanpa efek lain. `After=b.service` di unit `a.service` artinya, *kalau* `a` dan `b` kebetulan sama-sama dijadwalkan jalan dalam satu flow, maka `b` harus selesai start dulu baru `a` menyusul. Karena opsi ini nggak bikin `b` ikut jalan.
+**`After=`** dan **`Before=`** cuma mengatur urutan start, tanpa efek lain. `After=b.service` di unit `a.service` artinya, **kalau** `a` dan `b` kebetulan sama-sama dijadwalkan jalan dalam satu flow, maka `b` harus selesai start dulu baru `a` menyusul. Karena opsi ini nggak bikin `b` ikut jalan.
 
 ```ini
 [Unit]
@@ -76,7 +76,7 @@ After=postgresql.service
 ExecStart=/opt/myapp/server
 ```
 
-Perhatikan `After=` tetap ada. Tanpa `After=`, `Requires=` cuma menjamin Postgres *ikut dijalankan*, tapi systemd bebas start keduanya **barengan**. Aplikasi saya bisa saja jadi hidup sepersekian detik sebelum Postgres siap menerima koneksi, dan race condition-nya balik lagi. Inilah kesalahan kedua saya, yakni `Requires=` tanpa `After=`.
+Perhatikan `After=` tetap ada. Tanpa `After=`, `Requires=` cuma menjamin Postgres **ikut dijalankan**, tapi systemd bebas start keduanya **barengan**. Aplikasi saya bisa saja jadi hidup sepersekian detik sebelum Postgres siap menerima koneksi, dan race condition-nya balik lagi. Inilah kesalahan kedua saya, yakni `Requires=` tanpa `After=`.
 
 > **Penting:** `Requires=` dan `After=` itu pasangan, bukan pilihan. `Requires=` yang menjalankan unit-nya, `After=` yang memastikan urutannya. Butuh dua-duanya buat "start Postgres dulu, baru aplikasi saya".
 

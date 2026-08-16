@@ -12,7 +12,7 @@ tags = ['v4l2loopback', 'scrcpy', 'android', 'webcam', 'archlinux']
 
 Saya sedang mengerjakan project computer vision yang butuh feed video dari kamera Android. Masalahnya, aplikasi seperti **OpenCV**, **OBS**, atau bahkan browser yang butuh akses webcam hanya bisa membaca device `/dev/video*`, mereka tidak bisa langsung mengambil stream dari layar Android yang terhubung via USB.
 
-Opsi paling simple adalah beli capture card. Tapi untuk eksperimen dan prototyping, rasanya overkill mengeluarkan uang untuk hardware tambahan kalau bisa diselesaikan dengan software. Di Linux, ternyata ada cara untuk membuat virtual webcam device menggunakan **v4l2loopback**, sebuah kernel module yang membuat device `/dev/video*` virtual. Kombinasikan dengan **scrcpy** yang bisa mirror layar Android via ADB, dan hasilnya adalah layar Android masuk sebagai virtual webcam yang bisa dibaca oleh aplikasi apapun.
+Opsi paling simple adalah beli capture card. Tapi untuk eksperimen dan prototyping, rasanya overkill mengeluarkan uang untuk hardware tambahan kalau bisa diselesaikan dengan software.
 
 ## Permasalahan
 
@@ -33,7 +33,7 @@ Ada beberapa cara untuk mendapatkan video feed dari Android ke Linux:
 | **adb screenrecord + pipe** | Minimal dependency | Latency tinggi, frame rate terbatas, tidak stabil |
 | **MJPEG stream + ffmpeg** | Fleksibel | Setup kompleks, overhead encoding/decoding |
 
-Saya memilih **scrcpy + v4l2loopback** karena:
+Kombinasi yang saya pakai adalah **v4l2loopback**, sebuah kernel module yang membuat device `/dev/video*` virtual, dengan **scrcpy** yang bisa mirror layar Android via ADB. Hasilnya, layar Android masuk sebagai virtual webcam yang bisa dibaca oleh aplikasi apapun. Saya memilih **scrcpy + v4l2loopback** karena:
 
 1. **Zero cost**: tidak butuh hardware tambahan, cukup kabel USB yang sudah ada
 2. **Low latency**: scrcpy menggunakan koneksi USB langsung via ADB, latency-nya dalam kisaran 35-70ms

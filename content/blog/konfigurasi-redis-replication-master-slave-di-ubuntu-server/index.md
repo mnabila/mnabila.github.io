@@ -12,9 +12,7 @@ tags = ['redis', 'replication', 'ubuntu', 'server']
 
 Aplikasi production yang saya kelola mulai menunjukkan gejala bottleneck di layer cache. Semua operasi read dan write Redis masuk ke satu instance yang sama. Selama trafik normal tidak ada masalah, tapi begitu peak hour tiba, response time naik drastis dan terkadang ada beberapa request yang timeout karena Redis tidak sanggup menangani semua beban sendirian.
 
-Setelah saya cek, Mayoritas operasi ke Redis adalah read, session lookup, cache hit, rate limiting check. Write hanya terjadi saat ada update data atau cache invalidation. Artinya, kalau beban read bisa didistribusikan ke node lain, master tidak perlu kerja sendirian lagi.
-
-Solusi yang saya ambil adalah setup **Redis replication** dengan skema master-slave. Master fokus handle write, slave fokus handle read. Selain performa lebih baik, slave juga berfungsi sebagai fallback kalau master tiba-tiba down. Setup ini saya lakukan di dua Ubuntu Server 22.04 dalam satu network.
+Setelah saya cek, mayoritas operasi ke Redis adalah read, session lookup, cache hit, rate limiting check. Write hanya terjadi saat ada update data atau cache invalidation. Artinya, kalau beban read bisa didistribusikan ke node lain, master tidak perlu kerja sendirian lagi.
 
 ## Permasalahan
 
@@ -37,14 +35,14 @@ Ada beberapa opsi untuk mendistribusikan beban Redis:
 | **Redis Cluster**       | Sharding otomatis, horizontal scaling untuk write   | Butuh minimal 6 node, aplikasi harus support cluster protocol    |
 | **Twemproxy / Envoy**   | Proxy layer untuk distribusi koneksi                | Nambah layer infrastruktur, single point of failure baru         |
 
-Saya pilih **Master-Slave Replication** karena paling simpel untuk kebutuhan saat ini. Cukup untuk memisahkan beban read dan write, dan slave bisa sekaligus jadi node cadangan. Di sisi aplikasi, tinggal arahkan read ke slave dan write ke master.
+Saya pilih **Redis replication** dengan skema master-slave karena paling simpel untuk kebutuhan saat ini. Master fokus handle write, slave fokus handle read, dan selain performa lebih baik, slave juga berfungsi sebagai fallback kalau master tiba-tiba down. Di sisi aplikasi, tinggal arahkan read ke slave dan write ke master. Setup ini saya lakukan di dua Ubuntu Server 22.04 dalam satu network.
 
 Arsitektur yang dibangun:
 
 | Komponen   | IP Address     | Peran                                        |
 | ---------- | -------------- | -------------------------------------------- |
-| **Master** | `192.168.1.10` | Handle write, kirim data replication ke slave |
-| **Slave**  | `192.168.1.11` | Terima replication dari master, handle read   |
+| **Master** | `10.10.10.11` | Handle write, kirim data replication ke slave |
+| **Slave**  | `10.10.10.12` | Terima replication dari master, handle read   |
 
 ## Implementasi Teknis
 
@@ -141,7 +139,7 @@ protected-mode no
 port 6379
 requirepass slave123
 masterauth master123
-replicaof 192.168.1.10 6379
+replicaof 10.10.10.11 6379
 replica-read-only yes
 ```
 
@@ -173,7 +171,7 @@ $ redis-cli -a master123 info replication
 # Replication
 role:master
 connected_slaves:1
-slave0:ip=192.168.1.11,port=6379,state=online,offset=1234,lag=0
+slave0:ip=10.10.10.12,port=6379,state=online,offset=1234,lag=0
 master_failover_state:no-failover
 master_replid:abc123def456...
 master_replid2:0000000000000000000000000000000000000000
@@ -201,7 +199,7 @@ $ redis-cli -a slave123 info replication
 ```
 # Replication
 role:slave
-master_host:192.168.1.10
+master_host:10.10.10.11
 master_port:6379
 master_link_status:up
 master_last_io_seconds_ago:1
@@ -273,7 +271,7 @@ $ redis-cli -a slave123 info replication
 ```
 # Replication
 role:slave
-master_host:192.168.1.10
+master_host:10.10.10.11
 master_port:6379
 master_link_status:down
 master_last_io_seconds_ago:-1
@@ -315,7 +313,7 @@ $ sudo systemctl start redis-server
 Di slave (kembalikan jadi replica):
 
 ```
-$ redis-cli -a slave123 REPLICAOF 192.168.1.10 6379
+$ redis-cli -a slave123 REPLICAOF 10.10.10.11 6379
 ```
 
 ### Optimasi Redis untuk High Traffic
@@ -473,5 +471,5 @@ Redis replication master-slave cukup efektif untuk mendistribusikan beban read d
 
 ## Referensi
 
-- [Redis Master Slave](https://www.educba.com/redis-master-slave/), diakses pada2026-05-14
-- [Redis Replication Documentation](https://redis.io/docs/management/replication/), diakses pada2026-05-14
+- [Redis Master Slave](https://www.educba.com/redis-master-slave/), diakses pada 2026-05-14
+- [Redis Replication Documentation](https://redis.io/docs/management/replication/), diakses pada 2026-05-14

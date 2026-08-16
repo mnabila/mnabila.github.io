@@ -1,7 +1,7 @@
 +++
 draft = false
 date = '2026-04-11'
-title = 'Instalasi Kubernetes Dengan k0s di Debian Server'
+title = 'Instalasi Kubernetes dengan k0s di Debian Server'
 type = 'blog'
 description = 'Panduan instalasi Kubernetes cluster di Debian server menggunakan k0s dengan setup 1 controller dan 1 worker node tanpa ribet konfigurasi'
 image = ''
@@ -12,7 +12,7 @@ tags = ['kubernetes', 'k0s', 'debian', 'container']
 
 Kalau pernah setup Kubernetes pakai kubeadm, pasti tahu betapa banyaknya langkah yang harus dilakukan yakni disable swap, load kernel modules, set sysctl parameters, install containerd, konfigurasi cgroup driver, baru install kubeadm/kubelet/kubectl. Belum lagi kalau ada satu langkah yang terlewat, debugging-nya bisa memakan waktu berjam-jam.
 
-**k0s** hadir sebagai alternatif yang jauh lebih simpel, k0s adalah distribusi Kubernetes yang dikemas dalam **single binary.* Semua komponen yang dibutuhkan (containerd, etcd, CoreDNS, kube-proxy, Metrics Server) sudah dibundel di dalamnya. Tidak perlu install dependency satu per satu, tidak perlu konfigurasi container runtime manual, dan cluster bisa jalan dalam hitungan menit. Yang paling penting, k0s tetap **CNCF certified** artinya 100% upstream Kubernetes, bukan versi modifikasi.
+Untuk sekadar menjalankan cluster kecil dengan 1 controller dan 1 worker, rangkaian langkah sebanyak itu terasa berlebihan dan rawan bikin frustrasi.
 
 ## Permasalahan
 
@@ -43,6 +43,8 @@ Saya memilih **k0s** karena:
 3. **Etcd built-in**: berbeda dengan k3s yang default pakai SQLite, k0s sudah include etcd sebagai datastore
 4. **System requirements rendah**: minimal 1 vCPU dan 1 GB RAM untuk controller, bahkan worker cuma butuh 0.5 GB RAM
 
+Sebagai distribusi Kubernetes yang dikemas dalam **single binary**, k0s sudah membundel semua komponen yang dibutuhkan (containerd, etcd, CoreDNS, kube-proxy, Metrics Server) di dalamnya, sehingga cluster bisa jalan dalam hitungan menit tanpa perlu install dependency satu per satu atau konfigurasi container runtime manual.
+
 ## Implementasi Teknis
 
 ### Arsitektur Cluster
@@ -51,8 +53,8 @@ Berikut gambaran arsitektur yang akan di-setup:
 
 | Node | Hostname | IP (contoh) | Role |
 |------|----------|-------------|------|
-| Server 1 | `k0s-controller` | `192.168.1.10` | Controller |
-| Server 2 | `k0s-worker` | `192.168.1.11` | Worker |
+| Server 1 | `k0s-controller` | `10.10.10.10` | Controller |
+| Server 2 | `k0s-worker` | `10.10.10.11` | Worker |
 
 Minimum system requirements:
 
@@ -65,7 +67,7 @@ Minimum system requirements:
 
 ### Install k0s Binary (Semua Node)
 
-Langkah ini dilakukan di **kedua node**: controller dan worker.
+Langkah ini dilakukan di **kedua node**, yakni controller dan worker.
 
 Download k0s binary menggunakan script resmi:
 
@@ -171,7 +173,7 @@ Parameter `--expiry` menentukan masa berlaku token. Default-nya tidak expire, ta
 Transfer file token ke worker node:
 
 ```bash
-$ scp ~/worker-token user@192.168.1.11:~/worker-token
+$ scp ~/worker-token user@10.10.10.11:~/worker-token
 ```
 
 ### Join Worker Node (Worker Node Only)
@@ -236,10 +238,10 @@ Copy output-nya ke machine yang mau dipakai, simpan sebagai `~/.kube/config`. Ja
 ```bash
 # Di local machine
 $ mkdir -p ~/.kube
-$ scp user@192.168.1.10:/var/lib/k0s/pki/admin.conf ~/.kube/config
+$ scp user@10.10.10.10:/var/lib/k0s/pki/admin.conf ~/.kube/config
 
 # Ganti localhost dengan IP controller
-$ sed -i 's/localhost/192.168.1.10/g' ~/.kube/config
+$ sed -i 's/localhost/10.10.10.10/g' ~/.kube/config
 
 # Test koneksi
 $ kubectl get nodes

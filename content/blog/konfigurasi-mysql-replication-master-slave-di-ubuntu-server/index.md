@@ -12,10 +12,6 @@ tags = ['mysql', 'replication', 'database', 'ubuntu', 'server']
 
 Punya backend service yang traffic-nya makin tinggi dan yang paling merasakan dampaknya adalah database dikarenakan semua query baik read maupun write masuk ke satu instance MySQL yang sama. Makin banyak user, response time makin lambat. Padahal kalau kalau dilihat di log servicenya mayoritas querynya adalah proses read bukan write.
 
-Solusi yang paling masuk akal untuk kasus ini adalah **MySQL replication** dengan skema master-slave. Idenya simpel master khusus handle write, slave khusus handle read. Selain performa jadi lebih baik, slave juga bisa jadi semacam backup kalau sewaktu-waktu master bermasalah.
-
-Setup ini saya lakukan di dua Ubuntu Server 22.04 dalam satu network. Satu jadi master, satu lagi jadi slave.
-
 ## Permasalahan
 
 Pakai satu instance MySQL untuk semuanya mulai terasa limitasinya:
@@ -28,7 +24,7 @@ Pakai satu instance MySQL untuk semuanya mulai terasa limitasinya:
 
 ## Pendekatan Solusi
 
-Ada beberapa cara untuk mendistribusikan beban database:
+**MySQL replication** dengan skema master-slave adalah solusi yang paling masuk akal untuk kasus ini. Idenya simpel, master khusus handle write, slave khusus handle read. Selain performa jadi lebih baik, slave juga bisa jadi semacam backup kalau sewaktu-waktu master bermasalah. Ada beberapa cara untuk mendistribusikan beban database:
 
 | Pendekatan                    | Kelebihan                                              | Kekurangan                                                         |
 | ----------------------------- | ------------------------------------------------------ | ------------------------------------------------------------------ |
@@ -37,14 +33,14 @@ Ada beberapa cara untuk mendistribusikan beban database:
 | **MySQL Group Replication**   | Built-in fault tolerance, automatic failover           | Butuh minimal 3 node, ada overhead consensus                       |
 | **ProxySQL / MySQL Router**   | Query routing otomatis, load balancing                 | Nambah layer infrastruktur, bisa jadi single point of failure baru |
 
-Pada kasus ini saya pilih **Master-Slave Replication** karena paling simpel untuk kebutuhan ini. Cukup untuk misahin beban antara read dan write, dan slave bisa sekaligus jadi backup node. Di sisi aplikasi, tinggal arahkan query read ke slave dan write ke master.
+Pada kasus ini saya pilih **Master-Slave Replication** karena paling simpel untuk kebutuhan ini. Cukup untuk misahin beban antara read dan write, dan slave bisa sekaligus jadi backup node. Di sisi aplikasi, tinggal arahkan query read ke slave dan write ke master. Setup ini saya lakukan di dua Ubuntu Server 22.04 dalam satu network, satu jadi master, satu lagi jadi slave.
 
 Arsitektur yang dibangun:
 
 | Komponen   | IP Address     | Peran                                      |
 | ---------- | -------------- | ------------------------------------------ |
-| **Master** | `192.168.1.10` | Handle write, kirim binary log ke slave    |
-| **Slave**  | `192.168.1.11` | Terima binary log dari master, handle read |
+| **Master** | `10.10.10.10` | Handle write, kirim binary log ke slave    |
+| **Slave**  | `10.10.10.11` | Terima binary log dari master, handle read |
 
 ## Implementasi Teknis
 
@@ -115,8 +111,8 @@ $ sudo mysql -u root -p
 ```
 
 ```sql
-CREATE USER 'slave'@'192.168.1.11' IDENTIFIED BY 'slave123';
-GRANT REPLICATION SLAVE ON *.* TO 'slave'@'192.168.1.11';
+CREATE USER 'slave'@'10.10.10.11' IDENTIFIED BY 'slave123';
+GRANT REPLICATION SLAVE ON *.* TO 'slave'@'10.10.10.11';
 FLUSH PRIVILEGES;
 ```
 
@@ -165,7 +161,7 @@ EXIT;
 Transfer file dump ke slave:
 
 ```
-$ scp myapp_db_dump.sql user@192.168.1.11:/tmp/
+$ scp myapp_db_dump.sql user@10.10.10.11:/tmp/
 ```
 
 ### Import Data ke Slave
@@ -222,7 +218,7 @@ $ sudo mysql -u root -p
 
 ```sql
 CHANGE MASTER TO
-  MASTER_HOST='192.168.1.10',
+  MASTER_HOST='10.10.10.10',
   MASTER_USER='slave',
   MASTER_PASSWORD='slave123',
   MASTER_LOG_FILE='mysql-bin.000001',
@@ -334,7 +330,7 @@ Script ini ngecek `Slave_IO_Running`, `Slave_SQL_Running`, dan replication lag. 
 
 ## Tantangan yang Dihadapi
 
-Yang paling bikin pusing adalah **mismatch binary log position**. Kalau lupa dicatat `File` dan `Position` dari `SHOW MASTER STATUS` sebelum dump, atau ada write yang nyelip di antara proses lock dan dump, slave bakal mulai dari posisi yang salah. Hasilnya data tidak konsisten sehingga ada transaksi yang kelewat atau malah terduplikasi. Kalau sudah begini, tidak ada jalan lain selain mengulangi dari awal: lock table, catat posisi, dump, unlock.
+Yang paling bikin pusing adalah **mismatch binary log position**. Kalau lupa dicatat `File` dan `Position` dari `SHOW MASTER STATUS` sebelum dump, atau ada write yang nyelip di antara proses lock dan dump, slave bakal mulai dari posisi yang salah. Hasilnya data tidak konsisten sehingga ada transaksi yang kelewat atau malah terduplikasi. Kalau sudah begini, tidak ada jalan lain selain mengulangi dari awal, yakni lock table, catat posisi, dump, unlock.
 
 Masalah lain yang cukup bikin bingung di awal adalah **server-id yang sama**. Kalau lupa mengganti `server-id` di slave sehingga nilainya sama dengan master (atau dua-duanya masih default `1`), replication tidak mau jalan kemudian memunculkan error message-nya yang tidak jelas. MySQL cuma bilang IO thread gagal connect tanpa kasih tahu kalau penyebabnya duplicate server-id, dan pastikan tiap node punya `server-id` yang beda sebelum mulai.
 

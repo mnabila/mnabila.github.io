@@ -10,7 +10,7 @@ tags = ['systemd-boot', 'bootloader', 'linux-zen', 'archlinux', 'uefi']
 
 ## Latar Belakang
 
-Bootloader adalah komponen pertama yang jalan saat komputer dinyalakan tugasnya memuat kernel ke memori dan menyerahkan kontrol ke sistem operasi. Di Archlinux, kebanyakan orang langsung pakai GRUB karena familiar. Tapi sebenarnya ada alternatif yang jauh lebih simpel: **systemd-boot**. Bootloader ini sudah bundled di dalam `systemd`, konfigurasinya plain text, dan untuk kebutuhan single OS seperti setup saya, ini lebih dari cukup.
+Bootloader adalah komponen pertama yang jalan saat komputer dinyalakan tugasnya memuat kernel ke memori dan menyerahkan kontrol ke sistem operasi. Di Archlinux, kebanyakan orang langsung pakai GRUB karena familiar. Tapi untuk kebutuhan single OS seperti setup saya, GRUB terasa berlebihan dan saya butuh bootloader yang jauh lebih simpel.
 
 ## Permasalahan
 
@@ -225,7 +225,7 @@ Service ini menjalankan `bootctl update` setiap boot, memastikan EFI binary sela
 
 ## Tantangan yang Dihadapi
 
-Tantangan pertama adalah soal **path relatif di boot entry**. Semua path di file entry config itu relatif terhadap root ESP, bukan root filesystem. Ini sering bikin bingung di awal: kalau ESP di-mount di `/boot`, maka file `/boot/vmlinuz-linux-zen` ditulis sebagai `/vmlinuz-linux-zen`, bukan `/boot/vmlinuz-linux-zen`. Salah tulis path berarti kernel tidak ditemukan dan boot gagal.
+Tantangan pertama adalah soal **path relatif di boot entry**. Semua path di file entry config itu relatif terhadap root ESP, bukan root filesystem. Ini sering bikin bingung di awal, kalau ESP di-mount di `/boot`, maka file `/boot/vmlinuz-linux-zen` ditulis sebagai `/vmlinuz-linux-zen`, bukan `/boot/vmlinuz-linux-zen`. Salah tulis path berarti kernel tidak ditemukan dan boot gagal.
 
 Tantangan kedua adalah **UUID yang harus tepat**. Tidak seperti GRUB yang punya `grub-mkconfig` untuk auto-detect partisi, di systemd-boot kita harus manual memasukkan UUID partisi root. Salah ketik satu karakter saja berarti kernel panic saat boot. Selalu double-check dengan `blkid` dan pastikan UUID yang dimasukkan benar.
 

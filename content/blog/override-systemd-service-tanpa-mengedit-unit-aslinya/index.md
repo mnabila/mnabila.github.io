@@ -14,8 +14,6 @@ Setelah kebiasaan [bikin systemd service sendiri buat jalanin binary custom](/bl
 
 Masalahnya muncul waktu saya butuh nyetel sedikit perilakunya. Kadang cuma pengin nambah environment variable, kadang mau ganti `Restart=` biar lebih agresif, atau naikin limit file descriptor. Refleks pertama saya dulu langsung buka unit file-nya pakai editor, ubah barisnya, save, selesai. Kelihatannya beres, sampai suatu kali paketnya di-update dan semua perubahan saya hilang tanpa jejak karena file-nya ditimpa versi baru dari maintainer.
 
-Ternyata systemd memang sudah nyiapin cara resmi buat kasus ini, yaitu **drop-in override**. Idenya, unit file bawaan dibiarin utuh, dan perubahan saya ditaruh di file terpisah yang di-merge di atasnya. Update paket nggak akan ngutak-ngatik file override saya, jadi setelannya awet.
-
 ## Permasalahan
 
 Begitu sadar ngedit unit file bawaan itu keliru, muncul beberapa hal yang bikin saya penasaran:
@@ -26,6 +24,10 @@ Begitu sadar ngedit unit file bawaan itu keliru, muncul beberapa hal yang bikin 
 - **`ExecStart=` malah dobel**, waktu coba-coba, nulis `ExecStart=` di override bukannya mengganti, tapi malah nambah, dan service-nya gagal start
 - **Susah lacak setelan efektifnya**, setelah ada beberapa lapis file, saya nggak yakin baris mana yang benar-benar dipakai systemd
 - **Nggak tahu cara balikin**, kalau override saya ternyata salah, gimana cara mengembalikan service ke setelan aslinya tanpa nebak-nebak file mana yang harus dihapus
+
+## Pendekatan Solusi
+
+Ternyata systemd memang sudah nyiapin cara resmi buat kasus ini, yaitu **drop-in override**. Idenya, unit file bawaan dibiarin utuh, dan perubahan saya ditaruh di file terpisah yang di-merge di atasnya. Update paket nggak akan ngutak-ngatik file override saya, jadi setelannya awet.
 
 ## Kenapa Jangan Edit Unit File Bawaan
 
@@ -150,7 +152,5 @@ Inti dari override yang bener cuma satu, biarin file milik paket tetap utuh dan 
 
 ## Referensi
 
-- [systemd.unit(5) Manual Page](https://www.freedesktop.org/software/systemd/man/latest/systemd.unit.html), Diakses pada 2026-08-15
-- [systemctl(1) Manual Page](https://www.freedesktop.org/software/systemd/man/latest/systemctl.html), Diakses pada 2026-08-15
-</content>
-</invoke>
+- [systemd.unit(5) Manual Page](https://www.freedesktop.org/software/systemd/man/latest/systemd.unit.html), diakses pada 2026-08-15
+- [systemctl(1) Manual Page](https://www.freedesktop.org/software/systemd/man/latest/systemctl.html), diakses pada 2026-08-15

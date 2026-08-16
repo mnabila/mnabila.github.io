@@ -2,7 +2,7 @@
 draft = false
 date = '2019-05-27'
 lastmod = '2026-03-15'
-title = 'Berkenalan Dengan tmux'
+title = 'Berkenalan dengan tmux'
 type = 'blog'
 description = 'Pengenalan dan konfigurasi dasar tmux untuk membuka banyak sesi terminal dalam satu window.'
 image = ''
@@ -11,19 +11,19 @@ tags = ['tmux']
 
 ## Latar Belakang
 
-Sebagian besar waktu kerja saya di GNU/Linux dihabiskan di terminal. Ada kalanya saya bekerja langsung di TTY (*the real true terminal*) tanpa desktop environment. Di situasi seperti ini, kemampuan untuk menjalankan beberapa program sekaligus dalam satu layar menjadi kebutuhan yang sangat mendasar. Tidak ada tab browser, tidak ada window manager yang bisa di-split, yang ada hanya satu layar terminal polos.
+Sebagian besar waktu kerja saya di GNU/Linux dihabiskan di terminal. Ada kalanya saya bekerja langsung di TTY (the real true terminal) tanpa desktop environment. Di situasi seperti ini, kemampuan untuk menjalankan beberapa program sekaligus dalam satu layar menjadi kebutuhan yang sangat mendasar. Tidak ada tab browser, tidak ada window manager yang bisa di-split, yang ada hanya satu layar terminal polos.
 
 Di sinilah **tmux** (Terminal Multiplexer) masuk. Tmux memungkinkan kita membuka banyak sesi terminal dalam satu window, melakukan split panel, dan bahkan detach session yang bisa di-attach kembali nanti.
 
 ## Permasalahan
 
-Meskipun tmux sangat powerful, pengalaman pertama menggunakannya cukup membuat frustrasi. Key binding default-nya terasa asing: prefix key `Ctrl-b` yang posisinya berjauhan di keyboard, tampilan status bar yang polos tanpa informasi berguna, dan kebiasaan navigasi yang harus dibangun dari nol. Banyak yang menyerah di tahap awal karena learning curve ini.
+Meskipun tmux sangat powerful, pengalaman pertama menggunakannya cukup membuat frustrasi. Key binding default-nya terasa asing seperti prefix key `Ctrl-b` yang posisinya berjauhan di keyboard, tampilan status bar yang polos tanpa informasi berguna, dan kebiasaan navigasi yang harus dibangun dari nol. Banyak yang menyerah di tahap awal karena learning curve ini.
 
 Saya perlu mengkustomisasi tmux agar lebih nyaman digunakan sehari-hari sebelum bisa benar-benar produktif dengan tool ini.
 
 ## Pendekatan Solusi
 
-Ada dua hal utama yang ingin saya sesuaikan yakni **prefix key** yang lebih ergonomis dan **status bar** yang lebih informatif. Pendekatan saya sederhana: mulai dari konfigurasi minimal yang mengatasi friction terbesar, lalu perlahan menambahkan kustomisasi seiring kebutuhan. File konfigurasi tmux berada di `~/.tmux.conf` untuk tiap user, sedangkan konfigurasi global ada di `/etc/tmux.conf`.
+Ada dua hal utama yang ingin saya sesuaikan yakni **prefix key** yang lebih ergonomis dan **status bar** yang lebih informatif. Pendekatan saya sederhana, mulai dari konfigurasi minimal yang mengatasi friction terbesar, lalu perlahan menambahkan kustomisasi seiring kebutuhan. File konfigurasi tmux berada di `~/.tmux.conf` untuk tiap user, sedangkan konfigurasi global ada di `/etc/tmux.conf`.
 
 Untuk instalasi di Archlinux:
 
@@ -71,7 +71,7 @@ set -g status-right "#{prefix_highlight} #[fg=black,bg=yellow, bold]   #[fg=blac
 
 ### Konfigurasi Window
 
-Beberapa pengaturan tambahan untuk window agar lebih intuitif: index dimulai dari 1 (bukan 0), window otomatis di-rename sesuai program yang berjalan, dan visual distinction antara window aktif dan tidak aktif:
+Beberapa pengaturan tambahan untuk window agar lebih intuitif, yakni index dimulai dari 1 (bukan 0), window otomatis di-rename sesuai program yang berjalan, dan visual distinction antara window aktif dan tidak aktif:
 
 ```
 # WINDOW
@@ -90,7 +90,7 @@ Selain itu, menemukan kombinasi warna dan informasi yang tepat untuk status bar 
 
 ## Insight dan Pembelajaran
 
-Tmux adalah salah satu investasi tools terbaik untuk produktivitas di terminal. Begitu muscle memory terbentuk, workflow berubah drastis: tidak perlu lagi buka-tutup terminal, session bisa di-detach dan di-attach kembali (sangat berguna saat SSH ke remote server), dan split panel memungkinkan monitoring sambil bekerja.
+Tmux adalah salah satu investasi tools terbaik untuk produktivitas di terminal. Begitu muscle memory terbentuk, workflow berubah drastis, tidak perlu lagi buka-tutup terminal, session bisa di-detach dan di-attach kembali (sangat berguna saat SSH ke remote server), dan split panel memungkinkan monitoring sambil bekerja.
 
 Kunci untuk melewati fase awal yang membingungkan adalah memulai dengan konfigurasi minimal. Tidak perlu langsung menghafal semua shortcutnya cukup prefix key, split panel, dan navigasi antar panel. Sisanya bisa dipelajari secara bertahap.
 
@@ -100,7 +100,7 @@ Setelah konfigurasi di atas diterapkan, tmux sudah jauh lebih nyaman digunakan d
 
 ![hasil](img/hasil.png "hasil")
 
-*PS: screenshot ini diambil dari terminal emulator, bukan langsung dari TTY soalnya saya belum tahu cara screenshot di TTY.*
+PS: screenshot ini diambil dari terminal emulator, bukan langsung dari TTY soalnya saya belum tahu cara screenshot di TTY.
 
 Ke depannya, konfigurasi ini masih bisa dikembangkan, misalnya menambahkan plugin via TPM (Tmux Plugin Manager) atau mengintegrasikan tmux dengan workflow lain seperti vim dan fzf.
 

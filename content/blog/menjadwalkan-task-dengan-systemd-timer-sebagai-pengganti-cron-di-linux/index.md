@@ -12,7 +12,7 @@ tags = ['systemd', 'linux', 'cron', 'automation', 'scheduling']
 
 Setelah aplikasi berjalan rapi sebagai systemd service, kebutuhan berikutnya biasanya soal task berkala. Bukan proses yang hidup terus, tapi yang jalan sebentar lalu berhenti. Backup database tiap malam. Bersihkan log lama tiap minggu. Sinkronisasi data tiap jam. Health check tiap beberapa menit. Task seperti ini tidak butuh proses yang nyala terus. Cukup dieksekusi di waktu tertentu, selesai, berhenti.
 
-Selama ini saya selalu sama. Buka `crontab -e`, tulis satu baris jadwal, selesai. Cron memang simpel dan ada di mana-mana. Tapi begitu task-nya mulai penting, misalnya backup produksi, keterbatasan cron mulai kerasa. Ada task yang gagal diam-diam, dan saya baru sadar berhari-hari kemudian. Server sempat mati pas jam backup, task-nya terlewat begitu saja tanpa ada yang mengulang. Script yang mulus di shell malah gagal pas dipanggil cron karena environment-nya beda. Di titik itu saya sadar butuh penjadwalan yang lebih bisa diandalkan: lognya jelas dan gampang ditelusuri, bisa catch-up kalau server sempat mati, dan sadar sama dependency antar service supaya task tidak jalan sebelum yang dibutuhkannya siap.
+Selama ini saya selalu sama. Buka `crontab -e`, tulis satu baris jadwal, selesai. Cron memang simpel dan ada di mana-mana. Tapi begitu task-nya mulai penting, misalnya backup produksi, keterbatasan cron mulai kerasa. Ada task yang gagal diam-diam, dan saya baru sadar berhari-hari kemudian. Server sempat mati pas jam backup, task-nya terlewat begitu saja tanpa ada yang mengulang. Script yang mulus di shell malah gagal pas dipanggil cron karena environment-nya beda. Di titik itu saya sadar butuh penjadwalan yang lebih bisa diandalkan, yakni yang lognya jelas dan gampang ditelusuri, bisa catch-up kalau server sempat mati, dan sadar sama dependency antar service supaya task tidak jalan sebelum yang dibutuhkannya siap.
 
 ## Permasalahan
 
@@ -44,7 +44,7 @@ Saya pilih **systemd timer** karena:
 
 Sebagai contoh, saya bikin task backup database PostgreSQL yang jalan tiap hari jam 02:00 pagi. Pola yang sama kepakai untuk task terjadwal apapun.
 
-Konsep kuncinya: systemd memisahkan **apa yang dikerjakan** (didefinisikan di `.service`) dari **kapan dikerjakan** (didefinisikan di `.timer`). Kedua file punya nama dasar yang sama supaya systemd otomatis memasangkannya.
+Konsep kuncinya, systemd memisahkan **apa yang dikerjakan** (didefinisikan di `.service`) dari **kapan dikerjakan** (didefinisikan di `.timer`). Kedua file punya nama dasar yang sama supaya systemd otomatis memasangkannya.
 
 ### Membuat Service Unit
 
@@ -145,7 +145,7 @@ $ sudo systemctl daemon-reload
 $ sudo systemctl enable --now backup-db.timer
 ```
 
-Kesalahan umum di sini: yang di-enable malah service-nya, bukan timer-nya. Kalau itu terjadi, service coba jalan saat boot, bukan sesuai jadwal.
+Kesalahan umum di sini, yang di-enable malah service-nya, bukan timer-nya. Kalau itu terjadi, service coba jalan saat boot, bukan sesuai jadwal.
 
 ### Verifikasi dan Monitoring
 

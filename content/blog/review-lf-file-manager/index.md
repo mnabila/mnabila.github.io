@@ -15,7 +15,7 @@ Selama lebih dari 2 tahun, **ranger** menjadi file manager utama saya di termina
 
 ## Permasalahan
 
-Seiring waktu, masalah-masalah "ghaib" mulai muncul di ranger. File manager tiba-tiba freeze saat copy file besar, CPU usage mendadak 100% gara-gara file previewer, dan terkadang responsnya terasa lambat, seolah mengajak santai di saat saya butuh yang sat set. Yang paling menjengkelkan, list file kadang tidak terupdate meskipun sudah di-restart, terutama saat mengakses removable disk.
+Seiring waktu, masalah-masalah "ghaib" mulai muncul di ranger. File manager tiba-tiba freeze saat copy file besar, CPU usage mendadak 100% gara-gara file previewer, dan terkadang responsnya terasa lambat, seolah mengajak santai di saat saya butuh yang gesit. Yang paling menjengkelkan, list file kadang tidak terupdate meskipun sudah di-restart, terutama saat mengakses removable disk.
 
 Karena hal-hal ghaib itulah, rasa penasaran untuk mencoba alternatif lain mulai muncul.
 
@@ -23,7 +23,7 @@ Karena hal-hal ghaib itulah, rasa penasaran untuk mencoba alternatif lain mulai 
 
 Saya menjelajahi GitHub dan menemukan dua kandidat pengganti: **nnn** dan **lf**. Sebelum memutuskan, saya menetapkan tiga kriteria perbandingan: user interface (UI), file konfigurasi, dan workflow.
 
-Dari ketiganya, **lf** yang paling cocok: UI dan workflow-nya mirip ranger sehingga transisi tidak perlu mengubah workflow yang sudah ada, sementara it file konfigurasinya berbasis shell script yang justru lebih mudah jika dibanding Python-nya ranger.
+Dari ketiganya, **lf** yang paling cocok. UI dan workflow-nya mirip ranger sehingga transisi tidak perlu mengubah workflow yang sudah ada, sementara itu file konfigurasinya berbasis shell script yang justru lebih mudah jika dibanding Python-nya ranger.
 
 ### Perbandingan Lf vs Ranger
 

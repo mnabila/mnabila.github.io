@@ -14,16 +14,16 @@ Belakangan saya cukup sering bikin [systemd service buat jalanin binary custom](
 
 Refleks lama saya langsung masuk ke `WorkingDirectory` servicenya, ngintip apakah aplikasinya ninggalin file log di sana. Tapi kosong. Service yang dijalankan lewat systemd nggak nulis file log sendiri kecuali memang diprogram begitu. Semua `stdout` dan `stderr` disimpan di dalam satu komponen bernama **journald**, lalu disimpan dalam format database terindeks, bukan teks polos yang bisa dibaca melalui `tail` atau `cat`. Sebenarnya journald bukan hal yang asing buat saya, cuma memang jarang saya sentuh soalnya kebiasaan saya cuma ngecek servicenya jalan atau nggak, jarang sampai baca lognya.
 
-Selama ini saya berhenti di `systemctl status`, sekadar mastiin servicenya `active` atau `failed`, tanpa pernah beneran baca lognya. Padahal jawaban "kenapa dia mati" itu justru ada di dalam jurnal yang dikelola journald, bukan di status. Jadi saya putuskan buat berhenti nebak dan benar-benar duduk ngulik journald. Post ini catatan hasilnya: gimana journald ngumpulin log, cara baca dan filternya lewat `journalctl`, sampai bikin log awet lintas reboot dan ngatur biar nggak menuh-menuhin disk.
+Selama ini saya berhenti di `systemctl status`, sekadar mastiin servicenya `active` atau `failed`, tanpa pernah benar-benar baca lognya. Padahal jawaban "kenapa dia mati" itu justru ada di dalam jurnal yang dikelola journald, bukan di status. Jadi saya putuskan buat berhenti nebak dan benar-benar duduk ngulik journald. Post ini catatan hasilnya, gimana journald ngumpulin log, cara baca dan filternya lewat `journalctl`, sampai bikin log awet lintas reboot dan ngatur biar nggak menuh-menuhin disk.
 
 ## Permasalahan
 
 Dari kebiasaan cuma ngecek service jalan atau nggak, ada beberapa hal yang bikin saya mentok begitu harus benar-benar cari tahu kenapa sebuah service `failed`:
 
 - **Nggak nemu file log buat dibaca**, refleks ngintip `WorkingDirectory` service nemunya kosong, karena aplikasinya emang nggak nulis file `.log` sendiri. Terus outputnya ke mana?
-- **`systemctl status` cuma ngasih cuplikan**, dia nampilin beberapa baris log terakhir doang, sering kepotong tepat sebelum bagian yang saya butuh buat tahu penyebabnya
+- **`systemctl status` cuma ngasih cuplikan**, dia nampilin beberapa baris log terakhir saja, sering kepotong tepat sebelum bagian yang saya butuh buat tahu penyebabnya
 - **Bukan file teks biasa**, giliran ketemu `/var/log/journal`, isinya bukan teks polos tapi format database terindeks, jadi nggak bisa dibaca pakai `cat` atau `grep` langsung. Harus lewat tool khusus
-- **`journalctl` outputnya kebanyakan**, giliran nemu tool-nya, jalanin `journalctl` polos malah ngasih ribuan baris log dari semua service. Gimana cara filter yang saya butuh doang?
+- **`journalctl` outputnya kebanyakan**, giliran nemu tool-nya, jalanin `journalctl` polos malah ngasih ribuan baris log dari semua service. Gimana cara filter yang saya butuh saja?
 - **Log hilang setelah reboot**, di beberapa server, log dari boot sebelumnya lenyap begitu mesin restart. Padahal justru sesi boot itu yang mau saya periksa waktu server sempat crash
 - **Takut disk penuh**, kalau semua log ditumpuk di satu jurnal, apa nggak lama-lama makan disk sampai habis?
 
@@ -52,7 +52,7 @@ Semua sumber log bermuara ke satu daemon, ditulis ke satu jurnal, lalu dibaca ke
 | Audit                         | Event dari kernel audit subsystem                                      |
 | Journal API                   | Aplikasi yang kirim log terstruktur langsung ke journald               |
 
-Kunci yang bikin journald beda dari file log biasa: tiap entri log itu **terstruktur**, bukan sekadar baris teks. Satu baris log yang di terminal cuma keliatan seperti kalimat biasa, di dalam jurnal sebenarnya tersimpan dengan sekumpulan field. Berikut satu entri utuh kalau saya buka pakai `journalctl -o verbose`.
+Kunci yang bikin journald beda dari file log biasa, tiap entri log itu **terstruktur**, bukan sekadar baris teks. Satu baris log yang di terminal cuma keliatan seperti kalimat biasa, di dalam jurnal sebenarnya tersimpan dengan sekumpulan field. Berikut satu entri utuh kalau saya buka pakai `journalctl -o verbose`.
 
 ```
 Fri 2026-06-26 12:53:01.712802 WIB [s=874032e5a4e84b3ea2663fbafd13fa14;i=70f924;b=e26b5005c7ad48fb854288a24c03d174;m=2baed01f5;t=65521b8b989a2;x=5476e19f121261ac]
@@ -275,7 +275,7 @@ Kalau servicenya restart terus menerus, biasanya saya persempit ke rentang waktu
 - **`-b -1` itu penyelamat pas investigasi abis reboot**, karena log kepisah per sesi boot, saya bisa ngintip apa yang terjadi sebelum server crash. Hal yang susah banget dilakuin kalau lognya cuma file teks yang keburu ketimpa
 - **Log persisten itu opt-in di sebagian distro**, kalau lognya hilang tiap reboot, kemungkinan besar jurnalnya masih nyangkut di memori. Cukup bikin folder `/var/log/journal` biar log-nya awet lintas reboot
 - **Retensi itu diatur, bukan dipasrahin**, `SystemMaxUse` sama `MaxRetentionSec` bikin journald ngerotasi lognya sendiri. Jadi ketakutan disk penuh gara-gara log itu sebenernya nggak beralasan selama batasnya udah diset
-- **Prioritas bikin sinyal keliatan di tengah noise**, `-p err` nyembunyiin ribuan baris `info` dan langsung nunjukin mana yang beneran lagi bermasalah
+- **Prioritas bikin sinyal keliatan di tengah noise**, `-p err` nyembunyiin ribuan baris `info` dan langsung nunjukin mana yang benar-benar lagi bermasalah
 
 ## Penutup
 

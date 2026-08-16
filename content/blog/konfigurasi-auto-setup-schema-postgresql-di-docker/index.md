@@ -1,7 +1,7 @@
 +++
 draft = false
 date = '2026-06-03'
-title = 'Konfigurasi Auto Setup Schema PostgreSQL di Docker'
+title = 'Konfigurasi Auto Inisialisasi Schema PostgreSQL di Docker'
 type = 'blog'
 description = 'Setup database PostgreSQL otomatis saat container pertama kali jalan menggunakan docker-entrypoint-initdb.d supaya tidak perlu migrasi manual tiap bikin environment baru'
 image = ''
@@ -12,7 +12,7 @@ tags = ['postgresql', 'docker', 'docker-compose']
 
 Setiap kali mulai project baru atau onboard developer lain, langkah yang paling sering terlewat adalah setup database. Pull repo, jalankan `docker compose up`, lalu baru sadar tabel belum ada karena belum ada yang jalankan migration script. Akhirnya harus masuk ke container, konek ke **PostgreSQL**, lalu jalankan SQL satu per satu secara manual.
 
-Saya ingin setup yang benar-benar zero effort tinggal `docker compose up` dan database langsung siap pakai lengkap dengan schema, extension, bahkan seed data kalau perlu. Ternyata **Docker** image resmi PostgreSQL sudah menyediakan mekanisme untuk ini lewat direktori `/docker-entrypoint-initdb.d/`.
+Saya ingin setup yang benar-benar zero effort tinggal `docker compose up` dan database langsung siap pakai lengkap dengan schema, extension, bahkan seed data kalau perlu.
 
 ## Permasalahan
 
@@ -34,7 +34,7 @@ Ada beberapa cara untuk mengotomasi setup database di Docker:
 | **Custom entrypoint script**                | Fleksibel, bisa handle logic apapun                | Harus maintain script sendiri, rawan error   |
 | **Init container (Kubernetes)**             | Terpisah dari database container                   | Overkill untuk local development             |
 
-Saya pilih **docker-entrypoint-initdb.d** karena paling simpel dan sudah built-in di image resmi PostgreSQL. Tidak perlu install tool tambahan, cukup taruh file SQL atau shell script di direktori yang tepat. Untuk kebutuhan local development dan environment yang sering di-reset, pendekatan ini sudah lebih dari cukup.
+Saya pilih **docker-entrypoint-initdb.d** karena paling simpel dan sudah built-in di image resmi PostgreSQL. Docker image resmi PostgreSQL sudah menyediakan mekanisme ini lewat direktori `/docker-entrypoint-initdb.d/`, jadi tidak perlu install tool tambahan, cukup taruh file SQL atau shell script di direktori tersebut. Untuk kebutuhan local development dan environment yang sering di-reset, pendekatan ini sudah lebih dari cukup.
 
 ## Implementasi Teknis
 

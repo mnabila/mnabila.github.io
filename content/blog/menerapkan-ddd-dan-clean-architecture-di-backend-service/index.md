@@ -10,9 +10,9 @@ tags = ['architecture', 'ddd', 'clean-architecture', 'golang', 'software-design'
 
 ## Latar Belakang
 
-Hampir semua backend service yang saya tulis menerapkan **Domain-Driven Design** dan **Clean Architecture**. Dua prinsip ini jadi fondasi default: DDD untuk memodelkan domain bisnis, Clean Architecture untuk menjaga separation of concerns antar layer. Kombinasinya bikin kode terstruktur, testable, dan relatif mudah di-maintain.
+Hampir semua backend service yang saya tulis menerapkan **Domain-Driven Design** dan **Clean Architecture**. Dua prinsip ini jadi fondasi default, yakni DDD untuk memodelkan domain bisnis dan Clean Architecture untuk menjaga separation of concerns antar layer. Kombinasinya bikin kode terstruktur, testable, dan relatif mudah di-maintain.
 
-Tapi setelah beberapa project jalan cukup lama, saya sadar bahwa DDD dan Clean Architecture itu soal prinsip, bukan soal struktur folder. Keduanya bilang "pisahkan domain dari infrastructure", tapi tidak menjawab pertanyaan praktis: file-file ini taruh di mana? Bagaimana cara mengorganisasi kode supaya modular dan siap dipisah jadi microservice kalau monolith-nya sudah terlalu besar?
+Tapi setelah beberapa project jalan cukup lama, saya sadar bahwa DDD dan Clean Architecture itu soal prinsip, bukan soal struktur folder. Keduanya bilang "pisahkan domain dari infrastructure", tapi tidak menjawab pertanyaan praktis. File-file ini taruh di mana? Bagaimana cara mengorganisasi kode supaya modular dan siap dipisah jadi microservice kalau monolith-nya sudah terlalu besar?
 
 Di sinilah pertanyaan soal code organization muncul. Kode dikelompokkan berdasarkan layer teknis seperti `handler/`, `service/`, `repository/`? Atau berdasarkan fitur bisnis seperti `order/`, `payment/`, `inventory/`? Dua-duanya bisa dikombinasikan dengan DDD dan Clean Architecture, tapi implikasinya terhadap modularitas dan kesiapan microservice sangat berbeda. Dua pendekatan ini dikenal sebagai **Horizontal Slice Architecture** dan **Vertical Slice Architecture**.
 
@@ -83,7 +83,7 @@ func (s *OrderService) CreateOrder(userID int, items []OrderItem) (*Order, error
 }
 ```
 
-Coba perhatikan: `OrderService` punya akses ke `repository.PaymentRepository` dan `repository.UserRepository`. Tidak ada yang melarang secara teknis. Compiler tidak komplain, linter tidak teriak. Satu-satunya penghalang ya disiplin developer. Di project yang sudah jalan berbulan-bulan dengan banyak kontributor, disiplin itu gampang tererosi.
+Coba perhatikan, `OrderService` punya akses ke `repository.PaymentRepository` dan `repository.UserRepository`. Tidak ada yang melarang secara teknis. Compiler tidak komplain, linter tidak teriak. Satu-satunya penghalang ya disiplin developer. Di project yang sudah jalan berbulan-bulan dengan banyak kontributor, disiplin itu gampang tererosi.
 
 Tapi kelebihan horizontal slice yang sering di-underestimate adalah **konsistensi layer**. Semua handler ada di satu tempat, jadi gampang memastikan pattern yang sama diterapkan di semua handler. Mau tambah middleware baru? Buka satu folder. Mau cek semua repository pakai transaction pattern yang sama? Satu folder juga. Keunggulan ini hilang di vertical slice.
 
@@ -182,7 +182,7 @@ func (s *orderService) CreateOrder(ctx context.Context, req CreateOrderRequest) 
 }
 ```
 
-Slice `order` sama sekali tidak import package `user`. Ketergantungannya lewat interface `UserProvider` yang didefinisikan di slice `order` sendiri. Prinsipnya **Dependency Inversion**: yang butuh data yang bikin kontraknya, bukan yang nyediakan.
+Slice `order` sama sekali tidak import package `user`. Ketergantungannya lewat interface `UserProvider` yang didefinisikan di slice `order` sendiri. Prinsipnya **Dependency Inversion**, yakni yang butuh data yang bikin kontraknya, bukan yang nyediakan.
 
 Semua dependency di-resolve di `main.go` sebagai composition root:
 
@@ -229,11 +229,11 @@ Tidak ada yang menang di semua kriteria. Horizontal slice unggul di kesederhanaa
 
 Soal **testing**, perbedaannya cukup kerasa. Di horizontal slice, satu mock `repository.UserRepository` bisa dipakai di test `OrderService`, `PaymentService`, dan service lain. Praktis, tapi semua service bergantung pada kontrak yang sama. Ubah interface repository, semua mock harus ikut berubah.
 
-Di vertical slice, slice `order` punya `UserProvider` sendiri yang cuma berisi method yang dia butuhkan. Mock-nya spesifik dan kecil. Kalau slice `user` nambah method baru, mock di slice `order` tidak terpengaruh. Test jadi lebih stabil karena interface-nya tidak ikut membengkak. Trade-off-nya: setiap cross-slice dependency butuh interface dan mock tersendiri.
+Di vertical slice, slice `order` punya `UserProvider` sendiri yang cuma berisi method yang dia butuhkan. Mock-nya spesifik dan kecil. Kalau slice `user` nambah method baru, mock di slice `order` tidak terpengaruh. Test jadi lebih stabil karena interface-nya tidak ikut membengkak. Trade-off-nya, setiap cross-slice dependency butuh interface dan mock tersendiri.
 
 ### Kapan Pakai yang Mana
 
-Dari pengalaman saya, dua faktor yang paling menentukan: **ukuran tim** dan **kematangan domain**.
+Dari pengalaman saya, dua faktor yang paling menentukan adalah **ukuran tim** dan **kematangan domain**.
 
 **Pakai horizontal slice kalau:**
 

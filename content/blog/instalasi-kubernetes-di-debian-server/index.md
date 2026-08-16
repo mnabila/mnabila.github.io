@@ -1,7 +1,7 @@
 +++
 draft = false
 date = '2026-04-08'
-title = 'Instalasi Kubernetes di Debian Server Dengan 1 Control Plane dan 1 Worker Node'
+title = 'Instalasi Kubernetes di Debian Server dengan 1 Control Plane dan 1 Worker Node'
 type = 'blog'
 description = 'Panduan instalasi Kubernetes cluster di Debian server menggunakan kubeadm dengan setup minimal 1 control plane dan 1 worker node'
 image = ''
@@ -12,7 +12,7 @@ tags = ['kubernetes', 'debian']
 
 Kubernetes sudah menjadi standar container orchestration untuk saat ini. Kalau sebelumnya cukup pakai Docker Compose untuk menjalankan beberapa container, begitu kebutuhan mulai bertambah seperti scaling, self-healing, rolling update, service discovery sehigga kubernetes jadi pilihan yang sulit dihindari. Masalahnya, setup Kubernetes dari nol itu terkesan ribet dan belibet karena banyak komponen yang harus dikonfigurasi dengan benar.
 
-Pada artikel ini akan membahas cara instalasi Kubernetes cluster di Debian server dengan setup paling minimal: **1 control plane dan 1 worker node**. Setup ini cocok untuk belajar, development, atau staging environment sebelum scale ke production.
+Setup paling minimal untuk Kubernetes cluster di Debian server cukup **1 control plane dan 1 worker node**. Konfigurasi ini cocok untuk belajar, development, atau staging environment sebelum scale ke production.
 
 ## Permasalahan
 
@@ -30,8 +30,8 @@ Sebelum mulai, berikut gambaran arsitektur yang akan di-setup:
 
 | Node | Hostname | IP (contoh) | Role |
 |------|----------|-------------|------|
-| Server 1 | `k8s-cp` | `192.168.1.10` | Control Plane |
-| Server 2 | `k8s-worker` | `192.168.1.11` | Worker Node |
+| Server 1 | `k8s-cp` | `10.10.10.10` | Control Plane |
+| Server 2 | `k8s-worker` | `10.10.10.11` | Worker Node |
 
 Komponen yang akan diinstall:
 
@@ -311,7 +311,7 @@ Langkah ini **hanya dilakukan di worker node**.
 Jalankan perintah `kubeadm join` yang didapat dari output `kubeadm init` tadi:
 
 ```bash
-$ sudo kubeadm join 192.168.1.10:6443 \
+$ sudo kubeadm join 10.10.10.10:6443 \
     --token <token> \
     --discovery-token-ca-cert-hash sha256:<hash>
 ```
@@ -348,7 +348,7 @@ Tantangan pertama adalah **urutan instalasi yang harus tepat**. Kernel modules d
 
 Tantangan kedua adalah **CIDR yang harus konsisten**. Value `--pod-network-cidr` saat `kubeadm init` harus match dengan konfigurasi CNI plugin. Kalau berbeda, pod akan bisa dibuat tapi tidak bisa komunikasi antar node dan ini silent failure yang baru ketahuan saat testing.
 
-Satu hal lagi: **`SystemdCgroup = true` di containerd itu critical**. Default config containerd menggunakan `cgroupfs`, tapi kubelet di Debian menggunakan `systemd`. Kalau tidak match, kubelet akan restart loop atau pod random crash tanpa error message yang jelas.
+Satu hal lagi, **`SystemdCgroup = true` di containerd itu critical**. Default config containerd menggunakan `cgroupfs`, tapi kubelet di Debian menggunakan `systemd`. Kalau tidak match, kubelet akan restart loop atau pod random crash tanpa error message yang jelas.
 
 ## Insight dan Pembelajaran
 
@@ -363,7 +363,7 @@ Beberapa hal yang bisa diambil dari pengalaman setup ini:
 
 ## Penutup
 
-Setup Kubernetes cluster di Debian dengan 1 control plane dan 1 worker node itu simpel kalau langkah-langkahnya diikuti dengan urutan yang benar. Kuncinya ada di tiga hal: persiapan sistem yang lengkap (swap, modules, sysctl), container runtime yang dikonfigurasi dengan cgroup driver yang match, dan CIDR yang konsisten antara `kubeadm init` dan CNI plugin. Dari setup minimal ini, cluster bisa di-scale dengan menambah worker node menggunakan perintah `kubeadm join` yang sama.
+Setup Kubernetes cluster di Debian dengan 1 control plane dan 1 worker node itu simpel kalau langkah-langkahnya diikuti dengan urutan yang benar. Kuncinya ada di tiga hal, yakni persiapan sistem yang lengkap (swap, modules, sysctl), container runtime yang dikonfigurasi dengan cgroup driver yang match, dan CIDR yang konsisten antara `kubeadm init` dan CNI plugin. Dari setup minimal ini, cluster bisa di-scale dengan menambah worker node menggunakan perintah `kubeadm join` yang sama.
 
 ## Referensi
 

@@ -1,7 +1,7 @@
 +++
 draft = false
 date = '2026-04-05'
-title = 'Konfigurasi Cloudflare Tunnel Untuk Menerima Callback Di Archlinux'
+title = 'Konfigurasi Cloudflare Tunnel untuk Menerima Callback di Archlinux'
 type = 'blog'
 description = 'Cara menggunakan Cloudflare Tunnel di Archlinux untuk mengekspos local server agar bisa menerima callback dari service eksternal saat development.'
 image = ''
@@ -12,7 +12,7 @@ tags = ['cloudflare', 'tunnel', 'networking', 'archlinux']
 
 Saat develop aplikasi yang terintegrasi dengan service pihak ketiga, seperti membuat webhook payment gateway atau notifikasi dari messaging platform, ada satu kebutuhan yang sering muncul yakni proses **menerima callback**. Pada proses ini service eksternal perlu mengirim HTTP request ke endpoint saya, tapi masalahnya server development saya cuma jalan di `localhost` dan tidak bisa diakses dari internet.
 
-Biasanya solusi yang dipakai adalah **ngrok**, tool populer untuk mengekspos local server ke internet. Tapi ngrok punya limitasi di free tier-nya URL  bisa berubah setiap restart, rate limit yang cukup ketat, dan koneksi yang kadang tidak stabil. **Cloudflare Tunnel** menawarkan alternatif yang lebih fleksibel sehingga bisa pakai quick tunnel untuk kebutuhan cepat, atau named tunnel dengan custom domain untuk setup yang lebih permanen.
+Biasanya solusi yang dipakai adalah **ngrok**, tool populer untuk mengekspos local server ke internet. Tapi ngrok punya limitasi di free tier-nya, URL bisa berubah setiap restart, rate limit yang cukup ketat, dan koneksi yang kadang tidak stabil. Yang saya butuhkan adalah alternatif yang lebih fleksibel tanpa batasan-batasan tersebut.
 
 ## Permasalahan
 
@@ -27,14 +27,14 @@ Yang dibutuhkan adalah cara cepat untuk membuat `localhost:8080` bisa diakses da
 
 ## Pendekatan Solusi
 
-Cloudflare Tunnel punya dua mode yang relevan untuk kebutuhan ini:
+**Cloudflare Tunnel** menawarkan alternatif yang lebih fleksibel, bisa pakai quick tunnel untuk kebutuhan cepat, atau named tunnel dengan custom domain untuk setup yang lebih permanen. Cloudflare Tunnel punya dua mode yang relevan untuk kebutuhan ini:
 
 | Mode | Kegunaan | Kelebihan | Kekurangan |
 |------|----------|-----------|------------|
 | **Quick Tunnel** | Testing cepat, one-off | Tanpa konfigurasi, langsung jalan | URL random, tidak persisten, max 200 concurrent request |
 | **Named Tunnel** | Development jangka panjang | Custom domain, persisten, bisa jadi service | Butuh domain di Cloudflare dan setup awal |
 
-Cara kerjanya sederhana: `cloudflared` (daemon dari Cloudflare) membuat **koneksi outbound** dari mesin saya ke jaringan Cloudflare. Traffic dari internet masuk lewat Cloudflare, lalu diteruskan ke local server melalui tunnel tersebut. Karena koneksinya outbound, tidak perlu buka port apapun di firewall.
+Cara kerjanya sederhana. `cloudflared` (daemon dari Cloudflare) membuat **koneksi outbound** dari mesin saya ke jaringan Cloudflare. Traffic dari internet masuk lewat Cloudflare, lalu diteruskan ke local server melalui tunnel tersebut. Karena koneksinya outbound, tidak perlu buka port apapun di firewall.
 
 Untuk kebutuhan menerima callback saat development, **quick tunnel** biasanya sudah cukup. Tapi kalau butuh URL yang tetap (misalnya untuk mendaftarkan webhook yang tidak bisa sering diganti), **named tunnel** dengan custom domain lebih cocok.
 
@@ -125,7 +125,7 @@ ingress:
   - service: http_status:404
 ```
 
-Bagian `ingress` mendefinisikan routing: request ke `dev.mnabila.com` diteruskan ke `localhost:8080`. Rule terakhir (`http_status:404`) adalah catch-all yang wajib ada.
+Bagian `ingress` mendefinisikan routing, request ke `dev.mnabila.com` diteruskan ke `localhost:8080`. Rule terakhir (`http_status:404`) adalah catch-all yang wajib ada.
 
 saya juga bisa routing ke beberapa service sekaligus:
 
@@ -179,7 +179,7 @@ Tantangan utama saat menggunakan quick tunnel adalah **URL yang berubah setiap r
 
 Tantangan lain adalah **rate limit pada quick tunnel**, maksimal 200 concurrent request. Untuk menerima callback satu-dua request, ini bukan masalah. Tapi kalau testing load atau simulasi banyak callback sekaligus, bisa kena limit dan mendapat response `429 Too Many Requests`.
 
-Satu hal yang perlu diperhatikan juga: quick tunnel **tidak mendukung Server-Sent Events (SSE)**. Jika aplikasi menggunakan SSE untuk real-time updates, gunakan named tunnel sebagai gantinya.
+Satu hal yang perlu diperhatikan juga, quick tunnel **tidak mendukung Server-Sent Events (SSE)**. Jika aplikasi menggunakan SSE untuk real-time updates, gunakan named tunnel sebagai gantinya.
 
 ## Insight dan Pembelajaran
 
@@ -193,7 +193,7 @@ Beberapa insight setelah menggunakan Cloudflare Tunnel untuk development:
 
 ## Penutup
 
-Cloudflare Tunnel menjawab kebutuhan klasik developer: mengekspos local server ke internet untuk menerima callback. Quick tunnel cocok untuk kebutuhan cepat dan one-off, sementara named tunnel memberikan URL yang persisten dengan custom domain untuk development jangka panjang. Dibanding solusi sejenis, Cloudflare Tunnel punya keunggulan di sisi keamanan (outbound-only, HTTPS otomatis) dan fleksibilitas (multi-service ingress, bisa jadi systemd service). Untuk yang sering develop integrasi dengan webhook atau callback dari service pihak ketiga, tool ini wajib ada di toolbox.
+Cloudflare Tunnel menjawab kebutuhan klasik developer, yakni mengekspos local server ke internet untuk menerima callback. Quick tunnel cocok untuk kebutuhan cepat dan one-off, sementara named tunnel memberikan URL yang persisten dengan custom domain untuk development jangka panjang. Dibanding solusi sejenis, Cloudflare Tunnel punya keunggulan di sisi keamanan (outbound-only, HTTPS otomatis) dan fleksibilitas (multi-service ingress, bisa jadi systemd service). Untuk yang sering develop integrasi dengan webhook atau callback dari service pihak ketiga, tool ini wajib ada di toolbox.
 
 ## Referensi
 

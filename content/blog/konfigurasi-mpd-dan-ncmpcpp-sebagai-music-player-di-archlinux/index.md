@@ -1,7 +1,7 @@
 +++
 draft = false
 date = '2026-04-05'
-title = 'Konfigurasi Mpd Dan Ncmpcpp Sebagai Music Player Di Archlinux'
+title = 'Konfigurasi Mpd dan Ncmpcpp sebagai Music Player di Archlinux'
 type = 'blog'
 description = 'Cara mengkonfigurasi MPD dan ncmpcpp sebagai music player berbasis terminal di Archlinux untuk memutar koleksi musik FLAC dengan PipeWire audio output.'
 image = ''
@@ -13,15 +13,6 @@ tags = ['mpd', 'ncmpcpp', 'terminal', 'archlinux']
 Saya punya koleksi musik dalam format **FLAC** (Free Lossless Audio Codec) format lossless yang menyimpan audio tanpa kompresi lossy, sehingga kualitas suaranya identik dengan source aslinya. Untuk memutar koleksi ini, saya butuh player yang ringan, bisa jalan di background, dan mendukung FLAC dengan baik.
 
 Kebanyakan music player di Linux seperti Spotify, Rhythmbox, dan Audacious menggunakan arsitektur monolitik satu aplikasi yang menangani semuanya dari library management, playback, sampai UI. Pendekatan ini memang simpel, tapi kurang fleksibel. Kalau mau ganti UI, harus ganti seluruh aplikasi. Kalau mau music tetap jalan di background tanpa GUI, tidak bisa.
-
-**MPD (Music Player Daemon)** mengambil pendekatan berbeda, memisahkan antara **server** (daemon yang menangani playback) dan **client** (UI untuk mengontrol playback). MPD jalan di background sebagai daemon, sementara kita bebas memilih client apapun untuk mengontrolnya. MPD mendukung FLAC secara native tanpa plugin tambahan tinggal arahkan ke direktori musik dan langsung bisa diputar. Salah satu client terbaik untuk terminal adalah **ncmpcpp** yang merupakan client berbasis ncurses yang ringan, cepat, dan highly customizable.
-
-Kombinasi MPD + ncmpcpp memberikan music player yang:
-- Mendukung FLAC dan format lossless lainnya secara native
-- Jalan di background tanpa GUI
-- Bisa dikontrol dari terminal, keybinding, atau bahkan remote
-- Resource usage sangat minimal
-- Konfigurasi sepenuhnya lewat text file
 
 ## Permasalahan
 
@@ -35,6 +26,15 @@ Music player berbasis GUI seringkali overkill untuk kebutuhan yang sederhana, ya
 Dengan MPD, musik tetap jalan meskipun tidak ada GUI yang terbuka. Dan dengan ncmpcpp, kita punya kontrol penuh dari terminal termasuk custom keybinding yang sesuai dengan workflow kita.
 
 ## Pendekatan Solusi
+
+**MPD (Music Player Daemon)** mengambil pendekatan berbeda, memisahkan antara **server** (daemon yang menangani playback) dan **client** (UI untuk mengontrol playback). MPD jalan di background sebagai daemon, sementara kita bebas memilih client apapun untuk mengontrolnya. MPD mendukung FLAC secara native tanpa plugin tambahan, tinggal arahkan ke direktori musik dan langsung bisa diputar. Salah satu client terbaik untuk terminal adalah **ncmpcpp** yang merupakan client berbasis ncurses yang ringan, cepat, dan highly customizable.
+
+Kombinasi MPD + ncmpcpp memberikan music player yang:
+- Mendukung FLAC dan format lossless lainnya secara native
+- Jalan di background tanpa GUI
+- Bisa dikontrol dari terminal, keybinding, atau bahkan remote
+- Resource usage sangat minimal
+- Konfigurasi sepenuhnya lewat text file
 
 Arsitektur MPD menggunakan model **client-server**:
 

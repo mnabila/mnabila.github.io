@@ -1,7 +1,7 @@
 +++
 draft = false
 date = '2026-04-05'
-title = 'Konfigurasi Pipewire Menggantikan Pulseaudio Di Archlinux'
+title = 'Konfigurasi Pipewire Menggantikan Pulseaudio di Archlinux'
 type = 'blog'
 description = 'Cara migrasi dari PulseAudio ke PipeWire di Archlinux untuk memutar koleksi musik FLAC dengan kualitas lossless dan konfigurasi audio yang optimal.'
 image = ''
@@ -11,8 +11,6 @@ tags = ['pipewire', 'audio', 'flac', 'lossless', 'archlinux']
 ## Latar Belakang
 
 Saya punya koleksi musik dalam format **FLAC** format lossless yang menyimpan audio tanpa kompresi lossy. Untuk menikmati koleksi ini dengan kualitas optimal, audio server yang digunakan juga harus mampu memproses audio tanpa degradasi. Masalahnya, **PulseAudio** secara default melakukan resampling ke sample rate dan format tertentu, yang bisa menurunkan kualitas audio lossless.
-
-**PipeWire** hadir sebagai pengganti PulseAudio (dan sekaligus JACK) yang lebih modern. Selain mendukung low-latency audio layaknya JACK dan menangani video (screen sharing di Wayland), PipeWire juga bisa dikonfigurasi untuk **passthrough audio tanpa resampling** artinya file FLAC 24-bit/96kHz diputar apa adanya ke DAC tanpa konversi. Singkatnya, satu framework yang menangani semuanya dengan kualitas audio yang lebih baik.
 
 ## Permasalahan
 
@@ -27,6 +25,8 @@ Beberapa masalah yang sering muncul dengan PulseAudio, terutama untuk kebutuhan 
 Yang dibutuhkan adalah audio server yang bisa memutar koleksi FLAC dengan kualitas bit-perfect tanpa resampling atau konversi format yang tidak perlu.
 
 ## Pendekatan Solusi
+
+**PipeWire** hadir sebagai pengganti PulseAudio (dan sekaligus JACK) yang lebih modern. Selain mendukung low-latency audio layaknya JACK dan menangani video (screen sharing di Wayland), PipeWire juga bisa dikonfigurasi untuk **passthrough audio tanpa resampling**, artinya file FLAC 24-bit/96kHz diputar apa adanya ke DAC tanpa konversi. Singkatnya, satu framework yang menangani semuanya dengan kualitas audio yang lebih baik.
 
 PipeWire menyelesaikan masalah ini dengan pendekatan **compatibility layer**:
 
@@ -49,9 +49,9 @@ PipeWire menyediakan compatibility layer untuk setiap audio API:
 | `pipewire-jack` | Menggantikan JACK, aplikasi JACK bisa langsung terhubung ke PipeWire |
 | `pipewire-alsa` | Mengarahkan aplikasi ALSA langsung ke PipeWire |
 
-Artinya, **semua aplikasi yang sudah ada tetap berjalan**: mereka tidak tahu bahwa di balik layar sudah bukan PulseAudio lagi. Migrasi bisa dilakukan tanpa perlu mengubah konfigurasi aplikasi apapun.
+Artinya, **semua aplikasi yang sudah ada tetap berjalan**, mereka tidak tahu bahwa di balik layar sudah bukan PulseAudio lagi. Migrasi bisa dilakukan tanpa perlu mengubah konfigurasi aplikasi apapun.
 
-Session management ditangani oleh **WirePlumber**: session manager default untuk PipeWire yang mengelola routing audio antar device dan aplikasi.
+Session management ditangani oleh **WirePlumber**, yaitu session manager default untuk PipeWire yang mengelola routing audio antar device dan aplikasi.
 
 ## Implementasi Teknis
 

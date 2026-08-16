@@ -2,7 +2,7 @@
 draft = false
 date = '2020-11-08'
 lastmod = '2026-03-15'
-title = 'Konfigurasi Nextdns Client Di Archlinux'
+title = 'Konfigurasi Nextdns Client di Archlinux'
 type = 'blog'
 description = 'Cara mengimplementasikan NextDNS sebagai DNS firewall untuk keamanan berselancar di internet pada Archlinux.'
 image = ''
@@ -13,21 +13,19 @@ tags = ['nextdns', 'dns', 'blockads']
 
 Sudah beberapa lama saya menggunakan **dnscrypt** sebagai DNS resolver di Archlinux. Fungsinya sederhana: mengenkripsi DNS query agar tidak bisa disadap oleh ISP atau pihak ketiga. Namun seiring waktu, kebutuhan saya berkembang. Selain enkripsi, saya juga ingin fitur seperti ad blocking, tracker protection, dan monitoring query, sesuatu yang dnscrypt tidak sediakan secara built-in.
 
-Saat itulah saya menemukan **NextDNS**, layanan DNS firewall yang menawarkan paket lengkap: DNS-over-HTTPS/TLS, blokir iklan, pencegahan pelacakan, dan dashboard monitoring. Kebetulan mereka juga menyediakan client resmi yang ringan.
-
 ## Permasalahan
 
-Dnscrypt bekerja dengan baik untuk kebutuhan enkripsi DNS, tapi konfigurasinya cukup rumit jika ingin menambahkan fitur filtering. Butuh setup tambahan seperti mengintegrasikan dengan Pi-hole atau membuat blocklist sendiri. Saya mencari solusi yang lebih turnkey: satu tool yang langsung menyediakan enkripsi sekaligus filtering tanpa perlu banyak konfigurasi tambahan.
+Dnscrypt bekerja dengan baik untuk kebutuhan enkripsi DNS, tapi konfigurasinya cukup rumit jika ingin menambahkan fitur filtering. Butuh setup tambahan seperti mengintegrasikan dengan Pi-hole atau membuat blocklist sendiri. Saya mencari solusi yang lebih turnkey, yakni satu tool yang langsung menyediakan enkripsi sekaligus filtering tanpa perlu banyak konfigurasi tambahan.
 
 ## Pendekatan Solusi
 
-Ada beberapa cara mengintegrasikan NextDNS ke sistem Archlinux:
+**NextDNS** adalah layanan DNS firewall yang menawarkan paket lengkap, yakni DNS-over-HTTPS/TLS, blokir iklan, pencegahan pelacakan, dan dashboard monitoring, dan mereka juga menyediakan client resmi yang ringan. Ada beberapa cara mengintegrasikan NextDNS ke sistem Archlinux:
 
 - **nextdns-client**: client resmi dari NextDNS
 - **systemd-resolved**: resolver DNS bawaan systemd
 - **dnscrypt-proxy**: proxy DNS terenkripsi
 
-Saya memilih **nextdns-client** karena paling simpel: satu binary, satu service, minimal konfigurasi. Tidak perlu mengubah setup systemd-resolved yang bisa berdampak ke service lain.
+Saya memilih **nextdns-client** karena paling simpel, satu binary, satu service, minimal konfigurasi. Tidak perlu mengubah setup systemd-resolved yang bisa berdampak ke service lain.
 
 ## Implementasi Teknis
 

@@ -27,7 +27,7 @@ Saya butuh mekanisme yang membuat file konfigurasi di `~/.config` dan di folder 
 
 ## Pendekatan Solusi
 
-Solusi yang saya pilih adalah **GNU Stow**, sebuah _symlink farm manager_. Alih-alih menyimpan salinan file konfigurasi di dua tempat, stow membuat symlink dari lokasi tujuan ke sumber di folder dotfiles. Dengan begitu, file yang ada di `~/.config/zathura` sebenarnya adalah symlink yang mengarah ke `~/Dotfiles/zathura/.config/zathura`. Perubahan di salah satu otomatis terefleksi di keduanya karena pada dasarnya itu file yang sama.
+Solusi yang saya pilih adalah **GNU Stow**, sebuah **symlink farm manager**. Alih-alih menyimpan salinan file konfigurasi di dua tempat, stow membuat symlink dari lokasi tujuan ke sumber di folder dotfiles. Dengan begitu, file yang ada di `~/.config/zathura` sebenarnya adalah symlink yang mengarah ke `~/Dotfiles/zathura/.config/zathura`. Perubahan di salah satu otomatis terefleksi di keduanya karena pada dasarnya itu file yang sama.
 
 Saya mengkombinasikan stow dengan git subtree untuk mengelola seluruh dotfiles. Hasilnya jauh lebih nyaman dibandingkan workflow manual sebelumnya.
 
@@ -124,7 +124,7 @@ Perlu diperhatikan juga bahwa stow akan menolak membuat symlink jika file tujuan
 
 GNU Stow mengubah cara saya mengelola dotfiles secara fundamental. Dari yang sebelumnya harus ingat-ingat mana file yang sudah di-copy dan mana yang belum, sekarang cukup `stow <package>` dan selesai. Kombinasi stow + git subtree memberikan workflow yang solid, setiap perubahan konfigurasi otomatis ter-track tanpa langkah manual tambahan.
 
-Satu insight penting: konsep "struktur folder package mengikuti path tujuan" adalah desain yang sangat elegan. Ini membuat konfigurasi stow bersifat self-documenting hanya dengan melihat struktur folder, kita langsung tahu ke mana file tersebut akan di-symlink.
+Satu insight penting, konsep "struktur folder package mengikuti path tujuan" adalah desain yang sangat elegan. Ini membuat konfigurasi stow bersifat self-documenting hanya dengan melihat struktur folder, kita langsung tahu ke mana file tersebut akan di-symlink.
 
 ## Penutup
 
@@ -132,4 +132,4 @@ Dengan GNU Stow, mengelola dotfiles menjadi jauh lebih praktis dan reliable. Tid
 
 ## Referensi
 
-- manpage stow (`man stow`), diakses pada2021-01-06
+- manpage stow (`man stow`), diakses pada 2021-01-06

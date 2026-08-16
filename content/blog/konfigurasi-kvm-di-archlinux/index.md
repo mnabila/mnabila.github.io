@@ -1,7 +1,7 @@
 +++
 draft = false
 date = '2026-04-06'
-title = 'Konfigurasi KVM Di Archlinux'
+title = 'Konfigurasi KVM di Archlinux'
 type = 'blog'
 description = 'Panduan lengkap instalasi dan konfigurasi KVM/QEMU di Archlinux menggunakan libvirt dan virt-manager untuk virtualisasi dengan performa mendekati bare metal.'
 image = ''
@@ -10,7 +10,7 @@ tags = ['kvm', 'qemu', 'libvirt', 'virtualisasi', 'archlinux']
 
 ## Latar Belakang
 
-Virtualisasi sudah jadi kebutuhan saya sebagai developer, entah untuk testing environment, menjalankan OS lain, atau simulasi infrastruktur. Di Linux, **KVM (Kernel-based Virtual Machine)** adalah hypervisor yang langsung terintegrasi di kernel, artinya performanya mendekati bare metal tanpa overhead besar seperti VirtualBox.
+Virtualisasi sudah jadi kebutuhan saya sebagai developer, entah untuk testing environment, menjalankan OS lain, atau simulasi infrastruktur. Selama ini opsi yang mudah seperti VirtualBox terasa punya overhead yang besar, jadi saya butuh solusi virtualisasi dengan performa yang mendekati bare metal.
 
 ## Permasalahan
 
@@ -26,7 +26,7 @@ Yang dibutuhkan adalah solusi virtualisasi yang performanya bagus, fleksibel, da
 
 ## Pendekatan Solusi
 
-Ada beberapa opsi virtualisasi di Linux:
+Di Linux, **KVM (Kernel-based Virtual Machine)** adalah hypervisor yang langsung terintegrasi di kernel, artinya performanya mendekati bare metal tanpa overhead besar seperti VirtualBox. Ada beberapa opsi virtualisasi di Linux:
 
 | Pendekatan             | Kelebihan                                                         | Kekurangan                                          |
 | ---------------------- | ----------------------------------------------------------------- | --------------------------------------------------- |
@@ -267,7 +267,7 @@ Beberapa insight setelah menggunakan KVM di Archlinux:
 
 ## Penutup
 
-KVM dengan libvirt dan virt-manager adalah solusi virtualisasi terbaik di Linux: performa mendekati bare metal karena terintegrasi langsung di kernel, management yang fleksibel lewat GUI maupun CLI, dan ecosystem yang mature. Setup awalnya memang lebih banyak langkah dibanding VirtualBox, tapi hasilnya sepadan: VM yang lebih cepat, lebih stabil, dan lebih production-ready. 
+KVM dengan libvirt dan virt-manager adalah solusi virtualisasi terbaik di Linux, performa mendekati bare metal karena terintegrasi langsung di kernel, management yang fleksibel lewat GUI maupun CLI, dan ecosystem yang mature. Setup awalnya memang lebih banyak langkah dibanding VirtualBox, tapi hasilnya sepadan, VM yang lebih cepat, lebih stabil, dan lebih production-ready. 
 
 ## Referensi
 

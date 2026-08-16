@@ -40,7 +40,7 @@ Untuk **migrasi satu kali**, saya pakai helper container yang membungkus isi vol
 
 Untuk **sinkronisasi berkala** selama masa transisi, saya pakai `rsync` yang juga dijalankan lewat helper container. Alasannya, `rsync` cuma mengirim delta sehingga sinkronisasi kedua dan seterusnya jadi jauh lebih cepat.
 
-Kunci dari kedua pendekatan ini sama: jangan pernah menyentuh `/var/lib/docker/volumes` secara langsung. Selalu mount volume ke dalam container helper, biar Docker yang urus path-nya.
+Kunci dari kedua pendekatan ini sama, yakni jangan pernah menyentuh `/var/lib/docker/volumes` secara langsung. Selalu mount volume ke dalam container helper, biar Docker yang urus path-nya.
 
 ## Implementasi Teknis
 
@@ -160,6 +160,6 @@ Kunci memindahkan Docker volume antar server bukan pada tool yang canggih, melai
 
 ## Referensi
 
-- [Docker Documentation: Back up, restore, or migrate data volumes](https://docs.docker.com/storage/volumes/#back-up-restore-or-migrate-data-volumes), Diakses pada 2026-08-08
-- [GNU tar Manual: --numeric-owner](https://www.gnu.org/software/tar/manual/html_node/Attributes.html), Diakses pada 2026-08-08
-- [rsync Manual Page](https://download.samba.org/pub/rsync/rsync.1), Diakses pada 2026-08-08
+- [Docker Documentation: Back up, restore, or migrate data volumes](https://docs.docker.com/storage/volumes/#back-up-restore-or-migrate-data-volumes), diakses pada 2026-08-08
+- [GNU tar Manual: --numeric-owner](https://www.gnu.org/software/tar/manual/html_node/Attributes.html), diakses pada 2026-08-08
+- [rsync Manual Page](https://download.samba.org/pub/rsync/rsync.1), diakses pada 2026-08-08

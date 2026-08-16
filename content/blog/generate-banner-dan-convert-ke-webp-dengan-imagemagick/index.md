@@ -1,7 +1,7 @@
 +++
 draft = false
 date = '2026-04-08'
-title = 'Generate Banner dan Convert Image ke WebP Dengan ImageMagick'
+title = 'Generate Banner dan Convert Image ke WebP dengan ImageMagick'
 type = 'blog'
 description = 'Cara menggunakan ImageMagick untuk resize, optimize, dan convert gambar ke format WebP langsung dari terminal tanpa perlu aplikasi GUI.'
 image = ''
@@ -12,7 +12,7 @@ tags = ['imagemagick', 'webp', 'cli']
 
 Punya gambar 4MB untuk banner blog itu bukan hal yang lumrah terjadi. Download dari Unsplash atau stock photo, resolusinya bisa 4000x6000 pixel hal ini bagus untuk dicetak, tapi terlalu besar untuk sebuah banner di web. Kalau tidak optimalkan, halaman akan menjadi lambat, skor Lighthouse turun kayak harga btc, dan pengunjung kabur sebelum konten sempat ke-load.
 
-Biasanya orang buka Photoshop atau GIMP untuk resize dan compress gambar. Tapi kalau cuma butuh resize, crop, dan convert format terlalu berlebihan jikalau menggunakan aplikasi tersebut. Bermodalnya satu tools **ImageMagick** bisa melakukan semua hal itu langsung dari terminal dengan satu baris command.
+Biasanya orang buka Photoshop atau GIMP untuk resize dan compress gambar. Tapi kalau cuma butuh resize, crop, dan convert format terlalu berlebihan jikalau menggunakan aplikasi tersebut. Yang dibutuhkan cuma satu cara cepat untuk resize, compress, dan convert gambar langsung dari terminal tanpa buka aplikasi GUI yang berat.
 
 ## Permasalahan
 
@@ -36,6 +36,8 @@ WebP adalah format gambar yang dikembangkan oleh Google, dirancang khusus untuk 
 WebP menggabungkan kelebihan JPEG (kompresi lossy yang efisien) dan PNG (transparansi) dalam satu format dengan ukuran file yang lebih kecil. Semua browser modern sudah support WebP, jadi tidak ada alasan untuk tidak memakainya.
 
 ## Implementasi Teknis
+
+Bermodalkan satu tool **ImageMagick**, semua kebutuhan itu bisa dikerjakan langsung dari terminal dengan satu baris command.
 
 ### Instalasi ImageMagick
 

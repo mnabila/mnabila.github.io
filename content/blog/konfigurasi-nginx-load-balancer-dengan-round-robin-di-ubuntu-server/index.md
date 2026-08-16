@@ -3,7 +3,7 @@ draft = false
 date = '2026-06-27'
 title = 'Konfigurasi Nginx Load Balancer dengan Round Robin di Ubuntu Server'
 type = 'blog'
-description = 'Setup Nginx sebagai load balancer dengan metode round robin untuk mendistribusikan trafik ke beberapa backend dan menjaga ketersediaan layanan di Ubuntu Server 22.04'
+description = 'Konfigurasi Nginx sebagai load balancer dengan metode round robin untuk mendistribusikan trafik ke beberapa backend dan menjaga ketersediaan layanan di Ubuntu Server 22.04'
 image = ''
 tags = ['nginx', 'load-balancer', 'ubuntu', 'high-availability']
 +++
@@ -276,7 +276,7 @@ Konfigurasi `fail_timeout` juga butuh pertimbangan. Nilai yang terlalu kecil mem
 
 ## Penutup
 
-Setup Nginx sebagai load balancer dengan round robin cukup simpel dan efektif untuk mendistribusikan trafik ke beberapa backend. Dengan tambahan konfigurasi passive health check dan `proxy_next_upstream`, failover bisa berjalan otomatis tanpa intervensi manual. Untuk production yang lebih demanding, pertimbangkan upgrade ke NGINX Plus untuk active health check atau tambahkan monitoring layer seperti Prometheus dan Grafana untuk observability yang lebih baik.
+Konfigurasi Nginx sebagai load balancer dengan round robin cukup simpel dan efektif untuk mendistribusikan trafik ke beberapa backend. Dengan tambahan konfigurasi passive health check dan `proxy_next_upstream`, failover bisa berjalan otomatis tanpa intervensi manual. Untuk production yang lebih demanding, pertimbangkan upgrade ke NGINX Plus untuk active health check atau tambahkan monitoring layer seperti Prometheus dan Grafana untuk observability yang lebih baik.
 
 ## Referensi
 

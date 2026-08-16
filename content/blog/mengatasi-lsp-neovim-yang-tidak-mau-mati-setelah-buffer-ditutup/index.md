@@ -10,7 +10,7 @@ tags = ['neovim', 'lsp', 'archlinux', 'lua']
 
 ## Latar Belakang
 
-Sebagai pengguna **Neovim** di Arch Linux, LSP adalah fitur yang hampir tidak bisa dipisahkan dari workflow coding sehari-hari. Autocompletion, diagnostics, go-to-definition: semua bergantung pada LSP client yang berjalan di background.
+Sebagai pengguna **Neovim** di Arch Linux, LSP adalah fitur yang hampir tidak bisa dipisahkan dari workflow coding sehari-hari. Autocompletion, diagnostics, dan go-to-definition semuanya bergantung pada LSP client yang berjalan di background.
 
 Masalahnya, saya mulai sadar ada sesuatu yang tidak beres. Setiap kali mengecek proses yang berjalan lewat `htop`, saya sering menemukan proses LSP server seperti `gopls`, `lua-language-server`, atau `typescript-language-server` yang masih aktif, padahal buffer yang bersangkutan sudah lama ditutup. Dalam beberapa kasus, proses ini bahkan tetap hidup setelah Neovim ditutup.
 
@@ -30,7 +30,7 @@ Ada beberapa cara untuk mengatasi proses LSP yang menggantung:
 | Script `autocmd VimLeavePre`                 | Otomatis saat keluar Neovim               | Tidak menangani kasus buffer ditutup satu per satu |
 | `autocmd LspDetach` dengan pengecekan buffer | Otomatis, granular per client, real-time  | Perlu memahami lifecycle LSP dan event system      |
 
-Saya memilih pendekatan ketiga: menggunakan event `LspDetach` yang di-trigger setiap kali sebuah buffer terlepas dari LSP client. Dengan pendekatan ini, pengecekan terjadi secara real-time setiap kali buffer ditutup. Jika client sudah tidak memiliki buffer aktif yang terhubung, client langsung dihentikan.
+Saya memilih pendekatan ketiga, yaitu menggunakan event `LspDetach` yang di-trigger setiap kali sebuah buffer terlepas dari LSP client. Dengan pendekatan ini, pengecekan terjadi secara real-time setiap kali buffer ditutup. Jika client sudah tidak memiliki buffer aktif yang terhubung, client langsung dihentikan.
 
 Solusi ini saya dapatkan dari komunitas **Telegram Vim Indonesia**, dibagikan oleh [@baddmenn](https://t.me/VimID/1/53356) pada bulan Maret 2025.
 

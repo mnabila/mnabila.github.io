@@ -169,7 +169,7 @@ Buat file `Caddyfile` di root project.
 }
 ```
 
-Perbandingan langsung: konfigurasi Caddy membutuhkan 12 baris untuk fungsionalitas yang sama dengan 20 baris di Nginx. Gzip dan Brotli sudah aktif secara default di Caddy tanpa perlu dikonfigurasi. Prefix `:80` memastikan Caddy berjalan di port 80 tanpa mencoba provision HTTPS.
+Kalau dibandingkan langsung, konfigurasi Caddy membutuhkan 12 baris untuk fungsionalitas yang sama dengan 20 baris di Nginx. Gzip dan Brotli sudah aktif secara default di Caddy tanpa perlu dikonfigurasi. Prefix `:80` memastikan Caddy berjalan di port 80 tanpa mencoba provision HTTPS.
 
 ### Build dan Perbandingan Ukuran Image
 

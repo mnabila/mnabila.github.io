@@ -1,7 +1,7 @@
 +++
 draft = false
 date = '2026-04-11'
-title = 'Menjalankan Kubernetes Pod di Podman Dengan Kube Play'
+title = 'Menjalankan Kubernetes Pod di Podman dengan Kube Play'
 type = 'blog'
 description = 'Cara menjalankan Kubernetes YAML manifest langsung di Podman menggunakan perintah podman kube play tanpa perlu cluster Kubernetes'
 image = ''
@@ -12,8 +12,6 @@ tags = ['podman', 'kubernetes', 'container']
 
 Kubernetes sudah jadi standar untuk container orchestration, tapi tidak semua situasi butuh full cluster untuk menjalankan pod. Kadang kita cuma mau test YAML manifest yang baru ditulis, atau jalankan beberapa container di local tanpa harus setup minikube, kind, atau cluster sungguhan. Rasanya overkill kalau harus spin up cluster cuma untuk validasi satu pod.
 
-Ternyata Podman punya fitur yang bisa menyelesaikan masalah ini: **`podman kube play`**. Command ini bisa membaca Kubernetes YAML manifest dan langsung membuat pod beserta container-nya di local machine, tanpa cluster, tanpa daemon, tanpa ribet.
-
 ## Permasalahan
 
 Beberapa masalah yang sering ditemui saat ingin test atau jalankan Kubernetes manifest di local:
@@ -23,6 +21,10 @@ Beberapa masalah yang sering ditemui saat ingin test atau jalankan Kubernetes ma
 - **Dependency pada daemon**: Docker butuh daemon yang jalan di background dengan root privilege, yang tidak selalu ideal untuk local development
 
 Yang dibutuhkan adalah cara untuk langsung jalankan Kubernetes YAML di local tanpa overhead setup cluster dan tanpa butuh daemon.
+
+## Pendekatan Solusi
+
+Ternyata Podman punya fitur yang bisa menyelesaikan masalah ini, yaitu **`podman kube play`**. Command ini bisa membaca Kubernetes YAML manifest dan langsung membuat pod beserta container-nya di local machine, tanpa cluster, tanpa daemon, tanpa ribet.
 
 ## Implementasi Teknis
 
@@ -109,7 +111,7 @@ $ podman kube play nginx-pod.yaml --down
 
 ### Multi-Container Pod: Backend Service + PostgreSQL
 
-Sekarang contoh yang lebih real-world. Misalnya mau jalankan backend service dengan PostgreSQL dalam satu pod: setup yang umum untuk API development:
+Sekarang contoh yang lebih real-world. Misalnya mau jalankan backend service dengan PostgreSQL dalam satu pod, yaitu setup yang umum untuk API development:
 
 ```yaml
 # backend-pod.yaml

@@ -2,7 +2,7 @@
 draft = false
 date = '2022-04-26'
 lastmod = '2026-03-15'
-title = 'Mengurutkan Update Berdasarkan Size File Download Di Pacman'
+title = 'Mengurutkan Update Berdasarkan Size File Download di Pacman'
 type = 'blog'
 description = 'Metode sorting update package berdasarkan ukuran file download di pacman untuk koneksi internet lambat.'
 image = ''
@@ -19,7 +19,7 @@ Masalahnya, koneksi internet yang saya gunakan saat itu sangat terbatas dari sis
 
 Perilaku default `pacman -Syu` adalah mengunduh semua paket secara bersamaan tanpa memperhatikan urutan ukuran. Ini berarti paket-paket kecil yang sebenarnya bisa langsung selesai didownload harus "mengantri" bersama paket besar yang butuh waktu lama. Di koneksi yang tidak stabil, download bisa gagal di tengah jalan dan harus diulang dari awal.
 
-Muncul sebuah ide sederhana: bagaimana kalau proses download diurutkan berdasarkan ukuran file, dari yang terkecil ke terbesar? Dengan begitu, paket-paket kecil bisa diunduh lebih dahulu.
+Muncul sebuah ide sederhana. Bagaimana kalau proses download diurutkan berdasarkan ukuran file, dari yang terkecil ke terbesar? Dengan begitu, paket-paket kecil bisa diunduh lebih dahulu.
 
 ## Pendekatan Solusi
 

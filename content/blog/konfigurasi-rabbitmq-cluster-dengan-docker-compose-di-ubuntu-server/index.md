@@ -12,7 +12,7 @@ tags = ['rabbitmq', 'docker', 'docker-compose', 'high-availability', 'ubuntu']
 
 Beberapa service microservices yang saya kelola menggunakan **RabbitMQ** sebagai message broker. Selama ini RabbitMQ hanya berjalan di satu server, satu instance, satu node, tanpa redundansi apapun. Selama trafik normal dan server stabil, tidak ada masalah. Tapi begitu server mengalami gangguan, entah restart mendadak, update OS, atau network issue, semua service yang bergantung pada RabbitMQ ikut terdampak. Queue tidak bisa diakses, message menumpuk di producer, dan consumer berhenti total.
 
-Situasi ini klasik: **single point of failure**. Satu komponen down, seluruh pipeline messaging lumpuh. Saya perlu setup RabbitMQ yang punya redundansi, kalau satu node mati, message tetap aman dan service tetap bisa beroperasi.
+Situasi ini klasik, yaitu **single point of failure**. Satu komponen down, seluruh pipeline messaging lumpuh. Saya perlu setup RabbitMQ yang punya redundansi, kalau satu node mati, message tetap aman dan service tetap bisa beroperasi.
 
 ## Permasalahan
 

@@ -2,7 +2,7 @@
 draft = false
 date = '2022-01-06'
 lastmod = '2026-03-15'
-title = 'Aria2c Sebagai Download Engine Di Qutebrowser'
+title = 'Aria2c Sebagai Download Engine di Qutebrowser'
 type = 'blog'
 description = 'Menggunakan aria2c sebagai download engine di qutebrowser melalui userscript dan monkeyscript.'
 image = ''
@@ -13,9 +13,9 @@ tags = ['browser', 'download', 'cli', 'userscript', 'monkeyscript']
 
 Sebagai pengguna **Qutebrowser**, browser yang mengandalkan keyboard untuk navigasi, saya sudah cukup lama merasa kurang puas dengan kemampuan download bawaannya. Qutebrowser memang bukan browser mainstream yang dibangun menggunakan Python dengan module PyQt5, backend-nya qt5-webengine, dan tampilannya sangat minimalis. Bisa dibilang pengguna qutebrowser punya selera tersendiri yang rela menghafal keymap demi kenyamanan navigasi tanpa mouse.
 
-Di sisi lain, saya sudah menggunakan **aria2c** sebagai download manager utama di terminal. Aria2c adalah download manager berbasis CLI yang mendukung berbagai protokol: HTTP(S), FTP, SFTP, BitTorrent, hingga Metalink. Cukup satu tool ini saja dan tidak perlu lagi install torrent client terpisah. Yang lebih menarik, aria2c bisa dijadikan download service yang diakses dari berbagai frontend, baik GUI seperti [UGET](https://ugetdm.com/) dan [Persepolis](https://persepolisdm.github.io/), web seperti [AriaNg](https://github.com/mayswind/AriaNg) dan [webui-aria2](https://github.com/ziahamza/webui-aria2), hingga TUI seperti [aria2p](https://github.com/pawamoy/aria2p/).
+Di sisi lain, saya sudah menggunakan **aria2c** sebagai download manager utama di terminal. Aria2c adalah download manager berbasis CLI yang mendukung berbagai protokol seperti HTTP(S), FTP, SFTP, BitTorrent, hingga Metalink. Cukup satu tool ini saja dan tidak perlu lagi install torrent client terpisah. Yang lebih menarik, aria2c bisa dijadikan download service yang diakses dari berbagai frontend, baik GUI seperti [UGET](https://ugetdm.com/) dan [Persepolis](https://persepolisdm.github.io/), web seperti [AriaNg](https://github.com/mayswind/AriaNg) dan [webui-aria2](https://github.com/ziahamza/webui-aria2), hingga TUI seperti [aria2p](https://github.com/pawamoy/aria2p/).
 
-Muncul pertanyaan sederhana: bagaimana kalau dua tool ini digabungkan?
+Muncul pertanyaan sederhana, bagaimana kalau dua tool ini digabungkan?
 
 ## Permasalahan
 
@@ -71,7 +71,7 @@ Kemudian ditambahkan keymap di `config.py` qutebrowser:
 config.bind(",d", "hint links userscript qb2aria", "normal")
 ```
 
-Workflow-nya: tekan `,` lalu `d`, pilih hint link yang ingin di-download. Selesai.
+Workflow-nya simpel, tekan `,` lalu `d`, lalu pilih hint link yang ingin di-download. Selesai.
 
 ### Monkeyscript: Monkey D Aria2
 

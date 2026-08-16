@@ -1,7 +1,7 @@
 +++
 draft = false
 date = '2026-04-18'
-title = 'Hardening Ubuntu Server Untuk Mencegah Serangan'
+title = 'Hardening Ubuntu Server untuk Mencegah Serangan'
 type = 'blog'
 description = 'Panduan hardening Ubuntu Server untuk mencegah serangan umum seperti brute force SSH, crypto miner, dan malware'
 image = ''
@@ -121,7 +121,7 @@ Cek status:
 $ sudo ufw status verbose
 ```
 
-Prinsipnya: **deny all, allow specific**. Hanya buka port yang memang dibutuhkan oleh service yang berjalan.
+Prinsipnya yakni **deny all, allow specific**. Hanya buka port yang memang dibutuhkan oleh service yang berjalan.
 
 ### Proteksi Brute Force dengan Fail2ban
 
@@ -185,7 +185,7 @@ Setiap service yang berjalan adalah potensi attack surface. Cek service apa saja
 $ sudo systemctl list-units --type=service --state=running
 ```
 
-Prinsipnya: kalau tidak tahu kenapa sebuah service berjalan, cari tahu dulu sebelum men-disable-nya. Tapi kalau memang tidak dibutuhkan, matikan.
+Prinsipnya, kalau tidak tahu kenapa sebuah service berjalan, cari tahu dulu sebelum men-disable-nya. Tapi kalau memang tidak dibutuhkan, matikan.
 
 ### Deteksi Malware dengan rkhunter dan chkrootkit
 
@@ -250,9 +250,9 @@ Kalau ada proses dengan nama random yang memakan CPU tinggi, atau koneksi outbou
 
 ## Tantangan yang Dihadapi
 
-Tantangan pertama adalah **mendeteksi crypto miner yang sudah terlanjur masuk**. Pernah mengalami situasi di mana server tiba-tiba lambat, CPU 100% terus-menerus. Saat dicek dengan `top`, terlihat proses asing dengan nama random. Investigasi lebih lanjut menunjukkan proses tersebut masuk melalui SSH brute force (password lemah + root login aktif), menginstall dirinya via crontab, dan menambahkan SSH key asing ke `authorized_keys` untuk persistent access. Langkah response-nya: kill proses, bersihkan crontab dan authorized_keys, ganti semua password, lalu terapkan hardening. Tapi kalau tidak yakin sejauh mana server ter-compromise, rebuild dari awal lebih aman daripada membersihkan satu per satu.
+Tantangan pertama adalah **mendeteksi crypto miner yang sudah terlanjur masuk**. Pernah mengalami situasi di mana server tiba-tiba lambat, CPU 100% terus-menerus. Saat dicek dengan `top`, terlihat proses asing dengan nama random. Investigasi lebih lanjut menunjukkan proses tersebut masuk melalui SSH brute force (password lemah + root login aktif), menginstall dirinya via crontab, dan menambahkan SSH key asing ke `authorized_keys` untuk persistent access. Langkah response-nya yakni kill proses, bersihkan crontab dan authorized_keys, ganti semua password, lalu terapkan hardening. Tapi kalau tidak yakin sejauh mana server ter-compromise, rebuild dari awal lebih aman daripada membersihkan satu per satu.
 
-Tantangan kedua adalah **menentukan port mana yang perlu dibuka di firewall**. Kalau terlalu ketat, service yang dideploy bisa terganggu. Kalau terlalu longgar, sama saja tidak pakai firewall. Pendekatannya: mulai dari deny all, lalu buka port satu per satu sesuai kebutuhan: SSH, HTTP/HTTPS, dan port spesifik yang dipakai aplikasi. Kalau ragu apakah suatu port dibutuhkan, coba tutup dulu dan lihat apakah ada service yang terdampak.
+Tantangan kedua adalah **menentukan port mana yang perlu dibuka di firewall**. Kalau terlalu ketat, service yang dideploy bisa terganggu. Kalau terlalu longgar, sama saja tidak pakai firewall. Pendekatannya yakni mulai dari deny all, lalu buka port satu per satu sesuai kebutuhan seperti SSH, HTTP/HTTPS, dan port spesifik yang dipakai aplikasi. Kalau ragu apakah suatu port dibutuhkan, coba tutup dulu dan lihat apakah ada service yang terdampak.
 
 Satu hal lagi, **false positive dari fail2ban** bisa jadi masalah. Kalau `maxretry` terlalu rendah atau `findtime` terlalu panjang, IP yang legitimate (termasuk IP sendiri) bisa ikut ter-ban. Untuk mengatasinya, tambahkan IP trusted ke whitelist di konfigurasi fail2ban menggunakan directive `ignoreip`.
 

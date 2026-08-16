@@ -2,7 +2,7 @@
 draft = false
 date = '2022-01-18'
 lastmod = '2026-03-15'
-title = 'Handle Multiple File Di Lf'
+title = 'Menangani Multiple File di lf'
 type = 'blog'
 description = 'Cara menghandle multiple file yang dibuka dalam satu instance di lf file manager.'
 image = ''

@@ -12,7 +12,7 @@ tags = ['systemd', 'linux', 'daemon', 'deployment', 'service']
 
 Tiap kali selesai build aplikasi backend, entah binary Go atau Rust, pertanyaannya selalu sama begitu mau deploy ke server. Bagaimana supaya aplikasi ini tetap jalan setelah saya logout dari SSH, tetap hidup kalau server reboot, dan nyala lagi sendiri kalau tiba-tiba crash. Jalanin binary langsung dari terminal jelas bukan opsi, karena begitu sesi SSH ditutup, prosesnya ikut mati bareng shell.
 
-Kalau lagi buru-buru, saya kadang lempar ke PM2 kalau kebetulan sudah terpasang di server, atau bungkus pakai Docker kalau memang mau dicontainerisasi. Tapi keduanya bawa beban sendiri. PM2 butuh runtime Node.js cuma buat momong satu proses, sedangkan Docker kerasa berlebihan buat jalanin satu binary yang sebenarnya tinggal ditaruh di host. Yang saya butuhkan sebenarnya simpel: cara menjalankan satu binary secara native di server yang tetap hidup setelah saya logout, nyala lagi saat crash, dan lognya tercatat rapi, tanpa nambah dependency atau layer baru yang harus ikut dijaga.
+Kalau lagi buru-buru, saya kadang lempar ke PM2 kalau kebetulan sudah terpasang di server, atau bungkus pakai Docker kalau memang mau dicontainerisasi. Tapi keduanya bawa beban sendiri. PM2 butuh runtime Node.js cuma buat momong satu proses, sedangkan Docker kerasa berlebihan buat jalanin satu binary yang sebenarnya tinggal ditaruh di host. Yang saya butuhkan sebenarnya simpel, yakni cara menjalankan satu binary secara native di server yang tetap hidup setelah saya logout, nyala lagi saat crash, dan lognya tercatat rapi, tanpa nambah dependency atau layer baru yang harus ikut dijaga.
 
 ## Permasalahan
 
@@ -221,7 +221,7 @@ Terakhir, **log hilang setelah reboot**. Di beberapa distro `journald` menyimpan
 - **`daemon-reload` wajib tiap unit file berubah**: banyak yang bingung kenapa perubahannya nggak ngefek, ternyata lupa nyuruh systemd baca ulang konfigurasi
 - **`WorkingDirectory` dan path absolut nyegah bug misterius**: beda direktori kerja antara jalanin manual dan lewat systemd itu sumber bug yang sering kelewat
 - **Pisahin konfigurasi pakai `EnvironmentFile`**: naruh kredensial di unit file yang bisa dibaca semua orang itu lubang keamanan. File environment terpisah dengan permission `640` jauh lebih aman
-- **Pelajari `journalctl` beneran**: bisa filter log berdasarkan unit, waktu, dan boot session bikin debugging jauh lebih cepat dibanding ngubek file log manual
+- **Pelajari `journalctl` benar-benar**: bisa filter log berdasarkan unit, waktu, dan boot session bikin debugging jauh lebih cepat dibanding ngubek file log manual
 
 ## Penutup
 
