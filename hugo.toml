@@ -44,12 +44,6 @@ linkedin = 'https://linkedin.com/in/mnabila'
 email = 'mailto:saya@mnabila.com'
 [params.analytics]
 google = 'G-7NVMRSNZL7'
-[params.legal]
-app_name = 'mnabila.com'
-entity = 'MNABILA'
-contact_email = 'saya@mnabila.com'
-effective_date = '2026-09-26'
-governing_law = 'Indonesia'
 
 [outputs]
 section = ['html', 'rss', 'json']
