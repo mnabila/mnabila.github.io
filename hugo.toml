@@ -1,7 +1,7 @@
 baseURL = 'https://mnabila.com'
 languageCode = 'id'
 title = 'MNABILA'
-theme = 'resume'
+theme = 'bezelist'
 ignoreFiles = ['themes/.*/content/*']
 
 [module]
@@ -11,17 +11,10 @@ min = '0.146.0'
 [[module.mounts]]
 source = 'assets'
 target = 'assets'
-[[module.mounts]]
-disableWatch = true
-source = 'hugo_stats.json'
-target = 'assets/notwatching/hugo_stats.json'
 
 [build]
 [build.buildStats]
 enable = true
-[[build.cachebusters]]
-source = 'assets/notwatching/hugo_stats\.json'
-target = 'css'
 [[build.cachebusters]]
 source = '(postcss|tailwind)\.config\.js'
 target = 'css'
@@ -30,28 +23,95 @@ target = 'css'
 [caches.images]
 dir = ':cacheDir/images'
 
+
 [params]
 favicon = 'logo/favicon.ico'
 [params.author]
 name = 'Muhammad Nabil Adani'
-description = 'I’m a Software Engineer passionate about GNU/Linux and exploring open-source technologies'
-image = '/logo/mnabila.webp'
-[params.social]
-github = 'https://github.com/mnabila'
-gitlab = 'https://gitlab.com/mnabila'
-telegram = 'https://t.me/mnabila'
-linkedin = 'https://linkedin.com/in/mnabila'
-email = 'mailto:saya@mnabila.com'
+subtitle = 'Software Engineer'
+tagline = 'Building boringly stable systems. Fueled by caffeine, lo-fi beats, and a very patting the cat.'
+logo = '/logo/mna.webp'
+stack = [
+  'docker',
+  'go',
+  'nextjs',
+  'nodejs',
+  'postgresql',
+  'reactjs',
+  'redis',
+  'rust',
+  'typescript',
+]
+[[params.social]]
+name = 'GitHub'
+url = 'https://github.com/mnabila'
+icon = 'fa-brands fa-github'
+[[params.social]]
+name = 'GitLab'
+url = 'https://gitlab.com/mnabila'
+icon = 'fa-brands fa-gitlab'
+[[params.social]]
+name = 'Telegram'
+url = 'https://t.me/mnabila'
+icon = 'fa-brands fa-telegram'
+[[params.social]]
+name = 'LinkedIn'
+url = 'https://linkedin.com/in/mnabila'
+icon = 'fa-brands fa-linkedin'
+[[params.social]]
+name = 'X'
+url = 'https://x.com/mnabila'
+icon = 'fa-brands fa-x-twitter'
+[[params.social]]
+name = 'Email'
+url = 'mailto:saya@mnabila.com'
+icon = 'fa-solid fa-at'
 [params.analytics]
 google = 'G-7NVMRSNZL7'
+cloudflare = ''
+[params.banner]
+text = 'Open to backend engineering roles'
+cta = 'Get in touch'
+[params.hero]
+lines = ['I build backends', 'that stay', 'boring.']
+highlight = 'boring.'
+chip = 'v2026 / shipping'
+[params.sections]
+about = 'Who I am'
+experience = 'Career'
+education = 'Studied'
+skill = 'What I do'
+project = 'Selected work'
+blog = 'From the blog'
+contact = 'Get in touch'
+
+[menus]
+[[menus.main]]
+name = 'Home'
+pageRef = '/'
+weight = 10
+[[menus.main]]
+name = 'Experience'
+url = '/#experience'
+weight = 20
+[[menus.main]]
+name = 'Skills'
+url = '/#skill'
+weight = 30
+[[menus.main]]
+name = 'Projects'
+url = '/#project'
+weight = 40
+[[menus.main]]
+name = 'Blog'
+pageRef = '/blog'
+weight = 50
 
 [outputs]
 section = ['html', 'rss', 'json']
 
 [taxonomies]
 tag = 'tags'
-language = 'languages'
-tool = 'tools'
 
 [markup]
 [markup.highlight]
@@ -62,9 +122,6 @@ guessSyntax = true
 startLevel = 2
 endLevel = 4
 ordered = false
-
-[services.googleAnalytics]
-ID = "G-7NVMRSNZL7"
 
 [security]
 [security.exec]

@@ -1,3 +1,6 @@
 [submodule "themes/resume"]
 	path = themes/resume
 	url = git@github.com:mnabila/resume.git
+[submodule "themes/bezelist"]
+	path = themes/bezelist
+	url = git@github.com:mnabila/bezelist.git
