@@ -10,7 +10,7 @@ tags = ['kubernetes', 'debian']
 
 ## Latar Belakang
 
-Kubernetes sudah menjadi standar container orchestration untuk saat ini. Kalau sebelumnya cukup pakai Docker Compose untuk menjalankan beberapa container, begitu kebutuhan mulai bertambah seperti scaling, self-healing, rolling update, service discovery sehigga kubernetes jadi pilihan yang sulit dihindari. Masalahnya, setup Kubernetes dari nol itu terkesan ribet dan belibet karena banyak komponen yang harus dikonfigurasi dengan benar.
+Kubernetes sudah menjadi standar container orchestration untuk saat ini. Kalau sebelumnya cukup pakai Docker Compose untuk menjalankan beberapa container, begitu kebutuhan mulai bertambah seperti scaling, self-healing, rolling update, dan service discovery, Kubernetes jadi pilihan yang sulit dihindari. Masalahnya, setup Kubernetes dari nol itu terkesan ribet dan belibet karena banyak komponen yang harus dikonfigurasi dengan benar.
 
 Setup paling minimal untuk Kubernetes cluster di Debian server cukup **1 control plane dan 1 worker node**. Konfigurasi ini cocok untuk belajar, development, atau staging environment sebelum scale ke production.
 
@@ -367,6 +367,6 @@ Setup Kubernetes cluster di Debian dengan 1 control plane dan 1 worker node itu 
 
 ## Referensi
 
-- [Kubernetes - Installing kubeadm](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm/), diakses pada2026-04-08
-- [Computing For Geeks - Install Kubernetes Cluster on Debian 12](https://computingforgeeks.com/install-kubernetes-cluster-on-debian-12-bookworm/), diakses pada2026-04-08
-- [Steve Notes - Kubernetes Provisioning](https://github.com/steve-notes/Kubernetes-Provisioning), diakses pada2026-04-08
+- [Kubernetes - Installing kubeadm](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm/), diakses pada 2026-04-08
+- [Computing For Geeks - Install Kubernetes Cluster on Debian 12](https://computingforgeeks.com/install-kubernetes-cluster-on-debian-12-bookworm/), diakses pada 2026-04-08
+- [Steve Notes - Kubernetes Provisioning](https://github.com/steve-notes/Kubernetes-Provisioning), diakses pada 2026-04-08

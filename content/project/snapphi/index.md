@@ -3,7 +3,7 @@ draft = false
 date = '2026-06-09T10:00:00+07:00'
 title = 'Snapphi'
 type = 'project'
-description = 'A payment orchestration platform for the Indonesian market integration with Xendit, Midtrans, and Doku behind a single API with intelligent routing, automated settlement, and a multi-tenant admin dashboard.'
+description = 'A payment orchestration platform for the Indonesian market, putting Xendit, Midtrans, and Doku behind a single API with strategy-based routing, automated settlement, and a multi-tenant admin dashboard.'
 image = ''
 repository = ''
 languages = ['rust', 'typescript']
@@ -17,7 +17,7 @@ Snapphi is a payment orchestration platform that aggregates these providers behi
 ## Problem Background
 
 - **Multiple providers, multiple integrations**: each provider has its own API contract, webhook format, and authentication mechanism. Merchants must build and maintain separate integrations for each, multiplying development and operational cost
-- **No intelligent routing**: when a provider experiences downtime or rate limits, transactions fail. There is no automatic failover or load distribution across providers
+- **No automatic failover**: when a provider experiences downtime or rate limits, transactions fail. There is no automatic failover or load distribution across providers
 - **Manual reconciliation**: tracking which transactions settled, computing fees, and maintaining accurate merchant balances requires manual processes prone to error and delay
 - **Complex access control**: payment platforms serve both internal admins and external merchants, each requiring different permission levels. Role management needs to work at both system-wide and per-merchant scope
 
@@ -25,7 +25,7 @@ Snapphi is a payment orchestration platform that aggregates these providers behi
 
 Snapphi abstracts provider complexity into three layers: a merchant-facing payment API that routes transactions to the best available provider, an async pipeline that processes webhooks and maintains financial records, and a multi-tenant dashboard that gives admins and merchants scoped visibility into their data.
 
-The payment API exposes one endpoint per payment method. Behind it, using configurable routing strategies like failover, weighted by amount  and weighted by score, determine which provider handles each transaction. Webhooks trigger an asynchronous chain, status update, merchant notification, ledger entry, settlement batching, and disbursement. Every financial event produces an immutable ledger entry with before/after balances.
+The payment API exposes one endpoint per payment method. Behind it, configurable routing strategies (failover, weighted by amount, and weighted by score) determine which provider handles each transaction. Webhooks trigger an asynchronous chain, status update, merchant notification, ledger entry, settlement batching, and disbursement. Every financial event produces an immutable ledger entry with before/after balances.
 
 **Tech stack:** Rust (Axum, SQLx, Tokio, Lapin), React 19, TypeScript, PostgreSQL, Redis, RabbitMQ, Docker, Caddy
 
@@ -79,11 +79,11 @@ The system runs as 9 Rust binaries, each responsible for a single domain:
 | **withdrawal** | Handles merchant withdrawal request processing                                      |
 | **email**      | Sends transactional emails via Brevo                                                |
 
-All services share a single Rust crate with domain modules, ensuring consistent types and business logic across the system. Services communicate through RabbitMQ queues, if the notification service is slow or temporarily down it does not block webhook processing or ledger updates.
+All services share a single Rust crate with domain modules, ensuring consistent types and business logic across the system. Services communicate through RabbitMQ queues. If the notification service is slow or temporarily down, it does not block webhook processing or ledger updates.
 
 ## Key Features
 
-- **Intelligent provider routing**: three strategies (failover, weighted by amount, weighted by score) determine how transactions are distributed across Xendit, Midtrans, and Doku. Each merchant can override default routing priorities and weights
+- **Strategy-based provider routing**: three strategies (failover, weighted by amount, weighted by score) determine how transactions are distributed across Xendit, Midtrans, and Doku. Each merchant can override default routing priorities and weights
 - **Four payment methods**: QRIS, Virtual Accounts, E-wallets, and Disbursements, each routed through the provider selection layer
 - **Event-driven transaction pipeline**: a single payment flows through 8 asynchronous stages from creation to settlement. Each step is idempotent, and messages wait in RabbitMQ if a downstream service is temporarily unavailable
 - **Real-time financial ledger**: every payment, fee, settlement, and withdrawal produces an immutable ledger entry with amount, balance before, balance after, and source reference. Manual adjustments are supported with full audit trail

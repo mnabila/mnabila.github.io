@@ -209,7 +209,7 @@ Yang juga perlu diperhatikan, kalau device masuk sleep mode atau layar mati, str
 
 - **scrcpy server dan client itu independen**: server hanya capture + encode, client handle decode + render. Memahami pemisahan ini membuka kemungkinan untuk ganti client dengan tool yang lebih sesuai kebutuhan
 - **`send_frame_meta=false` adalah kunci**: tanpa flag ini, output stream punya header per-frame (PTS + packet size) yang bikin ffmpeg tidak bisa parse langsung sebagai raw H.264
-- **Hardware decoding di mpv itu game changer**: CPU usage turun dari 15-30% (scrcpy client) ke 2-5% (mpv dengan VAAPI). Perbedaannya sangat signifikan untuk sesi monitoring yang berjalan lama
+- **Hardware decoding di mpv bikin beda besar**: CPU usage turun dari 15-30% (scrcpy client) ke 2-5% (mpv dengan VAAPI). Perbedaannya sangat signifikan untuk sesi monitoring yang berjalan lama
 - **Trade-off yang jelas**: pendekatan ini mengorbankan fitur input control dan kemudahan setup demi efisiensi resource. Cocok untuk monitoring, tidak cocok kalau butuh interaksi dengan device
 
 ## Penutup

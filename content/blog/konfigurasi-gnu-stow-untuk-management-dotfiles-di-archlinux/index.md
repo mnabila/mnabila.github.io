@@ -124,11 +124,11 @@ Perlu diperhatikan juga bahwa stow akan menolak membuat symlink jika file tujuan
 
 GNU Stow mengubah cara saya mengelola dotfiles secara fundamental. Dari yang sebelumnya harus ingat-ingat mana file yang sudah di-copy dan mana yang belum, sekarang cukup `stow <package>` dan selesai. Kombinasi stow + git subtree memberikan workflow yang solid, setiap perubahan konfigurasi otomatis ter-track tanpa langkah manual tambahan.
 
-Satu insight penting, konsep "struktur folder package mengikuti path tujuan" adalah desain yang sangat elegan. Ini membuat konfigurasi stow bersifat self-documenting hanya dengan melihat struktur folder, kita langsung tahu ke mana file tersebut akan di-symlink.
+Satu insight penting, konsep "struktur folder package mengikuti path tujuan" adalah desain yang sangat elegan. Ini membuat konfigurasi stow bersifat self-documenting. Cukup lihat struktur folder, kita langsung tahu ke mana file tersebut akan di-symlink.
 
 ## Penutup
 
-Dengan GNU Stow, mengelola dotfiles menjadi jauh lebih praktis dan reliable. Tidak perlu lagi copy-paste manual cukup atur struktur folder dengan benar, dan biarkan stow yang mengurus sisanya. Bagi pengguna Archlinux atau distro apapun yang sering mengutak-atik konfigurasi, stow adalah tool yang sangat layak dicoba.
+Dengan GNU Stow, mengelola dotfiles menjadi jauh lebih praktis dan reliable. Tidak perlu lagi copy-paste manual, cukup atur struktur folder dengan benar, dan biarkan stow yang mengurus sisanya. Bagi pengguna Archlinux atau distro apapun yang sering mengutak-atik konfigurasi, stow adalah tool yang sangat layak dicoba.
 
 ## Referensi
 

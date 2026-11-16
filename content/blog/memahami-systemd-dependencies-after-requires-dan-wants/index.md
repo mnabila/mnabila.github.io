@@ -41,7 +41,7 @@ Salah paham saya di awal murni karena mencampur dua hal ini jadi satu kata "butu
 
 ## Ordering: After dan Before
 
-**`After=`** dan **`Before=`** cuma mengatur urutan start, tanpa efek lain. `After=b.service` di unit `a.service` artinya, **kalau** `a` dan `b` kebetulan sama-sama dijadwalkan jalan dalam satu flow, maka `b` harus selesai start dulu baru `a` menyusul. Karena opsi ini nggak bikin `b` ikut jalan.
+**`After=`** dan **`Before=`** cuma mengatur urutan start, tanpa efek lain. `After=b.service` di unit `a.service` artinya, **kalau** `a` dan `b` kebetulan sama-sama dijadwalkan jalan dalam satu flow, maka `b` harus selesai start dulu baru `a` menyusul, karena opsi ini sendiri nggak bikin `b` ikut jalan.
 
 ```ini
 [Unit]

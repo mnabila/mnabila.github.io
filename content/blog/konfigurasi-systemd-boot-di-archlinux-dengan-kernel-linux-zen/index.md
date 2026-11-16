@@ -10,7 +10,7 @@ tags = ['systemd-boot', 'bootloader', 'linux-zen', 'archlinux', 'uefi']
 
 ## Latar Belakang
 
-Bootloader adalah komponen pertama yang jalan saat komputer dinyalakan tugasnya memuat kernel ke memori dan menyerahkan kontrol ke sistem operasi. Di Archlinux, kebanyakan orang langsung pakai GRUB karena familiar. Tapi untuk kebutuhan single OS seperti setup saya, GRUB terasa berlebihan dan saya butuh bootloader yang jauh lebih simpel.
+Bootloader adalah komponen pertama yang jalan saat komputer dinyalakan, tugasnya memuat kernel ke memori dan menyerahkan kontrol ke sistem operasi. Di Archlinux, kebanyakan orang langsung pakai GRUB karena familiar. Tapi untuk kebutuhan single OS seperti setup saya, GRUB terasa berlebihan dan saya butuh bootloader yang jauh lebih simpel.
 
 ## Permasalahan
 
@@ -236,7 +236,7 @@ Satu hal lagi, **urutan `initrd` itu penting**. Microcode harus di-load sebelum 
 Setelah migrasi ke systemd-boot, beberapa insight yang didapat:
 
 - **Simplicity is a feature**: tidak semua hal butuh tool yang complex. Untuk single-boot system, systemd-boot jauh lebih simpel dibanding GRUB. Satu file entry berisi semua yang perlu diketahui.
-- **Plain text config itu powerful**: bisa di-track di dotfiles, mudah di-backup, dan gampang di-debug kalau ada masalah. Tidak ada auto-generated config yang misterius.
+- **Plain text config itu praktis**: bisa di-track di dotfiles, mudah di-backup, dan gampang di-debug kalau ada masalah. Tidak ada auto-generated config yang misterius.
 - **Keyboard shortcut di menu berguna untuk troubleshooting**: tekan **d** untuk set default entry, **t/T** untuk adjust timeout, dan **e** untuk edit kernel parameter (kalau editor diaktifkan).
 - **`editor no` wajib di-set untuk keamanan**: secara default, siapa saja dengan akses fisik bisa edit kernel parameter di menu boot. Ini bisa dieksploitasi untuk bypass security, jadi selalu nonaktifkan.
 - **Auto-detect Windows sudah built-in**: meskipun tidak se-canggih GRUB yang punya `os-prober`, systemd-boot otomatis mendeteksi Windows Boot Manager kalau file `EFI/Microsoft/Boot/Bootmgfw.efi` ada di ESP.
@@ -248,6 +248,6 @@ Migrasi dari GRUB ke systemd-boot itu simpel dan hasilnya worth it, terutama unt
 
 ## Referensi
 
-- [Arch Wiki - Systemd-boot](https://wiki.archlinux.org/title/Systemd-boot), diakses pada2026-04-07
-- [The Boot Loader Specification - systemd.io](https://systemd.io/BOOT/), diakses pada2026-04-07
-- [Arch Wiki - Kernel](https://wiki.archlinux.org/title/Kernel#Officially_supported_kernels), diakses pada2026-04-07
+- [Arch Wiki - Systemd-boot](https://wiki.archlinux.org/title/Systemd-boot), diakses pada 2026-04-07
+- [The Boot Loader Specification - systemd.io](https://systemd.io/BOOT/), diakses pada 2026-04-07
+- [Arch Wiki - Kernel](https://wiki.archlinux.org/title/Kernel#Officially_supported_kernels), diakses pada 2026-04-07

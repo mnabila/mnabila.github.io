@@ -158,7 +158,7 @@ Verifikasi node sudah terdaftar:
 $ sudo k0s kubectl get nodes
 ```
 
-Pada tahap ini belum ada node yang muncul karena controller secara default tidak menjalankan workload ini by design untuk isolasi control plane.
+Pada tahap ini belum ada node yang muncul karena controller secara default tidak menjalankan workload. Ini by design untuk isolasi control plane.
 
 ### Generate Token untuk Worker (Controller Node Only)
 
@@ -271,7 +271,7 @@ Satu hal lagi, **kubeconfig default pakai `localhost`** sebagai server address. 
 
 Beberapa hal yang bisa diambil dari pengalaman setup k0s:
 
-- **Single binary itu game changer**: tidak perlu install containerd, etcd, atau CNI plugin terpisah. Semua sudah ada di dalam binary k0s, jadi kemungkinan dependency conflict hampir tidak ada.
+- **Single binary bikin setup jauh lebih simpel**: tidak perlu install containerd, etcd, atau CNI plugin terpisah. Semua sudah ada di dalam binary k0s, jadi kemungkinan dependency conflict hampir tidak ada.
 - **Jalankan `k0s sysinfo` sebelum install**: command ini mengecek semua prerequisites secara otomatis. Lebih baik tahu masalahnya di awal daripada debugging setelah install.
 - **Set expiry pada token**: secara default token tidak expire, yang bisa jadi security risk. Selalu set `--expiry` saat generate token, terutama di environment yang accessible dari luar.
 - **Simpan kubeconfig dengan benar**: ambil dari `/var/lib/k0s/pki/admin.conf` di controller, ganti `localhost` dengan IP controller, baru simpan di `~/.kube/config` di machine yang mau dipakai.

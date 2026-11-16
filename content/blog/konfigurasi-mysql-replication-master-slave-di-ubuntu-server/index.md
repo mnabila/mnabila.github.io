@@ -10,7 +10,7 @@ tags = ['mysql', 'replication', 'database', 'ubuntu', 'server']
 
 ## Latar Belakang
 
-Punya backend service yang traffic-nya makin tinggi dan yang paling merasakan dampaknya adalah database dikarenakan semua query baik read maupun write masuk ke satu instance MySQL yang sama. Makin banyak user, response time makin lambat. Padahal kalau kalau dilihat di log servicenya mayoritas querynya adalah proses read bukan write.
+Punya backend service yang traffic-nya makin tinggi dan yang paling merasakan dampaknya adalah database dikarenakan semua query baik read maupun write masuk ke satu instance MySQL yang sama. Makin banyak user, response time makin lambat. Padahal kalau dilihat di log service-nya, mayoritas query-nya adalah proses read bukan write.
 
 ## Permasalahan
 
@@ -332,7 +332,7 @@ Script ini ngecek `Slave_IO_Running`, `Slave_SQL_Running`, dan replication lag. 
 
 Yang paling bikin pusing adalah **mismatch binary log position**. Kalau lupa dicatat `File` dan `Position` dari `SHOW MASTER STATUS` sebelum dump, atau ada write yang nyelip di antara proses lock dan dump, slave bakal mulai dari posisi yang salah. Hasilnya data tidak konsisten sehingga ada transaksi yang kelewat atau malah terduplikasi. Kalau sudah begini, tidak ada jalan lain selain mengulangi dari awal, yakni lock table, catat posisi, dump, unlock.
 
-Masalah lain yang cukup bikin bingung di awal adalah **server-id yang sama**. Kalau lupa mengganti `server-id` di slave sehingga nilainya sama dengan master (atau dua-duanya masih default `1`), replication tidak mau jalan kemudian memunculkan error message-nya yang tidak jelas. MySQL cuma bilang IO thread gagal connect tanpa kasih tahu kalau penyebabnya duplicate server-id, dan pastikan tiap node punya `server-id` yang beda sebelum mulai.
+Masalah lain yang cukup bikin bingung di awal adalah **server-id yang sama**. Kalau lupa mengganti `server-id` di slave sehingga nilainya sama dengan master (atau dua-duanya masih default `1`), replication tidak mau jalan dengan error message yang tidak jelas. MySQL cuma bilang IO thread gagal connect tanpa kasih tahu kalau penyebabnya duplicate server-id. Pastikan tiap node punya `server-id` yang beda sebelum mulai.
 
 **Replication lag** juga jadi masalah tersendiri, terutama pas ada bulk operation di master seperti `ALTER TABLE` di tabel besar, batch insert jutaan row. Slave memproses event secara single-threaded (di konfigurasi default), jadi operasi berat di master bisa bikin slave ketinggalan jauh. Kalau ini sering terjadi, coba pakai parallel replication lewat parameter `slave_parallel_workers`. Satu lagi yang sering kelewat, pastikan firewall di kedua server sudah buka port 3306. Koneksi yang putus di tengah replication bikin slave perlu di-resync ulang.
 
@@ -340,7 +340,7 @@ Masalah lain yang cukup bikin bingung di awal adalah **server-id yang sama**. Ka
 
 - **Urutan langkah itu krusial**: lock table dulu, catat posisi binary log, dump data, baru unlock. Salah urutan, data di slave bisa inkonsisten dan debugging-nya makan waktu yang cukup lama
 - **Binary log itu jantungnya replication**: semua perubahan data di master tercatat di sini. Kalau binary log corrupt atau terhapus sebelum slave sempat baca bisa dikatakan replication putus
-- **Read-only di slave bukan opsional**: tanpa `read_only = 1`, siapapun yang punya akses write ke slave bisa bikin data drift. Sekali data di slave beda dari master sehingga mengembalikan konsistensinya jadi susah
+- **Read-only di slave bukan opsional**: tanpa `read_only = 1`, siapapun yang punya akses write ke slave bisa bikin data drift. Sekali data di slave beda dari master, mengembalikan konsistensinya jadi susah
 - **Monitoring itu wajib, bukan nice-to-have**: replication bisa putus kapan saja. Tanpa monitoring aktif, bisa-bisa slave sudah ketinggalan berjam-jam sebelum ada yang sadar
 - **Pisahkan connection pool di aplikasi**: pakai pool terpisah untuk read (ke slave) dan write (ke master). Jangan hardcode, pakai config supaya bisa switch node tanpa perlu deploy ulang
 

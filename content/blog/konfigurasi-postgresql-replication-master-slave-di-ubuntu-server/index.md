@@ -423,7 +423,7 @@ INSERT INTO test_replication (message) VALUES ('should fail');
 ERROR:  cannot execute INSERT in a read-only transaction
 ```
 
-Error ini mengonfirmasi replica berjalan dalam mode hot standby sehingga hanya bisa menerima action read  dan untuk action write  akan ditolak.
+Error ini mengonfirmasi replica berjalan dalam mode hot standby, sehingga hanya bisa menerima action read, sedangkan action write ditolak.
 
 ### Pengujian Failover Sederhana
 
@@ -566,7 +566,7 @@ PostgreSQL streaming replication dengan Docker Compose di 2 VM terpisah cukup ef
 
 ## Referensi
 
-- [PostgreSQL Streaming Replication](https://www.postgresql.org/docs/16/warm-standby.html#STREAMING-REPLICATION), diakses pada2026-06-22
-- [PostgreSQL WAL Configuration](https://www.postgresql.org/docs/16/runtime-config-wal.html), diakses pada2026-06-22
-- [pg_basebackup Documentation](https://www.postgresql.org/docs/16/app-pgbasebackup.html), diakses pada2026-06-22
-- [PostgreSQL Docker Official Image](https://hub.docker.com/_/postgres), diakses pada2026-06-22
+- [PostgreSQL Streaming Replication](https://www.postgresql.org/docs/16/warm-standby.html#STREAMING-REPLICATION), diakses pada 2026-06-22
+- [PostgreSQL WAL Configuration](https://www.postgresql.org/docs/16/runtime-config-wal.html), diakses pada 2026-06-22
+- [pg_basebackup Documentation](https://www.postgresql.org/docs/16/app-pgbasebackup.html), diakses pada 2026-06-22
+- [PostgreSQL Docker Official Image](https://hub.docker.com/_/postgres), diakses pada 2026-06-22

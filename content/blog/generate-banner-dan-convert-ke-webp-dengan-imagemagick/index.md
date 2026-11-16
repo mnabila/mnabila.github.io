@@ -10,7 +10,7 @@ tags = ['imagemagick', 'webp', 'cli']
 
 ## Latar Belakang
 
-Punya gambar 4MB untuk banner blog itu bukan hal yang lumrah terjadi. Download dari Unsplash atau stock photo, resolusinya bisa 4000x6000 pixel hal ini bagus untuk dicetak, tapi terlalu besar untuk sebuah banner di web. Kalau tidak optimalkan, halaman akan menjadi lambat, skor Lighthouse turun kayak harga btc, dan pengunjung kabur sebelum konten sempat ke-load.
+Punya gambar 4MB untuk banner blog itu bukan hal yang lumrah terjadi. Download dari Unsplash atau stock photo, resolusinya bisa 4000x6000 pixel, ukuran ini bagus untuk dicetak, tapi terlalu besar untuk sebuah banner di web. Kalau tidak optimalkan, halaman akan menjadi lambat, skor Lighthouse turun kayak harga btc, dan pengunjung kabur sebelum konten sempat ke-load.
 
 Biasanya orang buka Photoshop atau GIMP untuk resize dan compress gambar. Tapi kalau cuma butuh resize, crop, dan convert format terlalu berlebihan jikalau menggunakan aplikasi tersebut. Yang dibutuhkan cuma satu cara cepat untuk resize, compress, dan convert gambar langsung dari terminal tanpa buka aplikasi GUI yang berat.
 
@@ -290,7 +290,7 @@ Output script akan menampilkan perbandingan ukuran sebelum dan sesudah, jadi lan
 
 ## Penutup
 
-ImageMagick itu tool yang powerful tapi sering di-underestimate karena tidak punya GUI. Untuk kebutuhan optimasi gambar web mulai resize, compress, convert ke WebP dengan satu baris command sudah cukup. Tidak perlu buka aplikasi berat, tidak perlu klik-klik menu, dan yang paling penting bisa di-automate lewat script untuk batch processing. Kombinasi `-strip -resize 1200x -quality 80 output.webp` itu sudah jadi template yang bisa dipakai untuk hampir semua kebutuhan banner blog.
+ImageMagick itu tool serbaguna tapi sering di-underestimate karena tidak punya GUI. Untuk kebutuhan optimasi gambar web mulai resize, compress, convert ke WebP dengan satu baris command sudah cukup. Tidak perlu buka aplikasi berat, tidak perlu klik-klik menu, dan yang paling penting bisa di-automate lewat script untuk batch processing. Kombinasi `-strip -resize 1200x -quality 80 output.webp` itu sudah jadi template yang bisa dipakai untuk hampir semua kebutuhan banner blog.
 
 ## Referensi
 

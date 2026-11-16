@@ -257,6 +257,6 @@ Kombinasi v4l2loopback dan scrcpy memberikan cara yang praktis untuk mengubah la
 
 ## Referensi
 
-- [scrcpy - V4L2 Documentation](https://github.com/Genymobile/scrcpy/blob/master/doc/v4l2.md), diakses pada2026-05-30
-- [Arch Wiki - v4l2loopback](https://wiki.archlinux.org/title/V4l2loopback), diakses pada2026-05-30
-- [Arch Wiki - Kernel module](https://wiki.archlinux.org/title/Kernel_module), diakses pada2026-05-30
+- [scrcpy - V4L2 Documentation](https://github.com/Genymobile/scrcpy/blob/master/doc/v4l2.md), diakses pada 2026-05-30
+- [Arch Wiki - v4l2loopback](https://wiki.archlinux.org/title/V4l2loopback), diakses pada 2026-05-30
+- [Arch Wiki - Kernel module](https://wiki.archlinux.org/title/Kernel_module), diakses pada 2026-05-30

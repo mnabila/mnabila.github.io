@@ -208,7 +208,7 @@ dnscrypt-proxy dengan AdGuard DNS adalah kombinasi yang solid untuk mengamankan 
 
 ## Referensi
 
-- [Arch Wiki - Dnscrypt-proxy](https://wiki.mnabila.com/title/Dnscrypt-proxy), diakses pada 2026-04-05
+- [Arch Wiki - Dnscrypt-proxy](https://wiki.archlinux.org/title/Dnscrypt-proxy), diakses pada 2026-04-05
 - [dnscrypt-proxy GitHub](https://github.com/DNSCrypt/dnscrypt-proxy), diakses pada 2026-04-05
 - [dnscrypt-proxy Wiki - Configuration](https://github.com/DNSCrypt/dnscrypt-proxy/wiki/Configuration), diakses pada 2026-04-05
 - [AdGuard DNS](https://adguard-dns.io/), diakses pada 2026-04-05

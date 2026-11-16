@@ -285,7 +285,7 @@ Beberapa keybinding bawaan yang sering dipakai:
 
 ## Tantangan yang Dihadapi
 
-Tantangan pertama adalah soal **permission audio output**. MPD harus dijalankan sebagai user service (`systemctl --user`), bukan system service. Kalau dijalankan sebagai system service, MPD berjalan dalam konteks root dan tidak bisa mengakses PipeWire audio session milik user hasilnya tidak ada suara meskipun MPD terlihat playing.
+Tantangan pertama adalah soal **permission audio output**. MPD harus dijalankan sebagai user service (`systemctl --user`), bukan system service. Kalau dijalankan sebagai system service, MPD berjalan dalam konteks root dan tidak bisa mengakses PipeWire audio session milik user, hasilnya tidak ada suara meskipun MPD terlihat playing.
 
 Tantangan kedua adalah **database tidak otomatis ter-build saat pertama kali**. Setelah konfigurasi selesai dan MPD dijalankan, koleksi musik mungkin belum muncul di ncmpcpp. Tekan `u` di ncmpcpp untuk trigger database update, atau jalankan:
 
@@ -299,7 +299,7 @@ Pastikan juga file FLAC berada di direktori yang ditentukan di `music_directory`
 
 Setelah menggunakan MPD + ncmpcpp, beberapa insight:
 
-- **Arsitektur client-server itu powerful**: musik tetap jalan meskipun ncmpcpp ditutup. Bisa buka tutup client kapan saja tanpa mengganggu playback. Bahkan bisa kontrol MPD dari script atau keybinding window manager.
+- **Arsitektur client-server itu fleksibel**: musik tetap jalan meskipun ncmpcpp ditutup. Bisa buka tutup client kapan saja tanpa mengganggu playback. Bahkan bisa kontrol MPD dari script atau keybinding window manager.
 - **Resource usage sangat minimal**: MPD idle menggunakan memory yang sangat kecil. Dibanding Spotify atau music player GUI, perbedaannya signifikan.
 - **Keybinding Vim-style bikin navigasi cepat**: dengan custom binding hjkl, navigasi koleksi musik terasa natural buat yang sudah terbiasa dengan Vim.
 - **`auto_update` menghilangkan friction**: tidak perlu manual update database setiap kali menambah file musik baru. MPD otomatis mendeteksi perubahan di music directory.

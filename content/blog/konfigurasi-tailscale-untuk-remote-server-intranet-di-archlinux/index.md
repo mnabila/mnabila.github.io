@@ -187,7 +187,7 @@ Tailscale mengubah cara kita mengakses server di intranet. Tidak perlu lagi ribe
 
 ## Referensi
 
-- [Tailscale Documentation](https://tailscale.com/kb), diakses pada2026-04-05
-- [Tailscale - What is Tailscale](https://tailscale.com/kb/1151/what-is-tailscale), diakses pada2026-04-05
-- [Tailscale - Subnet Routers](https://tailscale.com/kb/1019/subnets), diakses pada2026-04-05
-- [Arch Wiki - Tailscale](https://wiki.archlinux.org/title/Tailscale), diakses pada2026-04-05
+- [Tailscale Documentation](https://tailscale.com/kb), diakses pada 2026-04-05
+- [Tailscale - What is Tailscale](https://tailscale.com/kb/1151/what-is-tailscale), diakses pada 2026-04-05
+- [Tailscale - Subnet Routers](https://tailscale.com/kb/1019/subnets), diakses pada 2026-04-05
+- [Arch Wiki - Tailscale](https://wiki.archlinux.org/title/Tailscale), diakses pada 2026-04-05

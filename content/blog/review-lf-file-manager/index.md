@@ -253,7 +253,7 @@ Migrasi dari ranger ke lf mengajarkan beberapa hal penting:
 
 Pertama, tool yang minimalis belum tentu inferior. Justru karena minim fitur bawaan, lf memberikan kebebasan total untuk membangun workflow sesuai kebutuhan tanpa harus berurusan dengan fitur-fitur yang tidak terpakai.
 
-Kedua, konfigurasi berbasis shell script adalah pendekatan yang sangat powerful. Berbeda dengan konfigurasi Python di ranger yang butuh pemahaman API internal, di lf cukup menulis shell command biasa. Setiap orang yang familiar dengan terminal bisa langsung produktif.
+Kedua, konfigurasi berbasis shell script adalah pendekatan yang sangat fleksibel. Berbeda dengan konfigurasi Python di ranger yang butuh pemahaman API internal, di lf cukup menulis shell command biasa. Setiap orang yang familiar dengan terminal bisa langsung produktif.
 
 Ketiga, ranger tidak benar-benar dipensiunkan, lebih tepatnya dipindahkan ke bangku cadangan. Ranger masih berperan sebagai file chooser untuk qutebrowser dan file picker untuk neomutt, karena fitur ini belum tersedia di lf.
 

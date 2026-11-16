@@ -17,7 +17,7 @@ Di sinilah **tmux** (Terminal Multiplexer) masuk. Tmux memungkinkan kita membuka
 
 ## Permasalahan
 
-Meskipun tmux sangat powerful, pengalaman pertama menggunakannya cukup membuat frustrasi. Key binding default-nya terasa asing seperti prefix key `Ctrl-b` yang posisinya berjauhan di keyboard, tampilan status bar yang polos tanpa informasi berguna, dan kebiasaan navigasi yang harus dibangun dari nol. Banyak yang menyerah di tahap awal karena learning curve ini.
+Meskipun tmux punya banyak kemampuan, pengalaman pertama menggunakannya cukup membuat frustrasi. Key binding default-nya terasa asing seperti prefix key `Ctrl-b` yang posisinya berjauhan di keyboard, tampilan status bar yang polos tanpa informasi berguna, dan kebiasaan navigasi yang harus dibangun dari nol. Banyak yang menyerah di tahap awal karena learning curve ini.
 
 Saya perlu mengkustomisasi tmux agar lebih nyaman digunakan sehari-hari sebelum bisa benar-benar produktif dengan tool ini.
 
@@ -92,7 +92,7 @@ Selain itu, menemukan kombinasi warna dan informasi yang tepat untuk status bar 
 
 Tmux adalah salah satu investasi tools terbaik untuk produktivitas di terminal. Begitu muscle memory terbentuk, workflow berubah drastis, tidak perlu lagi buka-tutup terminal, session bisa di-detach dan di-attach kembali (sangat berguna saat SSH ke remote server), dan split panel memungkinkan monitoring sambil bekerja.
 
-Kunci untuk melewati fase awal yang membingungkan adalah memulai dengan konfigurasi minimal. Tidak perlu langsung menghafal semua shortcutnya cukup prefix key, split panel, dan navigasi antar panel. Sisanya bisa dipelajari secara bertahap.
+Kunci untuk melewati fase awal yang membingungkan adalah memulai dengan konfigurasi minimal. Tidak perlu langsung menghafal semua shortcut-nya, cukup prefix key, split panel, dan navigasi antar panel. Sisanya bisa dipelajari secara bertahap.
 
 ## Penutup
 

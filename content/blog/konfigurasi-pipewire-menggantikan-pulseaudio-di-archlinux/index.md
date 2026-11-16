@@ -10,7 +10,7 @@ tags = ['pipewire', 'audio', 'flac', 'lossless', 'archlinux']
 
 ## Latar Belakang
 
-Saya punya koleksi musik dalam format **FLAC** format lossless yang menyimpan audio tanpa kompresi lossy. Untuk menikmati koleksi ini dengan kualitas optimal, audio server yang digunakan juga harus mampu memproses audio tanpa degradasi. Masalahnya, **PulseAudio** secara default melakukan resampling ke sample rate dan format tertentu, yang bisa menurunkan kualitas audio lossless.
+Saya punya koleksi musik dalam format **FLAC**, format lossless yang menyimpan audio tanpa kompresi lossy. Untuk menikmati koleksi ini dengan kualitas optimal, audio server yang digunakan juga harus mampu memproses audio tanpa degradasi. Masalahnya, **PulseAudio** secara default melakukan resampling ke sample rate dan format tertentu, yang bisa menurunkan kualitas audio lossless.
 
 ## Permasalahan
 
@@ -73,7 +73,7 @@ Penjelasan masing-masing package:
 | `pipewire-jack` | JACK compatibility, menggantikan `jack2` |
 | `wireplumber` | Session manager yang mengelola routing dan policy |
 
-Saat install `pipewire-pulse`, pacman akan otomatis menampilkan opsi untuk menghapus `pulseaudio` dan `pulseaudio-bluetooth` karena pipewire dan pulseaudio saling conflict sehingga tidak bisa diinstall disatu device yang sama.
+Saat install `pipewire-pulse`, pacman akan otomatis menampilkan opsi untuk menghapus `pulseaudio` dan `pulseaudio-bluetooth` karena pipewire dan pulseaudio saling conflict sehingga tidak bisa diinstall di satu device yang sama.
 
 ### Menghapus PulseAudio
 
@@ -184,7 +184,7 @@ context.properties = {
 
 Parameter `default.clock.allowed-rates` mendefinisikan sample rate yang diizinkan. Dengan konfigurasi ini, PipeWire akan otomatis menyesuaikan sample rate sesuai dengan file yang sedang diputar. File FLAC 44.1kHz diputar di 44.1kHz, file 96kHz diputar di 96kHz **tanpa resampling**.
 
-Jika tidak di-set, PipeWire akan menggunakan satu sample rate tetap (biasanya 48kHz) dan melakukan resampling untuk semua audio yang tidak sesuai. Dengan konfigurasi di atas, resampling hanya terjadi jika sample rate file tidak ada dalam daftar yang sangat jarang untuk koleksi FLAC.
+Jika tidak di-set, PipeWire akan menggunakan satu sample rate tetap (biasanya 48kHz) dan melakukan resampling untuk semua audio yang tidak sesuai. Dengan konfigurasi di atas, resampling hanya terjadi jika sample rate file tidak ada dalam daftar, yang sangat jarang untuk koleksi FLAC.
 
 Restart PipeWire setelah konfigurasi:
 
@@ -216,8 +216,8 @@ Satu hal lagi jika menggunakan `pavucontrol` (PulseAudio Volume Control) sebagai
 
 Beberapa insight setelah migrasi dari PulseAudio ke PipeWire:
 
-- **Migrasi hampir seamless**: karena `pipewire-pulse` mengekspos API yang sama, semua aplikasi langsung berjalan tanpa perubahan konfigurasi apapun. Ini yang bikin migrasi ke PipeWire sangat low risk.
-- **Lossless audio tanpa resampling itu game changer**: dengan `default.clock.allowed-rates`, PipeWire otomatis switch sample rate sesuai file FLAC yang diputar. Tidak perlu lagi khawatir koleksi 96kHz di-downsample ke 48kHz.
+- **Migrasi hampir mulus**: karena `pipewire-pulse` mengekspos API yang sama, semua aplikasi langsung berjalan tanpa perubahan konfigurasi apapun. Ini yang bikin migrasi ke PipeWire sangat low risk.
+- **Lossless audio tanpa resampling itu lompatan besar**: dengan `default.clock.allowed-rates`, PipeWire otomatis switch sample rate sesuai file FLAC yang diputar. Tidak perlu lagi khawatir koleksi 96kHz di-downsample ke 48kHz.
 - **Latency jauh lebih rendah**: terasa perbedaannya saat monitoring audio real-time atau menggunakan DAW. PipeWire bisa mencapai latency setara JACK tanpa konfigurasi khusus.
 - **`wpctl` adalah tool utama**: untuk troubleshooting dan manajemen audio sehari-hari, `wpctl status` dan `wpctl set-default` adalah command yang paling sering dipakai.
 - **Bluetooth audio lebih reliable**: switching antara profile A2DP (music) dan HFP (headset/mic) lebih mulus dibanding di PulseAudio. Dukungan codec tambahan seperti LDAC juga langsung tersedia.

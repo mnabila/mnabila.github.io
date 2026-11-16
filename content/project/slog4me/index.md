@@ -12,7 +12,7 @@ tools = ['slog', 'text-template']
 
 Go's `log/slog` package, introduced in Go 1.21, gave the standard library a structured logging interface that most Go developers had been reaching for third-party libraries to get. It is well-designed, extensible, and production-ready. But it ships with two built-in handlers, `TextHandler` and `JSONHandler`, and neither supports custom output formatting.
 
-If you want your logs to follow a specific layout, route different levels to different files, or transform log records into domain-specific structures before rendering, you are on your own. slog4me is a small library that fills that gap template-based log formatting with level-based routing, built on Go generics.
+If you want your logs to follow a specific layout, route different levels to different files, or transform log records into domain-specific structures before rendering, you are on your own. slog4me is a small library that fills that gap with template-based log formatting and level-based routing, built on Go generics.
 
 ## Problem Background
 
@@ -32,7 +32,7 @@ slog4me is a Go library that provides a single, generic `slog.Handler` implement
 2. **Level-based routing**: send different log levels to different `io.Writer` destinations
 3. **Custom data mapping**: transform `slog.Record` into any user-defined struct via a mapper function, then pass that struct to the template for rendering
 
-The library exposes a functional options API and leverages Go generics so the mapper and template are fully type-safe.
+The library exposes a functional options API and uses Go generics so the mapper and template are fully type-safe.
 
 **Tech stack:** Go 1.24+, `log/slog`, `text/template`, `golang.org/x/sync`
 
@@ -40,7 +40,7 @@ The library exposes a functional options API and leverages Go generics so the ma
 
 ## System Architecture
 
-The library is intentionally minimal only have two files, one external dependency:
+The library is intentionally minimal, just two files and one external dependency:
 
 ```
 template_handler.go    -- TemplateHandler[T] implementation (slog.Handler interface)
@@ -125,7 +125,7 @@ This is a pragmatic trade-off: the mutex prevents interleaved output at the cost
 
 ## Conclusion
 
-slog4me is a small library solving a specific problem: bringing template-based formatting and level-based routing to Go's standard structured logging. It leverages generics for type safety, `text/template` for flexible output formatting, and the `slog.Handler` interface for seamless integration with existing code.
+slog4me is a small library solving a specific problem: bringing template-based formatting and level-based routing to Go's standard structured logging. It uses generics for type safety, `text/template` for flexible output formatting, and the `slog.Handler` interface so it plugs into existing code.
 
 Installation:
 

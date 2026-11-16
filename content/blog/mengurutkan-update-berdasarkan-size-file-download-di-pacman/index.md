@@ -13,7 +13,7 @@ tags = ['pacman', 'update', 'bash']
 
 Sebagai pengguna Archlinux, rutinitas update sistem adalah sesuatu yang idealnya dilakukan secara berkala. Archlinux adalah rolling release, artinya update datang terus-menerus, bukan dalam siklus rilis besar seperti Ubuntu atau Fedora. Menunda update terlalu lama justru meningkatkan risiko dependency conflict dan breaking changes yang menumpuk.
 
-Masalahnya, koneksi internet yang saya gunakan saat itu sangat terbatas dari sisi bandwidth. Proses `pacman -Syu` yang harus mengunduh ratusan megabyte atau bahkan gigabyte setelah lama tidak update menjadi beban tersendiri buat pengguna kouta internet seperti saya. 
+Masalahnya, koneksi internet yang saya gunakan saat itu sangat terbatas dari sisi bandwidth. Proses `pacman -Syu` yang harus mengunduh ratusan megabyte atau bahkan gigabyte setelah lama tidak update menjadi beban tersendiri buat pengguna kuota internet seperti saya. 
 
 ## Permasalahan
 
@@ -73,7 +73,7 @@ Tantangan kedua adalah memastikan script hanya mendownload paket yang benar-bena
 
 Dari pengalaman ini, ada beberapa hal yang bisa diambil:
 
-Pertama, memahami opsi-opsi pacman yang tersedia sangat membantu. Flag `--print-format` adalah fitur yang powerful tapi jarang dibahas di tutorial-tutorial umum. Dengan flag ini, output pacman bisa diformat sesuai kebutuhan scripting.
+Pertama, memahami opsi-opsi pacman yang tersedia sangat membantu. Flag `--print-format` adalah fitur yang ampuh tapi jarang dibahas di tutorial-tutorial umum. Dengan flag ini, output pacman bisa diformat sesuai kebutuhan scripting.
 
 Kedua, memisahkan proses download (`-Sdw`) dan instalasi (`-Su`) adalah strategi yang berguna untuk koneksi tidak stabil. Paket yang sudah berhasil didownload tersimpan di cache dan tidak perlu diunduh ulang saat instalasi.
 

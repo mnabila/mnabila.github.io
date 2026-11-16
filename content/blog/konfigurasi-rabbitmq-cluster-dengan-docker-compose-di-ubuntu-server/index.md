@@ -470,7 +470,7 @@ RabbitMQ cluster 3 node dengan quorum queue di 3 VM terpisah memberikan high ava
 
 ## Referensi
 
-- [RabbitMQ Clustering Guide](https://www.rabbitmq.com/docs/clustering), diakses pada2026-06-20
-- [RabbitMQ Quorum Queues](https://www.rabbitmq.com/docs/quorum-queues), diakses pada2026-06-20
-- [RabbitMQ Docker Official Image](https://hub.docker.com/_/rabbitmq), diakses pada2026-06-20
-- [Deploying RabbitMQ with Docker](https://www.rabbitmq.com/docs/docker), diakses pada2026-06-20
+- [RabbitMQ Clustering Guide](https://www.rabbitmq.com/docs/clustering), diakses pada 2026-06-20
+- [RabbitMQ Quorum Queues](https://www.rabbitmq.com/docs/quorum-queues), diakses pada 2026-06-20
+- [RabbitMQ Docker Official Image](https://hub.docker.com/_/rabbitmq), diakses pada 2026-06-20
+- [Deploying RabbitMQ with Docker](https://www.rabbitmq.com/docs/docker), diakses pada 2026-06-20

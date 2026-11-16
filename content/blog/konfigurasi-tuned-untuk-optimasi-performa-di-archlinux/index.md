@@ -208,7 +208,7 @@ Dibanding melakukan tuning manual, tuned memberikan pendekatan yang lebih terstr
 
 ## Penutup
 
-Tuned adalah tool yang simpel tapi powerful untuk optimasi performa sistem di Archlinux. Dengan profil bawaan yang sudah dioptimasi dan kemampuan membuat profil custom, kita bisa mengatur performa sistem sesuai kebutuhan tanpa harus menjadi kernel tuning expert. Cukup satu perintah `tuned-adm profile` untuk beralih antara mode hemat daya dan full performance. Untuk yang sering berpindah antara kerja di battery dan di charger, atau antara ngoding ringan dan heavy build, tuned bisa jadi game changer.
+Tuned adalah tool yang simpel tapi ampuh untuk optimasi performa sistem di Archlinux. Dengan profil bawaan yang sudah dioptimasi dan kemampuan membuat profil custom, kita bisa mengatur performa sistem sesuai kebutuhan tanpa harus menjadi kernel tuning expert. Cukup satu perintah `tuned-adm profile` untuk beralih antara mode hemat daya dan full performance. Untuk yang sering berpindah antara kerja di battery dan di charger, atau antara ngoding ringan dan heavy build, tuned bisa jadi pembeda besar.
 
 ## Referensi
 

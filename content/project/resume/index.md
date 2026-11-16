@@ -151,7 +151,7 @@ hugo server -D
 hugo --gc --minify
 ```
 
-The theme includes a complete `exampleSite/` with sample content for every section like experience, education, skills, projects, and blog posts. Include with a GitHub Actions workflow for deployment to GitHub Pages.
+The theme includes a complete `exampleSite/` with sample content for every section like experience, education, skills, projects, and blog posts. It ships with a GitHub Actions workflow for deploying to GitHub Pages.
 
 | Content Type | Archetype Command |
 |---|---|

@@ -12,7 +12,7 @@ tags = ['postgresql', 'docker', 'docker-compose']
 
 Setiap kali mulai project baru atau onboard developer lain, langkah yang paling sering terlewat adalah setup database. Pull repo, jalankan `docker compose up`, lalu baru sadar tabel belum ada karena belum ada yang jalankan migration script. Akhirnya harus masuk ke container, konek ke **PostgreSQL**, lalu jalankan SQL satu per satu secara manual.
 
-Saya ingin setup yang benar-benar zero effort tinggal `docker compose up` dan database langsung siap pakai lengkap dengan schema, extension, bahkan seed data kalau perlu.
+Saya ingin setup yang benar-benar zero effort, tinggal `docker compose up` dan database langsung siap pakai lengkap dengan schema, extension, bahkan seed data kalau perlu.
 
 ## Permasalahan
 
@@ -182,7 +182,7 @@ Hal yang paling penting untuk dipahami dari mekanisme `docker-entrypoint-initdb.
 
 Konsekuensinya, kalau ada perubahan schema di file SQL, perubahan itu tidak akan otomatis terapply ke database yang sudah jalan. Saya harus hapus volume dulu dengan `docker compose down -v` lalu jalankan ulang `docker compose up -d` supaya PostgreSQL membaca ulang script dari awal. Untuk local development ini tidak masalah, tapi untuk production tentu tidak bisa begini, di production tetap butuh migration tool yang proper seperti **Flyway** atau **golang-migrate**.
 
-Satu hal lagi yang sempat bikin bingung adalah urutan eksekusi file. PostgreSQL mengeksekusi file berdasarkan urutan alfanumerik nama file. Jadi kalau ada file bernama `create-tables.sql` dan `init-extensions.sql`, yang dijalankan duluan justru `create-tables.sql` karena huruf "c" lebih kecil dari "i". Solusinya simpel cukup pakai prefix angka seperti `01-`, `02-`, `03-` untuk memastikan urutan yang benar.
+Satu hal lagi yang sempat bikin bingung adalah urutan eksekusi file. PostgreSQL mengeksekusi file berdasarkan urutan alfanumerik nama file. Jadi kalau ada file bernama `create-tables.sql` dan `init-extensions.sql`, yang dijalankan duluan justru `create-tables.sql` karena huruf "c" lebih kecil dari "i". Solusinya simpel, cukup pakai prefix angka seperti `01-`, `02-`, `03-` untuk memastikan urutan yang benar.
 
 ## Insight dan Pembelajaran
 

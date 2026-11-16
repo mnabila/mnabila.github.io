@@ -22,7 +22,7 @@ Beberapa keterbatasan cron yang langsung kerasa saat saya mengelola task terjadw
 - **Tidak ada catch-up saat server mati**: kalau server mati pas jadwal task tiba, cron tidak mengulang setelah server nyala. Task-nya hilang begitu saja
 - **Sulit di-debug**: tidak ada cara langsung untuk lihat kapan task terakhir jalan, berapa lama durasinya, atau apa exit code-nya. Semua harus dikorek manual dari file log
 - **Tidak ada dependency**: cron tidak peduli apakah service yang dibutuhkan sudah siap. Task backup bisa jalan sebelum database benar-benar naik selepas reboot
-- **Environment minim**: cron jalan dengan environment yang sangat terbatas. seperti script jalan di shell tapi gagal pas dipanggil cron, karena `PATH` dan variabelnya berbeda
+- **Environment minim**: cron jalan dengan environment yang sangat terbatas, seperti script yang jalan di shell tapi gagal pas dipanggil cron, karena `PATH` dan variabelnya berbeda
 
 ## Pendekatan Solusi
 
