@@ -1,5 +1,5 @@
 baseURL = 'https://mnabila.com'
-languageCode = 'id'
+locale = 'id'
 title = 'MNABILA'
 theme = 'bezelist'
 ignoreFiles = ['themes/.*/content/*']
